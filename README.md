@@ -3,7 +3,7 @@
 # Hynix Client
 
 Hynix Client — мощный чит для Minecraft версии 1.16.5, предназначенный для игры на таких серверах, как HolyWorld,
-ReallyWorld, BravoHvH и др..
+ReallyWorld, BravoHvH и др
 
 # Скриншоты
 
@@ -21,6 +21,6 @@ ReallyWorld, BravoHvH и др..
 
 [johon0](https://github.com/JohON0),
 
-<img alt="alt text" src="https://avatars.githubusercontent.com/u/191154062?v=4"/>
+<img alt="alt text" src="https://avatars.githubusercontent.com/u/213180969?v=4&size=64"/>
 
 [L1r9ije](https://github.com/L1r9ije)
