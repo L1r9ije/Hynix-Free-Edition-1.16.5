@@ -1,0 +1,124 @@
+package mods.voicechat.config;
+
+import com.darkmagician6.eventapi.EventTarget;
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import de.maxhenkel.configbuilder.entry.ConfigEntry;
+import de.maxhenkel.configbuilder.entry.EnumConfigEntry;
+import mods.voicechat.Voicechat;
+import mods.voicechat.VoicechatClient;
+import mods.voicechat.eventforge.WorldEvent;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.FolderName;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public class ConfigMigrator {
+
+    private static final String MOVED_CONFIG_KEY = "moved";
+    private static final FolderName SERVERCONFIG = new FolderName("serverconfig");
+
+    public static void migrateClientConfig() {
+        migrateConfig(
+                ClientConfig.class,
+                VoicechatClient.CLIENT_CONFIG,
+                Voicechat.getConfigFolder().resolve("voicechat-client.toml"),
+                true,
+                "config/voicechat/voicechat-client.properties"
+        );
+    }
+
+    public static <T> void migrateConfig(Class<T> configClass, T modConfig, Path forgeConfig, boolean copyValues, String newPath) {
+        migrateConfig(configClass, modConfig, forgeConfig, copyValues, newPath, null);
+    }
+
+    public static <T> void migrateConfig(Class<T> configClass, T modConfig, Path forgeConfig, boolean copyValues, String newPath, @Nullable String configKey) {
+        try (CommentedFileConfig commentedConfig = CommentedFileConfig.builder(forgeConfig).build()) {
+            if (Files.isRegularFile(forgeConfig)) {
+                commentedConfig.load();
+            }
+
+            Boolean migrated = commentedConfig.get(MOVED_CONFIG_KEY);
+            if (migrated != null && migrated) {
+                return;
+            }
+
+            CommentedConfig config = configKey == null ? commentedConfig : commentedConfig.get(configKey);
+            if (config != null && copyValues) {
+                migrateConfigValues(configClass, modConfig, config);
+            }
+
+            commentedConfig.clear();
+            commentedConfig.set(MOVED_CONFIG_KEY, true);
+            commentedConfig.setComment(MOVED_CONFIG_KEY, String.format(" This config has been moved to %s", newPath));
+            commentedConfig.save();
+            Voicechat.LOGGER.info("Successfully migrated config {}", forgeConfig.getFileName());
+        }
+    }
+
+    public static <T> void migrateConfigValues(Class<T> configClass, T config, CommentedConfig forgeConfig) {
+        Field[] declaredFields = configClass.getDeclaredFields();
+
+        ConfigEntry<?> randomEntry = null;
+        for (Field field : declaredFields) {
+            try {
+                field.setAccessible(true);
+                Object configEntry = field.get(config);
+                if (configEntry instanceof ConfigEntry) {
+                    ConfigEntry entry = (ConfigEntry) configEntry;
+                    if (randomEntry == null) {
+                        randomEntry = entry;
+                    }
+                    Object forgeValue = forgeConfig.get(entry.getKey());
+                    copyEntry(forgeValue, entry);
+                }
+            } catch (IllegalAccessException e) {
+                Voicechat.LOGGER.error("Failed to migrate config entry {}", field.getName(), e);
+            }
+        }
+        if (randomEntry != null) {
+            randomEntry.save();
+        }
+    }
+
+    private static void copyEntry(Object forgeValue, ConfigEntry configEntry) {
+        try {
+            if (forgeValue == null) {
+                return;
+            }
+
+            if (configEntry instanceof EnumConfigEntry<?>) {
+                EnumConfigEntry<?> enumConfigEntry = (EnumConfigEntry<?>) configEntry;
+                forgeValue = Enum.valueOf(enumConfigEntry.get().getClass(), forgeValue.toString());
+            }
+
+            if (configEntry.getDefault().equals(forgeValue)) {
+                return;
+            }
+
+            configEntry.set(forgeValue);
+            Voicechat.LOGGER.debug("Migrated config entry '{}' with value '{}'", configEntry.getKey(), forgeValue);
+        } catch (Throwable e) {
+            Voicechat.LOGGER.error("Failed to migrate config entry {}", configEntry.getKey(), e);
+        }
+    }
+
+    @EventTarget
+    public void onLoadLevel(WorldEvent.Load event) {
+        if (!(event.getWorld() instanceof ServerWorld)) {
+            return;
+        }
+        ServerWorld serverLevel = (ServerWorld) event.getWorld();
+        migrateConfig(
+                ServerConfig.class,
+                Voicechat.SERVER_CONFIG,
+                serverLevel.getServer().func_240776_a_(SERVERCONFIG).resolve("voicechat-server.toml"),
+                serverLevel.getServer().isDedicatedServer(),
+                "config/voicechat/voicechat-server.properties",
+                "voice_chat"
+        );
+    }
+}

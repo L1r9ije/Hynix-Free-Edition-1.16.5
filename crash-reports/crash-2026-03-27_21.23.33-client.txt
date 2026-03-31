@@ -1,0 +1,66 @@
+---- Minecraft Crash Report ----
+// Surprise! Haha. Well, this is awkward.
+
+Time: 27.03.2026, 21:23
+Description: Initializing game
+
+java.lang.NullPointerException: Initializing game
+	at java.base/java.util.Objects.requireNonNull(Objects.java:209)
+	at su.hynix.utils.render.font.AbstractFont.getFont(AbstractFont.java:73)
+	at su.hynix.utils.render.font.StyledFont.<init>(StyledFont.java:204)
+	at su.hynix.utils.render.font.Fonts.fill(Fonts.java:27)
+	at su.hynix.utils.render.font.Fonts.init(Fonts.java:15)
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:416)
+	at net.minecraft.client.main.Main.main(Main.java:165)
+	at Start.main(Start.java:10)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at java.base/java.util.Objects.requireNonNull(Objects.java:209)
+	at su.hynix.utils.render.font.AbstractFont.getFont(AbstractFont.java:73)
+	at su.hynix.utils.render.font.StyledFont.<init>(StyledFont.java:204)
+	at su.hynix.utils.render.font.Fonts.fill(Fonts.java:27)
+	at su.hynix.utils.render.font.Fonts.init(Fonts.java:15)
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:416)
+
+-- Initialization --
+Details:
+Stacktrace:
+	at net.minecraft.client.main.Main.main(Main.java:165)
+	at Start.main(Start.java:10)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.5
+	Minecraft Version ID: 1.16.5
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 17.0.18, Amazon.com Inc.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Amazon.com Inc.
+	Memory: 838351728 bytes (799 MB) / 1411383296 bytes (1346 MB) up to 4133486592 bytes (3942 MB)
+	CPUs: 12
+	JVM Flags: 0 total; 
+	Launched Version: mcp
+	Backend library: LWJGL version 3.2.2 build 10
+	Backend API: AMD Radeon(TM) Graphics GL version 4.6.0 Compatibility Profile Context 26.1.1.251211, ATI Technologies Inc.
+	GL Caps: Using framebuffer using OpenGL 3.0
+	Using VBOs: Yes
+	Is Modded: Very likely; Jar signature invalidated
+	Type: Client (map_client.txt)
+	CPU: 12x AMD Ryzen 5 5600G with Radeon Graphics 
+	OptiFine Version: OptiFine_1.16.5_HD_U_G8
+	OptiFine Build: ~~NULL~~
+	Render Distance Chunks: 8
+	Mipmaps: 4
+	Anisotropic Filtering: 1
+	Antialiasing: 0
+	Multitexture: false
+	Shaders: null
+	OpenGlVersion: 4.6.0 Compatibility Profile Context 26.1.1.251211
+	OpenGlRenderer: AMD Radeon(TM) Graphics
+	OpenGlVendor: ATI Technologies Inc.
+	CpuCount: 12

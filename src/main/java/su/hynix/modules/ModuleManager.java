@@ -96,6 +96,7 @@ public class ModuleManager implements Wrapper {
         add(new ChestStealer());
         add(new NoInteract());
         //    add(new ItemRelease());
+        add(new TargetStrafe());
 
 
         // Visuals

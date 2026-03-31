@@ -1,0 +1,32 @@
+package mods.voicechat.plugins.impl.packets;
+
+import mods.voicechat.api.packets.StaticSoundPacket;
+import mods.voicechat.voice.common.GroupSoundPacket;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
+
+public class StaticSoundPacketImpl extends SoundPacketImpl implements StaticSoundPacket {
+
+    public StaticSoundPacketImpl(GroupSoundPacket packet) {
+        super(packet);
+    }
+
+    public static class BuilderImpl extends SoundPacketImpl.BuilderImpl<BuilderImpl, StaticSoundPacket> implements StaticSoundPacket.Builder<BuilderImpl> {
+
+        public BuilderImpl(SoundPacketImpl soundPacket) {
+            super(soundPacket);
+        }
+
+        public BuilderImpl(UUID channelId, UUID sender, byte[] opusEncodedData, long sequenceNumber, @Nullable String category) {
+            super(channelId, sender, opusEncodedData, sequenceNumber, category);
+        }
+
+        @Override
+        public StaticSoundPacket build() {
+            return new StaticSoundPacketImpl(new GroupSoundPacket(channelId, sender, opusEncodedData, sequenceNumber, category));
+        }
+
+    }
+
+}

@@ -1,0 +1,78 @@
+package mods.voicechat.plugins.impl.audiochannel;
+
+import mods.voicechat.api.Position;
+import mods.voicechat.api.ServerLevel;
+import mods.voicechat.api.audiochannel.LocationalAudioChannel;
+import mods.voicechat.api.events.SoundPacketEvent;
+import mods.voicechat.api.packets.MicrophonePacket;
+import mods.voicechat.plugins.impl.PositionImpl;
+import mods.voicechat.plugins.impl.ServerLevelImpl;
+import mods.voicechat.plugins.impl.ServerPlayerImpl;
+import mods.voicechat.voice.common.LocationSoundPacket;
+import mods.voicechat.voice.common.Utils;
+import mods.voicechat.voice.server.Server;
+import mods.voicechat.voice.server.ServerWorldUtils;
+
+import java.util.UUID;
+
+public class LocationalAudioChannelImpl extends AudioChannelImpl implements LocationalAudioChannel {
+
+    protected ServerLevel level;
+    protected PositionImpl position;
+    protected float distance;
+
+    public LocationalAudioChannelImpl(UUID channelId, Server server, ServerLevel level, PositionImpl position) {
+        super(channelId, server);
+        this.level = level;
+        this.position = position;
+        this.distance = Utils.getDefaultDistanceServer();
+    }
+
+    @Override
+    public void updateLocation(Position position) {
+        if (position instanceof PositionImpl) {
+            this.position = (PositionImpl) position;
+        } else {
+            throw new IllegalArgumentException("position is not an instance of PositionImpl");
+        }
+    }
+
+    @Override
+    public Position getLocation() {
+        return position;
+    }
+
+    @Override
+    public float getDistance() {
+        return distance;
+    }
+
+    @Override
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    @Override
+    public void send(byte[] opusData) {
+        broadcast(new LocationSoundPacket(channelId, channelId, position.getPosition(), opusData, sequenceNumber.getAndIncrement(), distance, category));
+    }
+
+    @Override
+    public void send(MicrophonePacket packet) {
+        send(packet.getOpusEncodedData());
+    }
+
+    @Override
+    public void flush() {
+        broadcast(new LocationSoundPacket(channelId, channelId, position.getPosition(), new byte[0], sequenceNumber.getAndIncrement(), distance, category));
+    }
+
+    private void broadcast(LocationSoundPacket packet) {
+        if (!(level instanceof ServerLevelImpl)) {
+            throw new IllegalArgumentException("level is not an instance of ServerLevelImpl");
+        }
+        ServerLevelImpl serverLevel = (ServerLevelImpl) level;
+        server.broadcast(ServerWorldUtils.getPlayersInRange(serverLevel.getRawServerLevel(), position.getPosition(), server.getBroadcastRange(distance), filter == null ? player -> true : player -> filter.test(new ServerPlayerImpl(player))), packet, null, null, null, SoundPacketEvent.SOURCE_PLUGIN);
+    }
+
+}

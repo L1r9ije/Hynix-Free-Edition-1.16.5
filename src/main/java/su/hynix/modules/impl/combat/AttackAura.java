@@ -75,7 +75,7 @@ public class AttackAura extends Module {
     public static LivingEntity target = null;
     @Getter
     public static double bpsTarget = 0.0f;
-    public final ModeSetting componentMode = new ModeSetting("Режим ротации", "Плавный", "Плавный", "FunTime", "SpookyTime", "Reallyworld", "Droid", "HolyWorld");
+    public final ModeSetting componentMode = new ModeSetting("Режим ротации", "Плавный", "Плавный", "FunTime", "SpookyTime", "Reallyworld", "Funsky", "HolyWorld", "HvH");
     public final MultiBooleanSetting checks = new MultiBooleanSetting("Прочее", new BooleanSetting("Выключить после смерти", true), new BooleanSetting("Не бить когда ешь", false), new BooleanSetting("Бить только с оружием", false), new BooleanSetting("TPSSync", false));
     public final MultiBooleanSetting targets = new MultiBooleanSetting("Цели", new BooleanSetting("Игроки", true), new BooleanSetting("Друзья", false), new BooleanSetting("Голые", true), new BooleanSetting("Животные", false), new BooleanSetting("Мобы", false));
     public final ModeSetting sortMode = new ModeSetting("Сортировать по", "Всему сразу", "Дистанции", "Здоровью", "Броне", "Всему сразу");
@@ -327,7 +327,7 @@ public class AttackAura extends Module {
             float finalDist = attackDist + rotateDist + 0.1f;
             boolean rayTrace = RayTraceUtil.rayTraceSingleEntity(mc.player.rotationYaw, mc.player.rotationPitch, attackDist + finalDist, target);
 
-            if (this.componentMode.is("Droid")) {
+            if (this.componentMode.is("Funsky")) {
                 double random = Math.random() * 1.0f;
                 double yawSpeed = 0.0f;
                 double pitchSpeed = 0.0f;
@@ -496,13 +496,50 @@ public class AttackAura extends Module {
             }
         }
 
+        if (componentMode.is("HvH")) {
+            // Агрессивный мгновенный снап — идеально для HvH серверов
+            Vector3d hvhTarget = new Vector3d(
+                    target.getPosX(),
+                    target.getPosY() + target.getHeight() * 0.85f,
+                    target.getPosZ()
+            );
+            Vector3d hvhPlayerPos = mc.player.getEyePosition(1.0F);
+            Vector3d hvhDir = hvhTarget.subtract(hvhPlayerPos).normalize();
+
+            float hvhYaw = (float) Math.toDegrees(Math.atan2(-hvhDir.x, hvhDir.z));
+            float hvhPitch = (float) MathHelper.clamp(
+                    (float) Math.toDegrees(Math.asin(-hvhDir.y)), -89.0f, 89.0f
+            );
+
+            // GCD обход — важен для античитов на HvH серверах
+            float gcd = SensUtil.getGCDValue();
+            float yawDeltaHvH = MathHelper.wrapDegrees(hvhYaw - lerpRotation.x);
+            float pitchDeltaHvH = MathHelper.wrapDegrees(hvhPitch - lerpRotation.y);
+            hvhYaw -= yawDeltaHvH % gcd;
+            hvhPitch -= pitchDeltaHvH % gcd;
+
+            // Маленький случайный шум — обход детектора одинаковых углов
+            hvhYaw += MathUtil.random(-0.8f, 0.8f);
+            hvhPitch += MathUtil.random(-0.4f, 0.4f);
+            hvhPitch = MathHelper.clamp(hvhPitch, -89.0f, 89.0f);
+
+            lerpRotation = new Vector2f(hvhYaw, hvhPitch);
+
+            Rotation hvhRotation = new Rotation(
+                    mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(hvhYaw) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
+                    mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(hvhPitch) - MathHelper.wrapDegrees(mc.player.rotationPitch))
+            );
+            // Максимальная скорость снапа, минимальный возврат
+            RotationComponent.update(hvhRotation, 360, 360, 0, 5);
+        }
+
         if (componentMode.is("Reallyworld")) {
             fastRotation();
         }
     }
 
     private boolean canFTRotate() {
-        return componentMode.is("FunTime");
+        return componentMode.is("FunTime") || componentMode.is("HvH");
     }
 
     private void updateCakeWorldRotation(float yaw, float pitch, float returnYaw, float returnPitch) {
@@ -597,7 +634,7 @@ public class AttackAura extends Module {
     public void onDisable() {
         super.onDisable();
         target = null;
-        if (componentMode.is("FunTime")) {
+        if (componentMode.is("FunTime") || componentMode.is("HvH")) {
             RotationComponent.update(new Rotation(LookHandler.getFreeYaw(), LookHandler.getFreePitch()), 20, 20, 30, 30, 0, 30, false);
         }
         counter = 9;
@@ -822,15 +859,14 @@ public class AttackAura extends Module {
     }
 
     public double getMaxRange() {
-        float originalDistance = this.componentMode.is("Легитная") ? 0.2f : 0.0f;
+        float originalDistance = (componentMode.is("HvH")) ? 0.0f : 0.0f;
         return (double) this.attackRange.get() - originalDistance;
     }
 
     public double getMaxAimRange() {
         float attackDist = attackRange.get();
         float rotateDist = rotateDistance.get();
-        float originalAimDistance = this.componentMode.is("Легитная") ? 0.2f : 0.0f;
-        return mc.player.isElytraFlying() ? attackDist : attackDist + rotateDist - originalAimDistance;
+        return mc.player.isElytraFlying() ? attackDist : attackDist + rotateDist;
     }
 
     public double attackDistance() {

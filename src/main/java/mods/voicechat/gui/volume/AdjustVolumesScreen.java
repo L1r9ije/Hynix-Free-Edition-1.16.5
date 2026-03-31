@@ -1,0 +1,119 @@
+package mods.voicechat.gui.volume;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import mods.voicechat.Voicechat;
+import mods.voicechat.gui.VoiceChatScreenBase;
+import mods.voicechat.gui.widgets.ListScreenBase;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+
+import java.util.Locale;
+
+public class AdjustVolumesScreen extends ListScreenBase {
+
+    protected static final ResourceLocation TEXTURE = new ResourceLocation(Voicechat.MODID + "/textures/gui/gui_volumes.png");
+    protected static final ITextComponent TITLE = new TranslationTextComponent("gui.voicechat.adjust_volume.title");
+    protected static final ITextComponent SEARCH_HINT = new TranslationTextComponent("message.voicechat.search_hint").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY);
+    protected static final ITextComponent EMPTY_SEARCH = new TranslationTextComponent("message.voicechat.search_empty").mergeStyle(TextFormatting.GRAY);
+
+    protected static final int HEADER_SIZE = 16;
+    protected static final int FOOTER_SIZE = 8;
+    protected static final int SEARCH_HEIGHT = 16;
+    protected static final int UNIT_SIZE = 18;
+    protected static final int CELL_HEIGHT = 36;
+
+    protected AdjustVolumeList volumeList;
+    protected TextFieldWidget searchBox;
+    protected String lastSearch;
+    protected int units;
+
+    public AdjustVolumesScreen() {
+        super(TITLE, 236, 0);
+        this.lastSearch = "";
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        searchBox.tick();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        guiLeft = guiLeft + 2;
+        guiTop = 32;
+        int minUnits = MathHelper.ceil((float) (CELL_HEIGHT + SEARCH_HEIGHT + 4) / (float) UNIT_SIZE);
+        units = Math.max(minUnits, (height - HEADER_SIZE - FOOTER_SIZE - guiTop * 2 - SEARCH_HEIGHT) / UNIT_SIZE);
+        ySize = HEADER_SIZE + units * UNIT_SIZE + FOOTER_SIZE;
+
+        minecraft.keyboardListener.enableRepeatEvents(true);
+        if (volumeList != null) {
+            volumeList.updateSize(width, units * UNIT_SIZE - SEARCH_HEIGHT, guiTop + HEADER_SIZE + SEARCH_HEIGHT);
+        } else {
+            volumeList = new AdjustVolumeList(width, units * UNIT_SIZE - SEARCH_HEIGHT, guiTop + HEADER_SIZE + SEARCH_HEIGHT, CELL_HEIGHT, this);
+        }
+        String string = searchBox != null ? searchBox.getText() : "";
+        searchBox = new TextFieldWidget(font, guiLeft + 28, guiTop + HEADER_SIZE + 6, 196, SEARCH_HEIGHT, SEARCH_HINT);
+        searchBox.setMaxStringLength(16);
+        searchBox.setEnableBackgroundDrawing(false);
+        searchBox.setVisible(true);
+        searchBox.setTextColor(0xFFFFFF);
+        searchBox.setText(string);
+        searchBox.setResponder(this::checkSearchStringUpdate);
+        addListener(searchBox);
+        addListener(volumeList);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        minecraft.keyboardListener.enableRepeatEvents(false);
+    }
+
+    @Override
+    public void renderBackground(MatrixStack poseStack, int mouseX, int mouseY, float delta) {
+        minecraft.getTextureManager().bindTexture(TEXTURE);
+        blit(poseStack, guiLeft, guiTop, 0, 0, xSize, HEADER_SIZE);
+        for (int i = 0; i < units; i++) {
+            blit(poseStack, guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * i, 0, HEADER_SIZE, xSize, UNIT_SIZE);
+        }
+        blit(poseStack, guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * units, 0, HEADER_SIZE + UNIT_SIZE, xSize, FOOTER_SIZE);
+        blit(poseStack, guiLeft + 10, guiTop + HEADER_SIZE + 6 - 2, xSize, 0, 12, 12);
+    }
+
+    @Override
+    public void renderForeground(MatrixStack poseStack, int mouseX, int mouseY, float delta) {
+        font.func_243248_b(poseStack, TITLE, width / 2 - font.getStringPropertyWidth(TITLE) / 2, guiTop + 5, VoiceChatScreenBase.FONT_COLOR);
+        if (!volumeList.isEmpty()) {
+            volumeList.render(poseStack, mouseX, mouseY, delta);
+        } else if (!searchBox.getText().isEmpty()) {
+            drawCenteredString(poseStack, font, EMPTY_SEARCH, width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - font.FONT_HEIGHT / 2, -1);
+        }
+        if (!searchBox.isFocused() && searchBox.getText().isEmpty()) {
+            drawString(poseStack, font, SEARCH_HINT, searchBox.x, searchBox.y, -1);
+        } else {
+            searchBox.render(poseStack, mouseX, mouseY, delta);
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (searchBox.isFocused()) {
+            searchBox.mouseClicked(mouseX, mouseY, button);
+        }
+        return super.mouseClicked(mouseX, mouseY, button) || volumeList.mouseClicked(mouseX, mouseY, button);
+    }
+
+    private void checkSearchStringUpdate(String string) {
+        if (!(string = string.toLowerCase(Locale.ROOT)).equals(lastSearch)) {
+            volumeList.setFilter(string);
+            lastSearch = string;
+        }
+    }
+
+}

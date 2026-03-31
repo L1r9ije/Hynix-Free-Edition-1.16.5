@@ -57,9 +57,7 @@ public class NotificationManager implements Wrapper {
             if (notification instanceof ImageNotification) {
                 width = Fonts.sf_regular[12].getWidth(notification.getMessage().getString()) + 24;
             } else {
-                FontNotification fontNotification = (FontNotification) notification;
-                width = Fonts.hynix_icons[16].getWidth(fontNotification.getTitle()) +
-                        Fonts.sf_regular[12].getWidth(notification.getMessage().getString()) + 17;
+                width = Fonts.sf_regular[12].getWidth(notification.getMessage().getString()) + 10f;
             }
 
             float x = (mw.getScaledWidth() - width) / 2f;

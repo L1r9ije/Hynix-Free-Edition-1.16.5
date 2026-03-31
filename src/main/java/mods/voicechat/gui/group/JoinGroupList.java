@@ -1,0 +1,60 @@
+package mods.voicechat.gui.group;
+
+import mods.voicechat.gui.widgets.ListScreenBase;
+import mods.voicechat.gui.widgets.ListScreenListBase;
+import mods.voicechat.voice.client.ClientManager;
+import mods.voicechat.voice.common.ClientGroup;
+import mods.voicechat.voice.common.PlayerState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+public class JoinGroupList extends ListScreenListBase<JoinGroupEntry> {
+
+    protected final ListScreenBase parent;
+
+    public JoinGroupList(ListScreenBase parent, int width, int height, int top, int size) {
+        super(width, height, top, size);
+        this.parent = parent;
+        func_244605_b(false);
+        func_244606_c(false);
+        updateGroups();
+    }
+
+    public static void update() {
+        Screen screen = Minecraft.getInstance().currentScreen;
+        if (screen instanceof JoinGroupScreen) {
+            JoinGroupScreen joinGroupScreen = (JoinGroupScreen) screen;
+            joinGroupScreen.groupList.updateGroups();
+        }
+    }
+
+    private void updateGroups() {
+        Map<UUID, JoinGroupEntry.Group> groups = ClientManager.getGroupManager().getGroups().stream().filter(clientGroup -> !clientGroup.isHidden()).collect(Collectors.toMap(ClientGroup::getId, JoinGroupEntry.Group::new));
+        Collection<PlayerState> playerStates = ClientManager.getPlayerStateManager().getPlayerStates(true);
+
+        for (PlayerState state : playerStates) {
+            if (!state.hasGroup()) {
+                continue;
+            }
+            JoinGroupEntry.Group group = groups.get(state.getGroup());
+            if (group == null) {
+                continue;
+            }
+            group.getMembers().add(state);
+        }
+
+        groups.values().forEach(group -> group.getMembers().sort(Comparator.comparing(PlayerState::getName)));
+
+        replaceEntries(groups.values().stream().map(group -> new JoinGroupEntry(parent, group)).sorted(Comparator.comparing(o -> o.getGroup().getGroup().getName())).collect(Collectors.toList()));
+    }
+
+    public boolean isEmpty() {
+        return getEventListeners().isEmpty();
+    }
+}
