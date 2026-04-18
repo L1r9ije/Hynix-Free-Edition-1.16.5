@@ -2,7 +2,6 @@ package su.hynix.ui.screens;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
@@ -25,21 +24,12 @@ import java.util.*;
 import static su.hynix.utils.Wrapper.mc;
 
 public class AccountsScreen extends Screen {
-    private static final ResourceLocation DEFAULT_SKIN = new ResourceLocation("minecraft:textures/entity/steve.png");
-    private static final int MAX_INPUT_LENGTH = 16;
-    private static float savedScroll = 0f;
-    private final float closeIconWidth = 8;
-    private final float closeIconHeight = 8;
-    private final Map<String, Long> accountNames = new LinkedHashMap<>();
-    private final Map<String, ResourceLocation> skinCache = new HashMap<>();
-    private final Map<String, Boolean> xaveIconClicked = new HashMap<>();
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-    private final AnimationUtil scrollAnimation = new AnimationUtil(0f, 7, Easings.QUINT_OUT);
-    private final AccountManager accountManager;
     private boolean showAddDialog = false;
     private boolean showClearDialog = false;
     private float closeIconX;
     private float closeIconY;
+    private static final ResourceLocation DEFAULT_SKIN = new ResourceLocation("minecraft:textures/entity/steve.png");
+    private static final int MAX_INPUT_LENGTH = 16;
     private String inputText = "";
     private String addDialogInputText = "";
     private boolean inputFocused = false;
@@ -47,10 +37,19 @@ public class AccountsScreen extends Screen {
     private boolean isTextSelected = false;
     private boolean isAddDialogTextSelected = false;
     private long cursorBlinkStart = 0;
+    private static float savedScroll = 0f;
+    private final float closeIconWidth = 8;
+    private final float closeIconHeight = 8;
     private String selectedAccount = null;
+    private final Map<String, Long> accountNames = new LinkedHashMap<>();
+    private final Map<String, ResourceLocation> skinCache = new HashMap<>();
+    private final Map<String, Boolean> xaveIconClicked = new HashMap<>();
     private float scroll = 0;
     private float animatedScroll = 0;
     private float maxHeight = 0;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    private final AnimationUtil scrollAnimation = new AnimationUtil(0f, 7, Easings.QUINT_OUT);
+    private final AccountManager accountManager;
 
     public AccountsScreen() {
         super(new StringTextComponent("Аккаунты"));
@@ -669,7 +668,7 @@ public class AccountsScreen extends Screen {
         double x4 = baseX + 3 * (buttonWidth + spacing);
         if (sx >= x4 && sx <= x4 + buttonWidth && sy >= yButtons && sy <= yButtons + buttonHeight) {
             savedScroll = this.scroll;
-            mc.displayGuiScreen(new MainMenuScreen());
+            mc.displayGuiScreen(new HynixMainMenuScreen());
             return true;
         }
 
@@ -864,7 +863,7 @@ public class AccountsScreen extends Screen {
                 isAddDialogTextSelected = false;
                 return true;
             } else {
-                mc.displayGuiScreen(new MainMenuScreen());
+                mc.displayGuiScreen(new HynixMainMenuScreen());
                 return true;
             }
         }

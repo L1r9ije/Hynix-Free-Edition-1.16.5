@@ -219,7 +219,6 @@ public class AttackAura extends Module {
         }
     }
 
-    // ------------------------------------
 
     @EventTarget
     public void onEvent(EventPacket event) {
@@ -304,7 +303,16 @@ public class AttackAura extends Module {
         Rotation rotation = new Rotation(mc.player.rotationYaw + (float) Math.ceil(lerpRotation.x - mc.player.rotationYaw), mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(lerpRotation.y) - MathHelper.wrapDegrees(mc.player.rotationPitch)));
 
         float fov = (float) AuraUtil.calculateFOVFromCamera(target);
-        float baseFov = 360;
+        float baseFov;
+        if (componentMode.is("HvH")) {
+            baseFov = 360f;
+        } else if (componentMode.is("Funsky") || componentMode.is("FunTime") || componentMode.is("SpookyTime")) {
+            baseFov = 180f;
+        } else if (componentMode.is("HolyWorld") || componentMode.is("Плавный") || componentMode.is("Reallyworld")) {
+            baseFov = 90f;
+        } else {
+            baseFov = 180f;
+        }
         float sign = wrapDegrees(rotation.getYaw() - wrapDegrees(mc.player.rotationYaw));
         yawDelta = ((rotation.getYaw() - mc.player.rotationYaw) % 360 + 540) % 360 - 180;
 
@@ -333,16 +341,26 @@ public class AttackAura extends Module {
                 double pitchSpeed = 0.0f;
                 long currentTime = System.currentTimeMillis();
 
+                // Микрошум для имитации micro-movement
+                float microCos = (float) Math.cos(currentTime / 90.0);
+                float microSin = (float) Math.sin(currentTime / 130.0);
+
                 if (rayTrace) {
                     if (mc.player.getDistanceEye(target) > 0.5f) {
                         if (!RayTraceUtil.rayTraceSmallHitBox(mc.player.rotationYaw, mc.player.rotationPitch, finalDist, target)) {
-                            yawSpeed = randomLerp(0.6f, 0.8f);
-                            pitchSpeed = randomLerp(0.2f, 0.6f);
+                            // Не на хитбоксе — активно доворачиваем
+                            yawSpeed = randomLerp(0.65f, 0.85f);
+                            pitchSpeed = randomLerp(0.25f, 0.55f);
                         } else {
+                            // Уже на хитбоксе — небольшой микро-drift вместо нуля
+                            float driftYaw = randomLerp(0.01f, 0.04f) * microCos;
+                            float driftPitch = randomLerp(0.005f, 0.02f) * microSin;
                             if (cooldownFromLastSwing() < 0.25f && MoveUtil.isMoving()) {
-                                yawSpeed = randomLerp(-0.02f, 0.02f);
-                                pitchSpeed = randomLerp(-0.01f, 0.01f);
+                                driftYaw = randomLerp(-0.025f, 0.025f);
+                                driftPitch = randomLerp(-0.015f, 0.015f);
                             }
+                            yawSpeed = driftYaw;
+                            pitchSpeed = driftPitch;
                         }
                     }
                     rayTraceDisabledTime = -1;
@@ -352,8 +370,8 @@ public class AttackAura extends Module {
                     }
                     long timeSinceDisabled = currentTime - rayTraceDisabledTime;
                     if (timeSinceDisabled < 400) {
-                        double progressYaw = (timeSinceDisabled) / 400.0f;
-                        double progressPitch = (timeSinceDisabled) / 600.0f;
+                        double progressYaw = timeSinceDisabled / 400.0f;
+                        double progressPitch = timeSinceDisabled / 600.0f;
                         double progressSpeedPitch = 12.0f;
                         double progressSpeedYaw = 24.0f;
 
@@ -371,18 +389,62 @@ public class AttackAura extends Module {
                         pitchSpeed = lastPitch + random;
                     }
                 }
+
+                // GCD коррекция для Funsky
+                float gcdFS = SensUtil.getGCDValue();
+                float fsYaw = lerpRotation.x + (float) yawSpeed;
+                float fsPitch = lerpRotation.y + (float) pitchSpeed;
+                fsYaw -= (fsYaw - lerpRotation.x) % gcdFS;
+                fsPitch -= (fsPitch - lerpRotation.y) % gcdFS;
+                lerpRotation = new Vector2f(fsYaw, fsPitch);
+
                 double returnYawSpeed = 8.0f + random;
                 double returnPitchSpeed = 4.0f + random;
-                this.updateCakeWorldRotation((float) yawSpeed, (float) pitchSpeed, (float) returnYawSpeed, (float) returnPitchSpeed);
+                this.updateCakeWorldRotation((float) Math.abs(yawSpeed) * 180f + 5f, (float) Math.abs(pitchSpeed) * 180f + 5f, (float) returnYawSpeed * 20f, (float) returnPitchSpeed * 20f);
             }
 
             if (componentMode.is("FunTime")) {
-                Rotation rotacia = rotka(new Rotation(mc.player.rotationYaw, mc.player.rotationPitch), rRotka);
-                float speedY = 15;
-                if (canFTRotate()) speedY = 360;
-                RotationComponent.update(rotacia, speedY, speedY, 45, 45, 10, 5, false);
+                // Prediction позиции таргета на 3 тика вперёд
+                double velX = target.getPosX() - target.prevPosX;
+                double velZ = target.getPosZ() - target.prevPosZ;
+                Vector3d ftPredicted = new Vector3d(
+                        target.getPosX() + velX * 3,
+                        target.getPosY() + target.getHeight() * 0.6f,
+                        target.getPosZ() + velZ * 3
+                );
+                Vector3d ftPlayerPos = mc.player.getEyePosition(1.0F);
+                Vector3d ftDir = ftPredicted.subtract(ftPlayerPos).normalize();
+
+                float ftRawYaw = (float) Math.toDegrees(Math.atan2(-ftDir.x, ftDir.z));
+                float ftRawPitch = (float) MathHelper.clamp((float) Math.toDegrees(Math.asin(-ftDir.y)), -89f, 89f);
+
+                float ftYawDelta = MathHelper.wrapDegrees(ftRawYaw - lerpRotation.x);
+                float ftPitchDelta = ftRawPitch - lerpRotation.y;
+
+                float ftSpeed = randomLerp(0.38f, 0.58f);
+                float ftNewYaw = lerpRotation.x + ftYawDelta * ftSpeed;
+                float ftNewPitch = lerpRotation.y + ftPitchDelta * (ftSpeed * 0.55f);
+
+                // GCD коррекция
+                float gcdFT = SensUtil.getGCDValue();
+                ftNewYaw -= (ftNewYaw - lerpRotation.x) % gcdFT;
+                ftNewPitch -= (ftNewPitch - lerpRotation.y) % gcdFT;
+
+                lerpRotation = new Vector2f(ftNewYaw, ftNewPitch);
+
+                Rotation rotacia = new Rotation(
+                        mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(ftNewYaw) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
+                        mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(ftNewPitch) - MathHelper.wrapDegrees(mc.player.rotationPitch))
+                );
+                float ftSpeedY = randomLerp(150f, 210f);
+                RotationComponent.update(rotacia, ftSpeedY, ftSpeedY * 0.5f, 45, 25, 8, 5, false);
             }
             if (componentMode.is("HolyWorld")) {
+                // Velocity prediction: предсказываем позицию таргета на 2.5 тика
+                double hwVelX = target.getPosX() - target.prevPosX;
+                double hwVelZ = target.getPosZ() - target.prevPosZ;
+                double hwPredFactor = 2.5;
+
                 float targetYaw = target.rotationYaw;
                 double offset = 0.28;
                 double ox = -MathHelper.sin(targetYaw * ((float) Math.PI / 180F)) * offset;
@@ -390,12 +452,16 @@ public class AttackAura extends Module {
                 Vector3d shifted;
                 if (hynix.getInstance().getModuleManager().getModule(Speed.class).isEnabled()) {
                     shifted = new Vector3d(
-                            target.getPosX() + ox,
+                            target.getPosX() + ox + hwVelX * hwPredFactor,
                             target.getPosY() + target.getHeight() * 0.75f,
-                            target.getPosZ() + oz
+                            target.getPosZ() + oz + hwVelZ * hwPredFactor
                     );
                 } else {
-                    shifted = new Vector3d(target.getPosX(), target.getPosY() + target.getHeight() * 0.75f, target.getPosZ());
+                    shifted = new Vector3d(
+                            target.getPosX() + hwVelX * hwPredFactor,
+                            target.getPosY() + target.getHeight() * 0.75f,
+                            target.getPosZ() + hwVelZ * hwPredFactor
+                    );
                 }
 
                 Vector3d playerPosition = mc.player.getEyePosition(1.0F);
@@ -428,9 +494,9 @@ public class AttackAura extends Module {
                 if (hynix.getInstance().getModuleManager().getModule(Speed.class).isEnabled()) {
                     speedd = 1;
                 } else {
-                    speedd = 3;
+                    speedd = 2;
                 }
-                SmoothRotationComponent.update(rotation, speedd, 5F, 1.5F, 1.5F, 1, 5, false);
+                SmoothRotationComponent.update(rotation, speedd, 8F, 1.5F, 1.5F, 1, 5, false);
             }
             if (componentMode.is("SpookyTime")) {
                 Vector3d vecs = new Vector3d(target.getPosX(), target.getPosY() + target.getHeight() * 0.8f, target.getPosZ());
@@ -492,16 +558,20 @@ public class AttackAura extends Module {
                         mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(finalPitch) - MathHelper.wrapDegrees(mc.player.rotationPitch))
                 );
 
-                SmoothRotationComponent.update(rotation2, 3F, 10F, 4F, 4F, 1, 5, false);
+                SmoothRotationComponent.update(rotation2, 8F, 15F, 4F, 4F, 1, 5, false);
             }
         }
 
         if (componentMode.is("HvH")) {
-            // Агрессивный мгновенный снап — идеально для HvH серверов
+            // 360° snap + prediction движения таргета на 2 тика
+            double hvhVelX = target.getPosX() - target.prevPosX;
+            double hvhVelY = target.getPosY() - target.prevPosY;
+            double hvhVelZ = target.getPosZ() - target.prevPosZ;
+
             Vector3d hvhTarget = new Vector3d(
-                    target.getPosX(),
-                    target.getPosY() + target.getHeight() * 0.85f,
-                    target.getPosZ()
+                    target.getPosX() + hvhVelX * 2,
+                    target.getPosY() + hvhVelY * 2 + target.getHeight() * 0.85f,
+                    target.getPosZ() + hvhVelZ * 2
             );
             Vector3d hvhPlayerPos = mc.player.getEyePosition(1.0F);
             Vector3d hvhDir = hvhTarget.subtract(hvhPlayerPos).normalize();
@@ -511,25 +581,19 @@ public class AttackAura extends Module {
                     (float) Math.toDegrees(Math.asin(-hvhDir.y)), -89.0f, 89.0f
             );
 
-            // GCD обход — важен для античитов на HvH серверах
             float gcd = SensUtil.getGCDValue();
             float yawDeltaHvH = MathHelper.wrapDegrees(hvhYaw - lerpRotation.x);
             float pitchDeltaHvH = MathHelper.wrapDegrees(hvhPitch - lerpRotation.y);
             hvhYaw -= yawDeltaHvH % gcd;
             hvhPitch -= pitchDeltaHvH % gcd;
 
-            // Маленький случайный шум — обход детектора одинаковых углов
-            hvhYaw += MathUtil.random(-0.8f, 0.8f);
-            hvhPitch += MathUtil.random(-0.4f, 0.4f);
+            hvhYaw += MathUtil.random(-0.5f, 0.5f);
+            hvhPitch += MathUtil.random(-0.3f, 0.3f);
             hvhPitch = MathHelper.clamp(hvhPitch, -89.0f, 89.0f);
 
             lerpRotation = new Vector2f(hvhYaw, hvhPitch);
 
-            Rotation hvhRotation = new Rotation(
-                    mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(hvhYaw) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
-                    mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(hvhPitch) - MathHelper.wrapDegrees(mc.player.rotationPitch))
-            );
-            // Максимальная скорость снапа, минимальный возврат
+            Rotation hvhRotation = new Rotation(hvhYaw, hvhPitch);
             RotationComponent.update(hvhRotation, 360, 360, 0, 5);
         }
 
@@ -542,8 +606,9 @@ public class AttackAura extends Module {
         return componentMode.is("FunTime") || componentMode.is("HvH");
     }
 
-    private void updateCakeWorldRotation(float yaw, float pitch, float returnYaw, float returnPitch) {
-        RotationComponent.update(new Rotation(yaw, pitch), yaw, pitch, returnYaw, returnPitch, 0, 15, false);
+    private void updateCakeWorldRotation(float yawSpeed, float pitchSpeed, float returnYaw, float returnPitch) {
+        // Используем lerpRotation как целевой угол, скорости передаём отдельно
+        RotationComponent.update(new Rotation(lerpRotation.x, lerpRotation.y), yawSpeed, pitchSpeed, returnYaw, returnPitch, 0, 15, false);
     }
 
     public float lerp(float input, float target, double step) {
@@ -551,23 +616,53 @@ public class AttackAura extends Module {
     }
 
     private void fastRotation() {
-        if (target == null || mc.player == null || mc.world == null) {
-            return;
-        }
+        if (target == null || mc.player == null || mc.world == null) return;
 
-        float currentYaw = mc.player.rotationYaw;
-        float currentPitch = mc.player.rotationPitch;
+        // Velocity prediction: предсказываем позицию на 2 тика вперёд
+        double rwVelX = target.getPosX() - target.prevPosX;
+        double rwVelZ = target.getPosZ() - target.prevPosZ;
+        Vector3d rwPredicted = new Vector3d(
+                target.getPosX() + rwVelX * 2,
+                target.getPosY() + target.getHeight() * 0.65f,
+                target.getPosZ() + rwVelZ * 2
+        );
 
-        float deltaYaw = MathHelper.wrapDegrees(lerpRotation.x - currentYaw);
-        float deltaPitch = MathHelper.wrapDegrees(lerpRotation.y - currentPitch);
+        Vector3d rwPlayerPos = mc.player.getEyePosition(1.0F);
+        Vector3d rwDir = rwPredicted.subtract(rwPlayerPos).normalize();
 
-        float newYaw = currentYaw + deltaYaw;
-        float newPitch = currentPitch + deltaPitch;
+        float rwTargetYaw = (float) Math.toDegrees(Math.atan2(-rwDir.x, rwDir.z));
+        float rwTargetPitch = (float) MathHelper.clamp((float) Math.toDegrees(Math.asin(-rwDir.y)), -89f, 89f);
 
-        newYaw += MathUtil.random(-3, 3);
-        newPitch += MathUtil.random(-2, 2);
+        float rwYawDelta = MathHelper.wrapDegrees(rwTargetYaw - lerpRotation.x);
+        float rwPitchDelta = rwTargetPitch - lerpRotation.y;
 
-        RotationComponent.update(new Rotation(newYaw, newPitch), 180, 180, 0, 5);
+        // Плавный lerp со случайной скоростью
+        float rwSpeed = randomLerp(0.55f, 0.75f);
+        float rwNewYaw = lerpRotation.x + rwYawDelta * rwSpeed;
+        float rwNewPitch = lerpRotation.y + rwPitchDelta * (rwSpeed * 0.6f);
+
+        // Осциллирующий micro-noise для naturalness
+        long now = System.currentTimeMillis();
+        float noiseYaw = randomLerp(0.6f, 1.8f) * (float) Math.cos(now / 120.0);
+        float noisePitch = randomLerp(0.3f, 0.9f) * (float) Math.sin(now / 175.0);
+        rwNewYaw += noiseYaw;
+        rwNewPitch += noisePitch;
+
+        // GCD коррекция
+        float gcd = SensUtil.getGCDValue();
+        rwNewYaw -= (rwNewYaw - lerpRotation.x) % gcd;
+        rwNewPitch -= (rwNewPitch - lerpRotation.y) % gcd;
+        rwNewPitch = MathHelper.clamp(rwNewPitch, -89f, 89f);
+
+        lerpRotation = new Vector2f(rwNewYaw, rwNewPitch);
+
+        RotationComponent.update(
+                new Rotation(
+                        mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(rwNewYaw) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
+                        mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(rwNewPitch) - MathHelper.wrapDegrees(mc.player.rotationPitch))
+                ),
+                randomLerp(165f, 225f), randomLerp(85f, 120f), 0, 5
+        );
     }
 
     private Rotation rotka(Rotation currentAngle, Rotation targetAngle) {
@@ -663,7 +758,8 @@ public class AttackAura extends Module {
 
     private void updateAttack() {
         Sprint autoSprint = (Sprint) hynix.getInstance().getModuleManager().getModule(Sprint.class);
-        if (canAttack() && rayTrace() && AuraUtil.getStrictDistance(target) < attackDistance()) {
+        boolean angleOk = componentMode.is("HvH") || rayTrace();
+        if (canAttack() && angleOk && AuraUtil.getStrictDistance(target) < attackDistance()) {
 
             if (autoSprint.getMode().is("Пакетный") && autoSprint.RAGE() && CEntityActionPacket.lastUpdatedSprint) {
                 mc.player.connection.sendPacket(new CEntityActionPacket(mc.player, CEntityActionPacket.Action.STOP_SPRINTING));

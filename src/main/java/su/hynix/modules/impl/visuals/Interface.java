@@ -72,7 +72,7 @@ public class Interface extends Module {
         staff.addSettings(StaffListRender.skins, StaffListRender.alphabg);
         potions.addSettings(PotionsRender.badeffects, PotionsRender.alphabg);
         notification.addSettings(NotificationRender.shield, NotificationRender.spec, NotificationRender.warps, NotificationRender.module, NotificationRender.lowstrength, NotificationRender.effects, NotificationRender.alphabg);
-        targetHudDrug.addSettings(TargetHudRender.hpbar, TargetHudRender.goldhealth, TargetHudRender.particles2, TargetHudRender.ontarget, TargetHudRender.armor, TargetHudRender.alphabg);
+        targetHudDrug.addSettings(TargetHudRender.hpbar, TargetHudRender.healthMode, TargetHudRender.goldhealth, TargetHudRender.particles2, TargetHudRender.ontarget, TargetHudRender.armor, TargetHudRender.alphabg);
         watermarkDrag.addSettings(WatermarkRender.login, WatermarkRender.fps, WatermarkRender.time, WatermarkRender.coordinates, WatermarkRender.ping, WatermarkRender.tps, WatermarkRender.bps, WatermarkRender.logotype, WatermarkRender.alphabg);
         watermarkDrag.addSettings(WatermarkRender.login, WatermarkRender.fps, WatermarkRender.alphabg);
 
