@@ -3,6 +3,10 @@ package su.hynix.modules.impl.miscellaneous;
 import com.darkmagician6.eventapi.EventTarget;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.network.play.server.SChatPacket;
 import su.hynix.events.EventKey;
 import su.hynix.events.EventPacket;
 import su.hynix.events.EventUpdate;
@@ -11,11 +15,6 @@ import su.hynix.modules.Module;
 import su.hynix.modules.api.constructors.impl.BindSetting;
 import su.hynix.modules.api.constructors.impl.ModeSetting;
 import su.hynix.utils.math.TimeUtil;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.inventory.container.ChestContainer;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.network.play.server.SChatPacket;
-
 
 import java.util.List;
 import java.util.regex.Pattern;

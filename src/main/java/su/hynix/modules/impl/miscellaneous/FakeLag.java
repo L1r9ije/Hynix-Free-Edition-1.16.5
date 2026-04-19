@@ -2,7 +2,6 @@ package su.hynix.modules.impl.miscellaneous;
 
 
 import com.darkmagician6.eventapi.EventTarget;
-import com.google.common.base.Stopwatch;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.client.CUseEntityPacket;
 import net.minecraft.util.math.vector.Vector3d;
@@ -13,8 +12,6 @@ import su.hynix.modules.api.constructors.impl.BooleanSetting;
 import su.hynix.modules.api.constructors.impl.SliderSetting;
 import su.hynix.utils.StopWatch;
 import su.hynix.utils.math.TimeUtil;
-import su.hynix.utils.misc.ChatUtil;
-import su.hynix.utils.render.ColorUtil;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;

@@ -1,6 +1,10 @@
 package su.hynix.modules.impl.miscellaneous;
 
 import com.darkmagician6.eventapi.EventTarget;
+import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.network.play.server.SChatPacket;
+import net.minecraft.network.play.server.SJoinGamePacket;
+import net.minecraft.util.text.TextFormatting;
 import su.hynix.commands.impl.AutoContractCommand;
 import su.hynix.events.EventKey;
 import su.hynix.events.EventPacket;
@@ -13,10 +17,6 @@ import su.hynix.modules.api.constructors.impl.SliderSetting;
 import su.hynix.utils.math.TimeUtil;
 import su.hynix.utils.misc.ChatUtil;
 import su.hynix.utils.misc.ServerUtil;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.network.play.server.SChatPacket;
-import net.minecraft.network.play.server.SJoinGamePacket;
-import net.minecraft.util.text.TextFormatting;
 
 public class AutoContract extends Module {
     private final SliderSetting griefSelection = new SliderSetting("Гриф", 1, 1, 54, 1);

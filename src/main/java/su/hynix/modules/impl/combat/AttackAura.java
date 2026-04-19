@@ -68,40 +68,53 @@ import static java.lang.Math.toDegrees;
 import static net.minecraft.util.math.MathHelper.clamp;
 import static net.minecraft.util.math.MathHelper.wrapDegrees;
 
+
 @SuppressWarnings("all")
+
 public class AttackAura extends Module {
 
     @Getter
     public static LivingEntity target = null;
+
     @Getter
     public static double bpsTarget = 0.0f;
-    public final ModeSetting componentMode = new ModeSetting("Режим ротации", "Плавный", "Плавный", "FunTime", "SpookyTime", "Reallyworld", "Funsky", "HolyWorld", "HvH");
     public final MultiBooleanSetting checks = new MultiBooleanSetting("Прочее", new BooleanSetting("Выключить после смерти", true), new BooleanSetting("Не бить когда ешь", false), new BooleanSetting("Бить только с оружием", false), new BooleanSetting("TPSSync", false));
+    public final ModeSetting componentMode = new ModeSetting("Режим ротации", "Плавный", "Плавный", "FunTime", "SpookyTime", "Reallyworld", "Droid", "HolyWorld");
+
+
     public final MultiBooleanSetting targets = new MultiBooleanSetting("Цели", new BooleanSetting("Игроки", true), new BooleanSetting("Друзья", false), new BooleanSetting("Голые", true), new BooleanSetting("Животные", false), new BooleanSetting("Мобы", false));
     public final ModeSetting sortMode = new ModeSetting("Сортировать по", "Всему сразу", "Дистанции", "Здоровью", "Броне", "Всему сразу");
 
     public final SliderSetting attackRange = new SliderSetting("Радиус атаки", 3.0F, 2.5F, 6.0F, 0.1F);
     public final SliderSetting rotateDistance = new SliderSetting("Радиус преследования", 1.5F, 0.0F, 3.0F, 0.1F);
-    public final BooleanSetting ray = new BooleanSetting("Проверка наведения", false, () -> componentMode.is("SpookyTime"));
-    public final ModeSetting correctionType = new ModeSetting("Коррекция движения", "Свободная", "Свободная", "Сфокусированная", "Фулл Таргет");
-    public final BooleanSetting attackThroughWalls = new BooleanSetting("Не Бить через стены", false);
     public final BooleanSetting setPitch = new BooleanSetting("Поворачивать pitch", false);
     public final BooleanSetting onlySpaceCritical = new BooleanSetting("Умные криты", false);
+    public final BooleanSetting ray = new BooleanSetting("Проверка наведения", false, () -> componentMode.is("SpookyTime"));
+    public final ModeSetting correctionType = new ModeSetting("Коррекция движения", "Свободная", "Свободная", "Сфокусированная", "Фулл Таргет");
+
+    public final BooleanSetting attackThroughWalls = new BooleanSetting("Не Бить через стены", false);
     @Getter
     private final BooleanSetting throughWalls = new BooleanSetting("Сквозь стены", true);
 
+
     private final BooleanSetting shielbreaker = new BooleanSetting("Ломать Щит ", true);
     private final BooleanSetting SHEIS = new BooleanSetting("Отжимать Щит ", true);
-    public boolean canCrit;
     public float adjYaw;
     public float adjPitch;
     public float yawDelta;
-    public double lastSpeed = 0;
+    public boolean canCrit;
     PerfectDelay perfectDelay = new PerfectDelay();
     TimeUtil stopWatch = new TimeUtil();
     int tickSprint;
-    int rayTicks = 0;
+    public double lastSpeed = 0;
     float lastYaw = 0;
+    int rayTicks = 0;
+    @Getter
+    private Vector2f lerpRotation = Vector2f.ZERO;
+    private Vector2f lerpRot = Vector2f.ZERO;
+    private Vector2f lerprRot = Vector2f.ZERO;
+    private int count;
+    private int counter;
     float lastPitch = 0;
     float preLastYaw = 0;
     float preLastPitch = 0;
@@ -112,26 +125,12 @@ public class AttackAura extends Module {
     private BooleanSetting onlycrit = new BooleanSetting("Бить только критами", true);
     private BooleanSetting bypassWalls = new BooleanSetting("Обход стен RW", false);
     @Getter
-    private Vector2f lerpRotation = Vector2f.ZERO;
-    private Vector2f lerpRot = Vector2f.ZERO;
-    private Vector2f lerprRot = Vector2f.ZERO;
-    private int count;
-    private int counter;
-    @Getter
     private long cps = 0L;
-    private float currentYawOffset = 0f;
-    private float currentPitchOffset = 0f;
-    private float targetYawOffset = 0f;
-    private float targetPitchOffset = 0f;
-    private long nextOffsetUpdateTime = 0;
+
 
     public AttackAura() {
         super("Attack Aura", "Автоматически атакует существ в радиусе", Category.Combat);
         addSettings(componentMode, checks, targets, sortMode, correctionType, targetesp, attackRange, rotateDistance, onlycrit, onlySpaceCritical, shielbreaker, SHEIS, bypassWalls, ray, attackThroughWalls);
-    }
-
-    public static float random(float min, float max) {
-        return (float) (Math.random() * (max - min) + min);
     }
 
     @EventTarget
@@ -149,22 +148,23 @@ public class AttackAura extends Module {
         canCrit = !event.isToGround() && event.getFrom().y > event.getTo().y && fallCheck;
     }
 
-    @EventTarget
-    public void onInput(EventInput eventInput) {
-        boolean rotateActive = RotationComponent.getInstance().isRotating();
-        if (this.correctionType.is("Свободная") && rotateActive) {
-            MoveUtil.fixMovement(eventInput, LookHandler.getFreeYaw());
-        }
-        if (this.correctionType.is("Фулл Таргет") && rotateActive) {
-            MoveUtil.moveToPosition(eventInput, target.getPositionVec(), mc.player.rotationYaw);
-        }
-        if (tickSprint > 0) {
-            eventInput.setForward(0);
-            tickSprint--;
-        }
-    }
+    private float currentYawOffset = 0f;
+    private float currentPitchOffset = 0f;
+    //    @Subscribe
+//    public void onEvent(EventInput e) {
+//        if (pop > 0) {
+//            e.setForward(0);
+//            e.setStrafe(0);
+//            pop--;
+//        }
+//    }
+    private float targetYawOffset = 0f;
+    private float targetPitchOffset = 0f;
+    private long nextOffsetUpdateTime = 0;
 
-    // --- Добавлены недостающие методы ---
+    public static float random(float min, float max) {
+        return (float) (Math.random() * (max - min) + min);
+    }
 
     @EventTarget
     public void test(EventWillLand eventWillLand) {
@@ -175,69 +175,12 @@ public class AttackAura extends Module {
     }
 
     @EventTarget
-    public void onEvent(EventUpdate e) {
-        if (checks.is("Выключить после смерти") && !mc.player.isAlive()) {
-            toggle();
-            return;
-        }
-        if (target != null) {
-            double dx = target.getPosX() - target.prevPosX;
-            double dy = target.getPosY() - target.prevPosY;
-            double dz = target.getPosZ() - target.prevPosZ;
-            double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            double speed = distance * 20.0;
-            this.lastSpeed = speed;
-        }
-        if (target == null || !this.isValidTarget(target)) {
-            target = this.findTarget();
-        }
-        if (target == null || mc.player == null || mc.world == null) {
-            reset();
-            return;
-        }
-        if (hynix.getInstance().getModuleManager().getModule(AirStuck.class).isEnabled()) {
-            canCrit = true;
-        }
-        if (!hynix.getInstance().getModuleManager().getModule(PacketCriticals.class).isEnabled() && target != null) {
-            if (canAttack() && onlycrit.get() && cps <= System.currentTimeMillis()) {
-                updateAttack();
-                cps = System.currentTimeMillis() + 460L;
-            }
-        }
-        if (rayTrace()) rayTicks++;
-        else rayTicks = 0;
-
-        if (checkReturn()) return;
-        if (componentMode.is("SpookyTime")) {
-            if (ray.get()) {
-                if (rayTicks > 1) updateAttack();
-            } else {
-                updateAttack();
-            }
-        } else {
-            updateAttack();
-        }
-    }
-
-    // ------------------------------------
-
-    @EventTarget
     public void onEvent(EventPacket event) {
         IPacket<?> packet = event.getPacket();
         if (packet instanceof CHeldItemChangePacket) {
             perfectDelay.reset(650L);
         } else if (packet instanceof CAnimateHandPacket) {
             perfectDelay.reset(500L);
-        }
-    }
-
-    @EventTarget
-    public void Event(EventPostUpdate event) {
-        if (hynix.getInstance().getModuleManager().getModule(PacketCriticals.class).isEnabled() && target != null) {
-            if (canAttack() && onlycrit.get() && cps <= System.currentTimeMillis()) {
-                updateAttack();
-                cps = System.currentTimeMillis() + 460L;
-            }
         }
     }
 
@@ -251,323 +194,8 @@ public class AttackAura extends Module {
         updateRotation();
     }
 
-    private void updateRotation() {
-        double maxHeight = (AuraUtil.getStrictDistance((target)) / attackDistance());
-        Vector3d vec = target.getPositionVec()
-                .add(0, clamp(mc.player.getEyePosition(mc.getRenderPartialTicks()).y - target.getPosY(), 0, maxHeight), 0)
-                .subtract(mc.player.getEyePosition(mc.getRenderPartialTicks()))
-                .normalize();
-
-        float rawYaw = (float) toDegrees(Math.atan2(-vec.x, vec.z));
-        float rawPitch = (float) clamp(-toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))), -90F, 90F);
-
-        float speed = new SecureRandom().nextBoolean() ? randomLerp(0.3F, 0.4F) : randomLerp(0.5F, 0.6F);
-
-        float cos = (float) Math.cos(System.currentTimeMillis() / 70D);
-        float sin = (float) Math.sin(System.currentTimeMillis() / 115D);
-        float cosF = (float) Math.cos(System.currentTimeMillis() / 44D);
-
-        float yawF = (float) Math.ceil(randomLerp(25F, 35) * cosF);
-        float yaw = (float) Math.ceil(randomLerp(1F, 3) * cos);
-        float pitch = (float) Math.ceil(randomLerp(1F, 2) * sin);
-        float pitchF = (float) Math.ceil(randomLerp(7F, 15) * sin);
-
-        if (componentMode.is("SpookyTime")) {
-            yaw = 0;
-            pitch = 0;
-        }
-
-        if (componentMode.is("PhotoGraf")) {
-            int suck = count % 3;
-            float random = stopWatch.getElapsedTime() / 40F + (count % 6);
-            Rotation randomAngle = switch (suck) {
-                case 0 -> new Rotation((float) Math.cos(random), (float) Math.sin(random));
-                case 1 -> new Rotation((float) Math.sin(random), (float) Math.cos(random));
-                case 2 -> new Rotation((float) Math.sin(random), (float) -Math.cos(random));
-                default -> new Rotation((float) -Math.cos(random), (float) Math.sin(random));
-            };
-
-            float yawadd = randomLerp(3, 5) * randomAngle.getYaw();
-            float pitch2 = randomLerp(0, 2) * (float) Math.cos((double) System.currentTimeMillis() / 5000);
-            float pitchadd = randomLerp(2, 4) * randomAngle.getPitch() + pitch2;
-            if (canCrit) pitchadd = yawadd = 0;
-            float addition = (1F - cooldownFromLastSwing()) * (randomLerp(20, 40));
-            yaw = (canCrit ? 0 : 19.23253f) * (count % 2 == 0 ? -1 : 1) + addition * (count % 2 == 0 ? -1 : 1) + yawadd;
-            pitch = (-addition + pitchadd);
-        }
-        lerpRotation = new Vector2f(wrapLerp(speed, lerpRotation.x, rawYaw + yaw), wrapLerp(speed / 2F, lerpRotation.y, clamp(rawPitch + pitch, -90F, 90F)));
-        lerpRot = new Vector2f(wrapLerp(speed, lerpRot.x, LookHandler.getFreeYaw() + yawF), wrapLerp(speed / 2F, lerpRot.y, clamp(pitchF, -90F, 90F)));
-        lerprRot = new Vector2f(wrapLerp(speed, lerprRot.x, RotationUtil.calculateLimitedAim(target, 12).x + yaw), wrapLerp(speed, lerprRot.y, RotationUtil.calculateLimitedAim(target, 12).y + pitch));
-
-        Rotation rRot = new Rotation((mc.player.rotationYaw + (float) Math.ceil(lerprRot.x - mc.player.rotationYaw)), (mc.player.rotationPitch + (float) Math.ceil(lerprRot.y - mc.player.rotationPitch)));
-        Rotation rRotka = new Rotation(!canFTRotate() ? LookHandler.getFreeYaw() : (mc.player.rotationYaw + (float) Math.ceil(lerprRot.x - mc.player.rotationYaw)), !canFTRotate() ? LookHandler.getFreePitch() : (mc.player.rotationPitch + (float) Math.ceil(lerprRot.y - mc.player.rotationPitch)));
-        Rotation rotation = new Rotation(mc.player.rotationYaw + (float) Math.ceil(lerpRotation.x - mc.player.rotationYaw), mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(lerpRotation.y) - MathHelper.wrapDegrees(mc.player.rotationPitch)));
-
-        float fov = (float) AuraUtil.calculateFOVFromCamera(target);
-        float baseFov = 360;
-        float sign = wrapDegrees(rotation.getYaw() - wrapDegrees(mc.player.rotationYaw));
-        yawDelta = ((rotation.getYaw() - mc.player.rotationYaw) % 360 + 540) % 360 - 180;
-
-        if (Math.abs(fov) < baseFov) {
-            if (componentMode.is("PhotoGraf")) {
-                if (target != null && mc.player.getDistance(target) < 0.75f) {
-                    return;
-                }
-                double random = Math.random() * 2.5f;
-                float yawSpeed = (float) (9 - random);
-                float pitchSpeed = (float) (4.0f - random);
-                float returnYawSpeed = (float) (18 + random);
-                float returnPitchSpeed = (float) (18 + random);
-
-                RotationComponent.update(rRot, yawSpeed, pitchSpeed, returnYawSpeed, returnPitchSpeed, 0, 1, false);
-            }
-
-            float attackDist = attackRange.get();
-            float rotateDist = rotateDistance.get();
-            float finalDist = attackDist + rotateDist + 0.1f;
-            boolean rayTrace = RayTraceUtil.rayTraceSingleEntity(mc.player.rotationYaw, mc.player.rotationPitch, attackDist + finalDist, target);
-
-            if (this.componentMode.is("Funsky")) {
-                double random = Math.random() * 1.0f;
-                double yawSpeed = 0.0f;
-                double pitchSpeed = 0.0f;
-                long currentTime = System.currentTimeMillis();
-
-                if (rayTrace) {
-                    if (mc.player.getDistanceEye(target) > 0.5f) {
-                        if (!RayTraceUtil.rayTraceSmallHitBox(mc.player.rotationYaw, mc.player.rotationPitch, finalDist, target)) {
-                            yawSpeed = randomLerp(0.6f, 0.8f);
-                            pitchSpeed = randomLerp(0.2f, 0.6f);
-                        } else {
-                            if (cooldownFromLastSwing() < 0.25f && MoveUtil.isMoving()) {
-                                yawSpeed = randomLerp(-0.02f, 0.02f);
-                                pitchSpeed = randomLerp(-0.01f, 0.01f);
-                            }
-                        }
-                    }
-                    rayTraceDisabledTime = -1;
-                } else {
-                    if (rayTraceDisabledTime == -1) {
-                        rayTraceDisabledTime = currentTime;
-                    }
-                    long timeSinceDisabled = currentTime - rayTraceDisabledTime;
-                    if (timeSinceDisabled < 400) {
-                        double progressYaw = (timeSinceDisabled) / 400.0f;
-                        double progressPitch = (timeSinceDisabled) / 600.0f;
-                        double progressSpeedPitch = 12.0f;
-                        double progressSpeedYaw = 24.0f;
-
-                        if (mc.player.getDistanceEye(target) < 0.95f && MoveUtil.isMoving()) {
-                            yawSpeed = randomLerp(8.0f, 12.0f);
-                        } else {
-                            yawSpeed = lerp(0.0f, (float) progressSpeedYaw, progressYaw);
-                        }
-                        pitchSpeed = lerp(0.0f, (float) progressSpeedPitch, progressPitch);
-
-                        lastYaw = (float) yawSpeed;
-                        lastPitch = (float) pitchSpeed;
-                    } else {
-                        yawSpeed = lastYaw + random;
-                        pitchSpeed = lastPitch + random;
-                    }
-                }
-                double returnYawSpeed = 8.0f + random;
-                double returnPitchSpeed = 4.0f + random;
-                this.updateCakeWorldRotation((float) yawSpeed, (float) pitchSpeed, (float) returnYawSpeed, (float) returnPitchSpeed);
-            }
-
-            if (componentMode.is("FunTime")) {
-                Rotation rotacia = rotka(new Rotation(mc.player.rotationYaw, mc.player.rotationPitch), rRotka);
-                float speedY = 15;
-                if (canFTRotate()) speedY = 360;
-                RotationComponent.update(rotacia, speedY, speedY, 45, 45, 10, 5, false);
-            }
-            if (componentMode.is("HolyWorld")) {
-                float targetYaw = target.rotationYaw;
-                double offset = 0.28;
-                double ox = -MathHelper.sin(targetYaw * ((float) Math.PI / 180F)) * offset;
-                double oz = MathHelper.cos(targetYaw * ((float) Math.PI / 180F)) * offset;
-                Vector3d shifted;
-                if (hynix.getInstance().getModuleManager().getModule(Speed.class).isEnabled()) {
-                    shifted = new Vector3d(
-                            target.getPosX() + ox,
-                            target.getPosY() + target.getHeight() * 0.75f,
-                            target.getPosZ() + oz
-                    );
-                } else {
-                    shifted = new Vector3d(target.getPosX(), target.getPosY() + target.getHeight() * 0.75f, target.getPosZ());
-                }
-
-                Vector3d playerPosition = mc.player.getEyePosition(1.0F);
-                Vector3d direction = shifted.subtract(playerPosition).normalize();
-                float yawToTarget = (float) Math.toDegrees(Math.atan2(-direction.x, direction.z));
-                float pitchToTarget = (float) MathHelper.clamp((int) Math.toDegrees(Math.asin(-direction.y)), -88, 88);
-                float yawDelta = wrapDegrees(yawToTarget - lerpRotation.x);
-                float pitchDelta = pitchToTarget - lerpRotation.y;
-                float clampedYaw = Math.min(Math.max(Math.abs(yawDelta), 0), 100);
-                float clampedPitch = Math.min(Math.max(Math.abs(pitchDelta), 0), 30);
-                cos = (float) Math.cos(System.currentTimeMillis() / 100D);
-                float xAnims = (float) Math.ceil(randomLerp(6, 12) * cos);
-
-                sin = (float) Math.sin(System.currentTimeMillis() / 100D);
-                float yAnims = (float) Math.ceil(randomLerp(2, 4) * sin);
-                yaw = lerpRotation.x + (yawDelta > 0 ? clampedYaw : -clampedYaw);
-                pitch = lerpRotation.y + (pitchDelta > 0 ? clampedPitch : -clampedPitch);
-
-                float gcd = SensUtil.getGCDValue();
-                yaw -= (yaw - lerpRotation.x) % gcd;
-                pitch -= (pitch - lerpRotation.y) % gcd;
-
-                lerpRotation = new Vector2f(yaw, pitch);
-
-                rotation = new Rotation(
-                        mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(yaw + xAnims) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
-                        mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(pitch + yAnims) - MathHelper.wrapDegrees(mc.player.rotationPitch))
-                );
-                float speedd;
-                if (hynix.getInstance().getModuleManager().getModule(Speed.class).isEnabled()) {
-                    speedd = 1;
-                } else {
-                    speedd = 3;
-                }
-                SmoothRotationComponent.update(rotation, speedd, 5F, 1.5F, 1.5F, 1, 5, false);
-            }
-            if (componentMode.is("SpookyTime")) {
-                Vector3d vecs = new Vector3d(target.getPosX(), target.getPosY() + target.getHeight() * 0.8f, target.getPosZ());
-                Vector3d playerPosition = mc.player.getEyePosition(1.0F);
-                Vector3d direction = vecs.subtract(playerPosition).normalize();
-
-                float rawYaws = (float) toDegrees(Math.atan2(-direction.x, direction.z));
-                float rawPitchs = (float) clamp(-toDegrees(Math.atan2(direction.y, Math.hypot(direction.x, direction.z))), -89.0f, 89.0f);
-
-                float yawDelta = MathHelper.wrapDegrees(rawYaws - lerpRotation.x);
-                float pitchDelta = MathHelper.wrapDegrees(rawPitchs - lerpRotation.y);
-
-                float clampedYaw = Math.min(Math.max(Math.abs(yawDelta), 0), yawSpeed(1));
-                float clampedPitch = Math.min(Math.max(Math.abs(pitchDelta), 0), 8);
-
-                double distance = playerPosition.distanceTo(vecs);
-                double bbWidth = target.getWidth();
-                double bbHeight = target.getHeight();
-
-                float maxYawOffset = (float) toDegrees(Math.atan((bbWidth / 2) / distance));
-                float maxPitchOffset = (float) toDegrees(Math.atan((bbHeight / 2) / distance));
-
-                float finalYaw = lerpRotation.x + (yawDelta > 0 ? clampedYaw : -clampedYaw);
-                float finalPitch = lerpRotation.y + (pitchDelta > 0 ? clampedPitch : -clampedPitch);
-
-                long now = System.currentTimeMillis();
-                Random rng = new Random();
-                if (rayTrace()) {
-                    if (now >= nextOffsetUpdateTime) {
-                        targetYawOffset = rng.nextFloat() * 32f - 16f;
-                        targetPitchOffset = rng.nextFloat() * 24f - 12f;
-
-                        targetYawOffset = clamp(targetYawOffset, -maxYawOffset, maxYawOffset);
-                        targetPitchOffset = clamp(targetPitchOffset, -maxPitchOffset, maxPitchOffset);
-
-                        nextOffsetUpdateTime = now + 80 + rng.nextInt(70);
-                    }
-
-                    float offsetLerp = 0.4f;
-                    currentYawOffset += (targetYawOffset - currentYawOffset) * offsetLerp;
-                    currentPitchOffset += (targetPitchOffset - currentPitchOffset) * offsetLerp;
-                } else {
-                    currentYawOffset = 0f;
-                    currentPitchOffset = 0f;
-                }
-
-                finalYaw += currentYawOffset;
-                finalPitch += currentPitchOffset;
-                finalPitch = clamp(finalPitch, -89.0f, 89.0f);
-
-                float gcd = SensUtil.getGCDValue();
-                finalYaw -= (finalYaw - lerpRotation.x) % gcd;
-                finalPitch -= (finalPitch - lerpRotation.y) % gcd;
-
-                lerpRotation = new Vector2f(finalYaw, finalPitch);
-
-                Rotation rotation2 = new Rotation(
-                        mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(finalYaw) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
-                        mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(finalPitch) - MathHelper.wrapDegrees(mc.player.rotationPitch))
-                );
-
-                SmoothRotationComponent.update(rotation2, 3F, 10F, 4F, 4F, 1, 5, false);
-            }
-        }
-
-        if (componentMode.is("HvH")) {
-            // Агрессивный мгновенный снап — идеально для HvH серверов
-            Vector3d hvhTarget = new Vector3d(
-                    target.getPosX(),
-                    target.getPosY() + target.getHeight() * 0.85f,
-                    target.getPosZ()
-            );
-            Vector3d hvhPlayerPos = mc.player.getEyePosition(1.0F);
-            Vector3d hvhDir = hvhTarget.subtract(hvhPlayerPos).normalize();
-
-            float hvhYaw = (float) Math.toDegrees(Math.atan2(-hvhDir.x, hvhDir.z));
-            float hvhPitch = (float) MathHelper.clamp(
-                    (float) Math.toDegrees(Math.asin(-hvhDir.y)), -89.0f, 89.0f
-            );
-
-            // GCD обход — важен для античитов на HvH серверах
-            float gcd = SensUtil.getGCDValue();
-            float yawDeltaHvH = MathHelper.wrapDegrees(hvhYaw - lerpRotation.x);
-            float pitchDeltaHvH = MathHelper.wrapDegrees(hvhPitch - lerpRotation.y);
-            hvhYaw -= yawDeltaHvH % gcd;
-            hvhPitch -= pitchDeltaHvH % gcd;
-
-            // Маленький случайный шум — обход детектора одинаковых углов
-            hvhYaw += MathUtil.random(-0.8f, 0.8f);
-            hvhPitch += MathUtil.random(-0.4f, 0.4f);
-            hvhPitch = MathHelper.clamp(hvhPitch, -89.0f, 89.0f);
-
-            lerpRotation = new Vector2f(hvhYaw, hvhPitch);
-
-            Rotation hvhRotation = new Rotation(
-                    mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(hvhYaw) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
-                    mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(hvhPitch) - MathHelper.wrapDegrees(mc.player.rotationPitch))
-            );
-            // Максимальная скорость снапа, минимальный возврат
-            RotationComponent.update(hvhRotation, 360, 360, 0, 5);
-        }
-
-        if (componentMode.is("Reallyworld")) {
-            fastRotation();
-        }
-    }
-
-    private boolean canFTRotate() {
-        return componentMode.is("FunTime") || componentMode.is("HvH");
-    }
-
-    private void updateCakeWorldRotation(float yaw, float pitch, float returnYaw, float returnPitch) {
-        RotationComponent.update(new Rotation(yaw, pitch), yaw, pitch, returnYaw, returnPitch, 0, 15, false);
-    }
-
     public float lerp(float input, float target, double step) {
         return (float) (input + step * (target - input));
-    }
-
-    private void fastRotation() {
-        if (target == null || mc.player == null || mc.world == null) {
-            return;
-        }
-
-        float currentYaw = mc.player.rotationYaw;
-        float currentPitch = mc.player.rotationPitch;
-
-        float deltaYaw = MathHelper.wrapDegrees(lerpRotation.x - currentYaw);
-        float deltaPitch = MathHelper.wrapDegrees(lerpRotation.y - currentPitch);
-
-        float newYaw = currentYaw + deltaYaw;
-        float newPitch = currentPitch + deltaPitch;
-
-        newYaw += MathUtil.random(-3, 3);
-        newPitch += MathUtil.random(-2, 2);
-
-        RotationComponent.update(new Rotation(newYaw, newPitch), 180, 180, 0, 5);
     }
 
     private Rotation rotka(Rotation currentAngle, Rotation targetAngle) {
@@ -630,16 +258,77 @@ public class AttackAura extends Module {
         );
     }
 
-    @Override
-    public void onDisable() {
-        super.onDisable();
-        target = null;
-        if (componentMode.is("FunTime") || componentMode.is("HvH")) {
-            RotationComponent.update(new Rotation(LookHandler.getFreeYaw(), LookHandler.getFreePitch()), 20, 20, 30, 30, 0, 30, false);
+    @EventTarget
+    public void onInput(EventInput eventInput) {
+        boolean rotateActive = RotationComponent.getInstance().isRotating();
+        if (this.correctionType.is("Свободная") && rotateActive) {
+            MoveUtil.fixMovement(eventInput, LookHandler.getFreeYaw());
         }
-        counter = 9;
-        lerpRotation = Vector2f.ZERO;
-        lerpRot = Vector2f.ZERO;
+        if (this.correctionType.is("Фулл Таргет") && rotateActive) {
+            MoveUtil.moveToPosition(eventInput, target.getPositionVec(), mc.player.rotationYaw);
+        }
+        if (tickSprint > 0) {
+            eventInput.setForward(0);
+            tickSprint--;
+        }
+
+    }
+
+    @EventTarget
+    public void onEvent(EventUpdate e) {
+        if (checks.is("Выключить после смерти") && !mc.player.isAlive()) {
+            toggle();
+            return;
+        }
+        if (target != null) {
+            double dx = target.getPosX() - target.prevPosX;
+            double dy = target.getPosY() - target.prevPosY;
+            double dz = target.getPosZ() - target.prevPosZ;
+            double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            double speed = distance * 20.0;
+            this.lastSpeed = speed;
+        }
+        if (target == null || !this.isValidTarget(target)) {
+            target = this.findTarget();
+        }
+        if (target == null || mc.player == null || mc.world == null) {
+            reset();
+            return;
+        }
+        if (hynix.getInstance().getModuleManager().getModule(AirStuck.class).isEnabled()) {
+            canCrit = true;
+        }
+        if (!hynix.getInstance().getModuleManager().getModule(PacketCriticals.class).isEnabled() && target != null) {
+            if (canAttack() && onlycrit.get() && cps <= System.currentTimeMillis()) {
+                updateAttack();
+                cps = System.currentTimeMillis() + 460L;
+            }
+        }
+        if (rayTrace()) rayTicks++;
+        else rayTicks = 0;
+
+
+        if (checkReturn()) return;
+        if (componentMode.is("SpookyTime")) {
+            if (ray.get()) {
+                if (rayTicks > 1) updateAttack();
+            } else {
+                updateAttack();
+            }
+        } else {
+            updateAttack();
+        }
+    }
+
+    @EventTarget
+    public void Event(EventPostUpdate event) {
+
+        if (hynix.getInstance().getModuleManager().getModule(PacketCriticals.class).isEnabled() && target != null) {
+            if (canAttack() && onlycrit.get() && cps <= System.currentTimeMillis()) {
+                updateAttack();
+                cps = System.currentTimeMillis() + 460L;
+            }
+        }
     }
 
     @Override
@@ -647,6 +336,329 @@ public class AttackAura extends Module {
         super.onEnable();
         lerpRotation = new Vector2f(mc.player.rotationYaw, mc.player.rotationPitch);
         lerpRot = new Vector2f(mc.player.rotationYaw, mc.player.rotationPitch);
+    }
+
+    private void updateRotation() {
+        double maxHeight = (AuraUtil.getStrictDistance((target)) / attackDistance());
+        Vector3d vec = target.getPositionVec()
+                .add(0, clamp(mc.player.getEyePosition(mc.getRenderPartialTicks()).y - target.getPosY(), 0, maxHeight), 0)
+                .subtract(mc.player.getEyePosition(mc.getRenderPartialTicks()))
+                .normalize();
+
+        float rawYaw = (float) toDegrees(Math.atan2(-vec.x, vec.z));
+        float rawPitch = (float) clamp(-toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))), -90F, 90F);
+
+        float speed = new SecureRandom().nextBoolean() ? randomLerp(0.3F, 0.4F) : randomLerp(0.5F, 0.6F);
+
+        float cos = (float) Math.cos(System.currentTimeMillis() / 70D);
+        float sin = (float) Math.sin(System.currentTimeMillis() / 115D);
+        float cosF = (float) Math.cos(System.currentTimeMillis() / 44D);
+
+        float yawF = (float) Math.ceil(randomLerp(25F, 35) * cosF);
+        float yaw = (float) Math.ceil(randomLerp(1F, 3) * cos);
+        float pitch = (float) Math.ceil(randomLerp(1F, 2) * sin);
+        float pitchF = (float) Math.ceil(randomLerp(7F, 15) * sin);
+
+        if (componentMode.is("SpookyTime")) {
+            yaw = 0;
+            pitch = 0;
+        }
+
+
+        if (componentMode.is("PhotoGraf")) {
+            int suck = count % 3;
+            float random = stopWatch.getElapsedTime() / 40F + (count % 6);
+            Rotation randomAngle = switch (suck) {
+                case 0 -> new Rotation((float) Math.cos(random), (float) Math.sin(random));
+                case 1 -> new Rotation((float) Math.sin(random), (float) Math.cos(random));
+                case 2 -> new Rotation((float) Math.sin(random), (float) -Math.cos(random));
+                default -> new Rotation((float) -Math.cos(random), (float) Math.sin(random));
+            };
+
+            float yawadd = randomLerp(3, 5) * randomAngle.getYaw();
+            float pitch2 = randomLerp(0, 2) * (float) Math.cos((double) System.currentTimeMillis() / 5000);
+            float pitchadd = randomLerp(2, 4) * randomAngle.getPitch() + pitch2;
+            if (canCrit) pitchadd = yawadd = 0;
+            float addition = (1F - cooldownFromLastSwing()) * (randomLerp(20, 40));
+            yaw = (canCrit ? 0 : 19.23253f) * (count % 2 == 0 ? -1 : 1) + addition * (count % 2 == 0 ? -1 : 1) + yawadd;
+            pitch = (-addition + pitchadd);
+        }
+        lerpRotation = new Vector2f(wrapLerp(speed, lerpRotation.x, rawYaw + yaw), wrapLerp(speed / 2F, lerpRotation.y, clamp(rawPitch + pitch, -90F, 90F)));
+        lerpRot = new Vector2f(wrapLerp(speed, lerpRot.x, LookHandler.getFreeYaw() + yawF), wrapLerp(speed / 2F, lerpRot.y, clamp(pitchF, -90F, 90F)));
+        lerprRot = new Vector2f(wrapLerp(speed, lerprRot.x, RotationUtil.calculateLimitedAim(target, 12).x + yaw), wrapLerp(speed, lerprRot.y, RotationUtil.calculateLimitedAim(target, 12).y + pitch));
+
+        Rotation rRot = new Rotation((mc.player.rotationYaw + (float) Math.ceil(lerprRot.x - mc.player.rotationYaw)), (mc.player.rotationPitch + (float) Math.ceil(lerprRot.y - mc.player.rotationPitch)));
+        Rotation rRotka = new Rotation(!canFTRotate() ? LookHandler.getFreeYaw() : (mc.player.rotationYaw + (float) Math.ceil(lerprRot.x - mc.player.rotationYaw)), !canFTRotate() ? LookHandler.getFreePitch() : (mc.player.rotationPitch + (float) Math.ceil(lerprRot.y - mc.player.rotationPitch)));
+        Rotation rotation = new Rotation(mc.player.rotationYaw + (float) Math.ceil(lerpRotation.x - mc.player.rotationYaw), mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(lerpRotation.y) - MathHelper.wrapDegrees(mc.player.rotationPitch)));
+
+
+        float fov = (float) AuraUtil.calculateFOVFromCamera(target);
+        float baseFov = 360;
+        float sign = wrapDegrees(rotation.getYaw() - wrapDegrees(mc.player.rotationYaw));
+        yawDelta = ((rotation.getYaw() - mc.player.rotationYaw) % 360 + 540) % 360 - 180;
+
+        if (Math.abs(fov) < baseFov) {
+            if (componentMode.is("PhotoGraf")) {
+
+                if (target != null && mc.player.getDistance(target) < 0.75f) {
+                    return;
+                }
+
+                double random = Math.random() * 2.5f;
+
+                float yawSpeed = (float) (9 - random);
+                float pitchSpeed = (float) (4.0f - random);
+
+                float returnYawSpeed = (float) (18 + random);
+                float returnPitchSpeed = (float) (18 + random);
+
+                RotationComponent.update(
+                        rRot,
+                        yawSpeed,
+                        pitchSpeed,
+                        returnYawSpeed,
+                        returnPitchSpeed,
+                        0, 1, false
+                );
+            }
+
+            float attackDist = attackRange.get();
+            float rotateDist = rotateDistance.get();
+            float finalDist = attackDist + rotateDist + 0.1f;
+            boolean rayTrace = RayTraceUtil.rayTraceSingleEntity(mc.player.rotationYaw, mc.player.rotationPitch, attackDist + finalDist, target);
+            if (this.componentMode.is("Droid")) {
+
+                double random = Math.random() * 1.0f;
+                double yawSpeed = 0.0f;
+                double pitchSpeed = 0.0f;
+                long currentTime = System.currentTimeMillis();
+
+
+                if (rayTrace) {
+                    if (mc.player.getDistanceEye(target) > 0.5f) {
+                        if (!RayTraceUtil.rayTraceSmallHitBox(mc.player.rotationYaw, mc.player.rotationPitch, finalDist, target)) {
+                            yawSpeed = randomLerp(0.6f, 0.8f);
+                            pitchSpeed = randomLerp(0.2f, 0.6f);
+                        } else {
+                            if (cooldownFromLastSwing() < 0.25f && MoveUtil.isMoving()) {
+                                yawSpeed = randomLerp(-0.02f, 0.02f);
+                                pitchSpeed = randomLerp(-0.01f, 0.01f);
+                            }
+                        }
+                    }
+                    rayTraceDisabledTime = -1;
+                } else {
+                    if (rayTraceDisabledTime == -1) {
+                        rayTraceDisabledTime = currentTime;
+                    }
+                    long timeSinceDisabled = currentTime - rayTraceDisabledTime;
+                    if (timeSinceDisabled < 400) {
+                        double progressYaw = (timeSinceDisabled) / 400.0f;
+                        double progressPitch = (timeSinceDisabled) / 600.0f;
+                        double progressSpeedPitch = 12.0f;
+                        double progressSpeedYaw = 24.0f;
+
+                        if (mc.player.getDistanceEye(target) < 0.95f && MoveUtil.isMoving()) {
+                            yawSpeed = randomLerp(8.0f, 12.0f);
+                        } else {
+                            yawSpeed = lerp(0.0f, (float) progressSpeedYaw, progressYaw);
+                        }
+                        pitchSpeed = lerp(0.0f, (float) progressSpeedPitch, progressPitch);
+
+                        lastYaw = (float) yawSpeed;
+                        lastPitch = (float) pitchSpeed;
+                    } else {
+                        yawSpeed = lastYaw + random;
+                        pitchSpeed = lastPitch + random;
+                    }
+                }
+                double returnYawSpeed = 8.0f + random;
+                double returnPitchSpeed = 4.0f + random;
+                this.updateCakeWorldRotation((float) yawSpeed, (float) pitchSpeed, (float) returnYawSpeed, (float) returnPitchSpeed);
+            }
+
+
+            if (componentMode.is("FunTime")) {
+                Rotation rotacia = rotka(new Rotation(mc.player.rotationYaw, mc.player.rotationPitch), rRotka);
+                float speedY = 15;
+                if (canFTRotate()) speedY = 360;
+                RotationComponent.update(rotacia, speedY, speedY, 45, 45, 10, 5, false);
+            }
+            if (componentMode.is("HolyWorld")) {
+
+
+                float targetYaw = target.rotationYaw;
+
+                double offset = 0.28;
+                double ox = -MathHelper.sin(targetYaw * ((float) Math.PI / 180F)) * offset;
+                double oz = MathHelper.cos(targetYaw * ((float) Math.PI / 180F)) * offset;
+                Vector3d shifted;
+                if (hynix.getInstance().getModuleManager().getModule(Speed.class).isEnabled()) {
+                    shifted = new Vector3d(
+                            target.getPosX() + ox,
+                            target.getPosY() + target.getHeight() * 0.75f,
+                            target.getPosZ() + oz
+                    );
+                } else {
+                    shifted = new Vector3d(target.getPosX(), target.getPosY() + target.getHeight() * 0.75f, target.getPosZ());
+                }
+
+                Vector3d playerPosition = mc.player.getEyePosition(1.0F);
+                Vector3d direction = shifted.subtract(playerPosition).normalize();
+                float yawToTarget = (float) Math.toDegrees(Math.atan2(-direction.x, direction.z));
+                float pitchToTarget = (float) MathHelper.clamp((int) Math.toDegrees(Math.asin(-direction.y)), -88, 88);
+                float yawDelta = wrapDegrees(yawToTarget - lerpRotation.x);
+                float pitchDelta = pitchToTarget - lerpRotation.y;
+                float clampedYaw = Math.min(Math.max(Math.abs(yawDelta), 0), 100);
+                float clampedPitch = Math.min(Math.max(Math.abs(pitchDelta), 0), 30);
+                cos = (float) Math.cos(System.currentTimeMillis() / 100D);
+                float xAnims = (float) Math.ceil(randomLerp(6, 12) * cos);
+
+                sin = (float) Math.sin(System.currentTimeMillis() / 100D);
+                float yAnims = (float) Math.ceil(randomLerp(2, 4) * sin);
+                yaw = lerpRotation.x + (yawDelta > 0 ? clampedYaw : -clampedYaw);
+                pitch = lerpRotation.y + (pitchDelta > 0 ? clampedPitch : -clampedPitch);
+
+                float gcd = SensUtil.getGCDValue();
+                yaw -= (yaw - lerpRotation.x) % gcd;
+                pitch -= (pitch - lerpRotation.y) % gcd;
+
+                lerpRotation = new Vector2f(yaw, pitch);
+
+                rotation = new Rotation(
+                        mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(yaw + xAnims) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
+                        mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(pitch + yAnims) - MathHelper.wrapDegrees(mc.player.rotationPitch))
+                );
+                float speedd;
+                if (hynix.getInstance().getModuleManager().getModule(Speed.class).isEnabled()) {
+                    speedd = 1;
+                } else {
+                    speedd = 3;
+                }
+                SmoothRotationComponent.update(rotation, speedd, 5F, 1.5F, 1.5F, 1, 5, false);
+
+            }
+            if (componentMode.is("SpookyTime")) {
+                Vector3d vecs = new Vector3d(target.getPosX(), target.getPosY() + target.getHeight() * 0.8f, target.getPosZ());
+                Vector3d playerPosition = mc.player.getEyePosition(1.0F);
+                Vector3d direction = vecs.subtract(playerPosition).normalize();
+
+                float rawYaws = (float) toDegrees(Math.atan2(-direction.x, direction.z));
+                float rawPitchs = (float) clamp(-toDegrees(Math.atan2(direction.y, Math.hypot(direction.x, direction.z))), -89.0f, 89.0f);
+
+                float yawDelta = MathHelper.wrapDegrees(rawYaws - lerpRotation.x);
+                float pitchDelta = MathHelper.wrapDegrees(rawPitchs - lerpRotation.y);
+
+                float clampedYaw = Math.min(Math.max(Math.abs(yawDelta), 0), yawSpeed(1));
+                float clampedPitch = Math.min(Math.max(Math.abs(pitchDelta), 0), 8);
+
+                double distance = playerPosition.distanceTo(vecs);
+                double bbWidth = target.getWidth();
+                double bbHeight = target.getHeight();
+
+                float maxYawOffset = (float) toDegrees(Math.atan((bbWidth / 2) / distance));
+                float maxPitchOffset = (float) toDegrees(Math.atan((bbHeight / 2) / distance));
+
+                float finalYaw = lerpRotation.x + (yawDelta > 0 ? clampedYaw : -clampedYaw);
+                float finalPitch = lerpRotation.y + (pitchDelta > 0 ? clampedPitch : -clampedPitch);
+
+                long now = System.currentTimeMillis();
+                Random rng = new Random();
+                if (rayTrace()) {
+                    if (now >= nextOffsetUpdateTime) {
+                        targetYawOffset = rng.nextFloat() * 32f - 16f;
+                        targetPitchOffset = rng.nextFloat() * 24f - 12f;
+
+
+                        targetYawOffset = clamp(targetYawOffset, -maxYawOffset, maxYawOffset);
+                        targetPitchOffset = clamp(targetPitchOffset, -maxPitchOffset, maxPitchOffset);
+
+                        nextOffsetUpdateTime = now + 80 + rng.nextInt(70);
+                    }
+
+                    float offsetLerp = 0.4f;
+                    currentYawOffset += (targetYawOffset - currentYawOffset) * offsetLerp;
+                    currentPitchOffset += (targetPitchOffset - currentPitchOffset) * offsetLerp;
+                } else {
+                    currentYawOffset = 0f;
+                    currentPitchOffset = 0f;
+                }
+
+                finalYaw += currentYawOffset;
+                finalPitch += currentPitchOffset;
+                finalPitch = clamp(finalPitch, -89.0f, 89.0f);
+
+                float gcd = SensUtil.getGCDValue();
+                finalYaw -= (finalYaw - lerpRotation.x) % gcd;
+                finalPitch -= (finalPitch - lerpRotation.y) % gcd;
+
+                lerpRotation = new Vector2f(finalYaw, finalPitch);
+
+                Rotation rotation2 = new Rotation(
+                        mc.player.rotationYaw + (float) Math.ceil(MathHelper.wrapDegrees(finalYaw) - MathHelper.wrapDegrees(mc.player.rotationYaw)),
+                        mc.player.rotationPitch + (float) Math.ceil(MathHelper.wrapDegrees(finalPitch) - MathHelper.wrapDegrees(mc.player.rotationPitch))
+                );
+
+                SmoothRotationComponent.update(rotation2, 3F, 10F, 4F, 4F, 1, 5, false);
+            }
+        }
+
+
+        if (componentMode.is("Reallyworld")) {
+            fastRotation();
+        }
+
+
+    }
+
+    private void fastRotation() {
+
+        if (target == null || mc.player == null || mc.world == null) {
+            return;
+        }
+
+        float currentYaw = mc.player.rotationYaw;
+        float currentPitch = mc.player.rotationPitch;
+
+        float deltaYaw = MathHelper.wrapDegrees(lerpRotation.x - currentYaw);
+        float deltaPitch = MathHelper.wrapDegrees(lerpRotation.y - currentPitch);
+
+        float newYaw = currentYaw + deltaYaw;
+        float newPitch = currentPitch + deltaPitch;
+
+        newYaw += MathUtil.random(-3, 3);
+        newPitch += MathUtil.random(-2, 2);
+
+        RotationComponent.update(new Rotation(newYaw, newPitch), 180, 180, 0, 5);
+    }
+
+    private boolean canFTRotate() {
+        return mc.player.getDistance(target) > 0.75f;
+    }
+
+    private void updateCakeWorldRotation(float yawSpeed, float pitchSpeed, float returnYawSpeed, float returnPitchSpeed) {
+        Vector3d vec = target.getPositionVec()
+                .add(0, clamp(mc.player.getEyePosition(mc.getRenderPartialTicks()).y - target.getPosY(), 0, target.getHeight()), 0)
+                .subtract(mc.player.getEyePosition(mc.getRenderPartialTicks()))
+                .normalize();
+
+        float rawYaw = (float) toDegrees(Math.atan2(-vec.x, vec.z));
+        float rawPitch = (float) clamp(-toDegrees(Math.atan2(vec.y, Math.hypot(vec.x, vec.z))), -90F, 90F);
+
+        Rotation targetRotation = new Rotation(rawYaw, rawPitch);
+        RotationComponent.update(targetRotation, yawSpeed, pitchSpeed, returnYawSpeed, returnPitchSpeed, 0, 5, false);
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        target = null;
+        if (componentMode.is("FunTime")) {
+            RotationComponent.update(new Rotation(LookHandler.getFreeYaw(), LookHandler.getFreePitch()), 20, 20, 30, 30, 0, 30, false);
+        }
+        counter = 9;
+        lerpRotation = Vector2f.ZERO;
+        lerpRot = Vector2f.ZERO;
     }
 
     public float wrapLerp(float step, float input, float target) {
@@ -664,6 +676,7 @@ public class AttackAura extends Module {
     private void updateAttack() {
         Sprint autoSprint = (Sprint) hynix.getInstance().getModuleManager().getModule(Sprint.class);
         if (canAttack() && rayTrace() && AuraUtil.getStrictDistance(target) < attackDistance()) {
+
 
             if (autoSprint.getMode().is("Пакетный") && autoSprint.RAGE() && CEntityActionPacket.lastUpdatedSprint) {
                 mc.player.connection.sendPacket(new CEntityActionPacket(mc.player, CEntityActionPacket.Action.STOP_SPRINTING));
@@ -704,9 +717,11 @@ public class AttackAura extends Module {
 
             stopWatch.reset();
 
+
             count = (count + 1) % 2;
             counter++;
             canCrit = false;
+
 
         } else if (!mc.player.canEntityBeSeen(target) && ServerUtil.isConnectedToServer("holyworld") && mc.player.getServerBrand().contains("HolyWorld")) {
             RotationComponent.update(new Rotation(Rotation.cameraYaw(), 90), 360, 360, 0, 5);
@@ -747,6 +762,13 @@ public class AttackAura extends Module {
         boolean ready = stopWatch.hasTimeElapsed(450) && mc.player.getCooledAttackStrength(checks.is("TPSSync") ? TPSHandler.getAdjustTicks() : 0.5F) > 0.9F;
         boolean air = mc.player.movementInput.jump || !mc.player.isOnGround();
 
+//        if (componentMode.is("SpookyTime")) {
+//            boolean spookyDelay = stopWatch.getElapsedTime() >= 350 + (counter % 10 == 0 ? 255 : 0);
+//            boolean spookyStrength = mc.player.getCooledAttackStrength(1.5F) >= 0.92F;
+//            if (!(spookyDelay && spookyStrength)) {
+//                return false;
+//            }
+//        }
         if (AuraUtil.isJumpBlockedByCeiling()) {
             return ready;
         } else if (hynix.getInstance().getModuleManager().getModule(PacketCriticals.class).isEnabled()) {
@@ -833,6 +855,7 @@ public class AttackAura extends Module {
         if (entity.ticksExisted < 3) return false;
         if (mc.player.getDistanceEyePos(entity) >= getMaxAimRange()) return false;
 
+        //   if (!attackThroughWalls.get() && !this.canSeeThroughWall(entity)) return false;
         if (entity instanceof PlayerEntity playerEntity) {
             if (hynix.getInstance().getModuleManager().getModule(AntiBot.class).isEnabled() && AntiBot.bot.contains(playerEntity)) {
                 return false;
@@ -850,23 +873,23 @@ public class AttackAura extends Module {
         if ((entity instanceof AnimalEntity || entity instanceof SalmonEntity || entity instanceof TropicalFishEntity || entity instanceof CodEntity || entity instanceof SquidEntity || entity instanceof DolphinEntity) && !targets.is("Животные"))
             return false;
 
-        // ВОТ ЗДЕСЬ БЫЛА ПРОПУЩЕНА СКОБКА, КОТОРАЯ ЛОМАЛА ВЕСЬ ФАЙЛ
         return !entity.isInvulnerable() && entity.isAlive() && !(entity instanceof ArmorStandEntity);
     }
 
     public boolean rayTrace() {
-        return (RayTraceUtil.rayTraceEntity(mc.player.rotationYaw, mc.player.rotationPitch, attackDistance(), target, attackThroughWalls.get()));
+        return (RayTraceUtil.rayTraceEntity(mc.player.rotationYaw, mc.player.rotationPitch, attackDistance(), target, attackThroughWalls.get())); //|| (hynix.getInst().moduleManager.getElytraTarget().isState() && target.isElytraFlying() && mc.player.isElytraFlying());
     }
-
     public double getMaxRange() {
-        float originalDistance = (componentMode.is("HvH")) ? 0.0f : 0.0f;
+        float originalDistance = this.componentMode.is("Легитная") ? 0.2f : 0.0f;
         return (double) this.attackRange.get() - originalDistance;
     }
+
 
     public double getMaxAimRange() {
         float attackDist = attackRange.get();
         float rotateDist = rotateDistance.get();
-        return mc.player.isElytraFlying() ? attackDist : attackDist + rotateDist;
+        float originalAimDistance = this.componentMode.is("Легитная") ? 0.2f : 0.0f;
+        return mc.player.isElytraFlying() ? attackDist : attackDist + rotateDist - originalAimDistance;
     }
 
     public double attackDistance() {
@@ -874,6 +897,8 @@ public class AttackAura extends Module {
     }
 
     private void reset() {
+//        TargetComponent.clearTarget();
+//        TargetComponent.updateTargetList();
         target = null;
         canCrit = false;
         adjYaw = 0;
@@ -881,5 +906,6 @@ public class AttackAura extends Module {
         preLastYaw = 0;
         preLastPitch = 0;
         rayTraceDisabledTime = -1;
+
     }
 }

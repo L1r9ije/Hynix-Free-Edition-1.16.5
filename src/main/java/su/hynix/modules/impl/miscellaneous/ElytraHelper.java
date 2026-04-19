@@ -1,6 +1,11 @@
 package su.hynix.modules.impl.miscellaneous;
 
 import com.darkmagician6.eventapi.EventTarget;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ElytraItem;
+import net.minecraft.item.Items;
+import net.minecraft.network.play.client.CCloseWindowPacket;
+import net.minecraft.network.play.client.CEntityActionPacket;
 import su.hynix.events.EventInput;
 import su.hynix.events.EventKey;
 import su.hynix.events.EventUpdate;
@@ -10,11 +15,6 @@ import su.hynix.modules.api.constructors.impl.BindSetting;
 import su.hynix.modules.api.constructors.impl.BooleanSetting;
 import su.hynix.utils.player.InventoryUtil;
 import su.hynix.utils.player.MoveUtil;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.Items;
-import net.minecraft.network.play.client.CCloseWindowPacket;
-import net.minecraft.network.play.client.CEntityActionPacket;
 
 
 public class ElytraHelper extends Module {

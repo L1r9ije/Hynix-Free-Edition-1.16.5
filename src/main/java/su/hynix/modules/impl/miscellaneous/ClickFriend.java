@@ -1,15 +1,14 @@
 package su.hynix.modules.impl.miscellaneous;
 
 import com.darkmagician6.eventapi.EventTarget;
-import su.hynix.hynix;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TextFormatting;
 import su.hynix.events.EventKey;
+import su.hynix.hynix;
 import su.hynix.modules.Category;
 import su.hynix.modules.Module;
 import su.hynix.modules.api.constructors.impl.BindSetting;
 import su.hynix.utils.misc.ChatUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.TextFormatting;
 
 public class ClickFriend extends Module {
     private final BindSetting key = new BindSetting("Кнопка взаимодействия");

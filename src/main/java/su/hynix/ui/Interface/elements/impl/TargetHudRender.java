@@ -42,6 +42,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TargetHudRender implements ElementRender {
 
     public static final ModeSetting hpbar = new ModeSetting("Цвет здоровья", "Клиентский", "Клиентский", "Здоровье");
+    public static final ModeSetting healthMode = new ModeSetting("Вид здоровья", "Число", "Число", "Проценты");
     public static final BooleanSetting goldhealth = new BooleanSetting("Золотые сердца", true);
     public static final BooleanSetting particles2 = new BooleanSetting("Частицы", true);
     public static final BooleanSetting ontarget = new BooleanSetting("При наведении", false);
@@ -99,8 +100,10 @@ public class TargetHudRender implements ElementRender {
         }
 
         lastTarget = target != null ? target : lastTarget;
-        dragging.setHeight(38);
-        dragging.setWidth(100);
+
+        // Размеры плашки сделаны поменьше (ширина 115, высота 36)
+        dragging.setWidth(115);
+        dragging.setHeight(36);
     }
 
     private Entity determineTarget(LivingEntity auraTarget) {
@@ -138,7 +141,6 @@ public class TargetHudRender implements ElementRender {
         armorScaleAnimation.update(armor.get() && targetAlpha > 0 ? 1 : 0.0f);
     }
 
-
     private void renderTargetHud(MatrixStack ms, Entity renderTarget, float posX, float posY) {
         if (!(renderTarget instanceof LivingEntity livingTarget)) return;
 
@@ -158,12 +160,16 @@ public class TargetHudRender implements ElementRender {
 
         float hpPercentage = Math.min(healthAnimation.getValue() / maxHP, 1.0f);
         float secondaryHpPercentage = Math.min(secondaryHealthAnimation.getValue() / maxHP, 1.0f);
-        float hpBarWidth = 52 * hpPercentage;
-        float secondaryHpBarWidth = 52 * secondaryHpPercentage;
+
+        // Ширина полоски здоровья под новые размеры
+        float maxBarWidth = 73;
+        float hpBarWidth = maxBarWidth * hpPercentage;
+        float secondaryHpBarWidth = maxBarWidth * secondaryHpPercentage;
 
         int textColor = ColorUtil.applyOpacity(ThemeEditor.getColor(ThemeSettings.WINDOW_TEXT), (ThemeEditor.getAlpha(ThemeSettings.WINDOW_TEXT) / 255f) * alpha);
 
-        RenderUtil.drawBlurredRoundedRectangle(posX, posY, 100, 30, 5.0f, alphabg.get() ? ColorUtil.applyOpacity(ThemeEditor.getColor(ThemeSettings.WINDOW_BG), 0) : ThemeEditor.getColor(ThemeSettings.WINDOW_BG), alpha);
+        // Обновленный фон: закругления увеличены до 6.0f для большей эстетики, размеры уменьшены до 115x36
+        RenderUtil.drawBlurredRoundedRectangle(posX, posY, 115, 36, 6.0f, alphabg.get() ? ColorUtil.applyOpacity(ThemeEditor.getColor(ThemeSettings.WINDOW_BG), 0) : ThemeEditor.getColor(ThemeSettings.WINDOW_BG), alpha);
 
         renderParticles(posX, posY, alpha);
         renderEntityHead(ms, renderTarget, posX, posY, textColor, alpha);
@@ -171,7 +177,7 @@ public class TargetHudRender implements ElementRender {
             renderArmor(livingTarget, posX, posY);
         }
         renderHealthBar(posX, posY, hpBarWidth, secondaryHpBarWidth, currentHP, absorption, maxHP, alpha);
-        renderText(ms, renderTarget, posX, posY, currentHP, absorption, textColor);
+        renderText(ms, renderTarget, posX, posY, currentHP, maxHP, absorption, textColor);
     }
 
     private void renderParticles(float posX, float posY, float alpha) {
@@ -185,9 +191,10 @@ public class TargetHudRender implements ElementRender {
     }
 
     private void renderEntityHead(MatrixStack ms, Entity renderTarget, float posX, float posY, int textColor, float alpha) {
+        // Уменьшенная голова (28x28) с увеличенным радиусом закругления (6)
         if (renderTarget instanceof PlayerEntity)
-            RenderUtil.drawRoundedHead(mc.getRenderManager().getRenderer(renderTarget).getEntityTexture(renderTarget), (LivingEntity) renderTarget, posX + 3, posY + 3, 24, 24, 4, alpha);
-        else Fonts.icons[36].drawString(ms, "N", posX + 6.5f, posY + 9.0f, textColor);
+            RenderUtil.drawRoundedHead(mc.getRenderManager().getRenderer(renderTarget).getEntityTexture(renderTarget), (LivingEntity) renderTarget, posX + 4, posY + 4, 28, 28, 6, alpha);
+        else Fonts.icons[36].drawString(ms, "N", posX + 8f, posY + 11f, textColor);
     }
 
     private void renderArmor(LivingEntity livingTarget, float posX, float posY) {
@@ -205,24 +212,25 @@ public class TargetHudRender implements ElementRender {
         if (totalItems > 0) {
             float panelWidth = dragging.getWidth();
             float usedWidth = 8 * totalItems + (totalItems - 1);
-            float handX = posX + panelWidth - usedWidth - 3.5f;
+            float handX = posX + panelWidth - usedWidth - 4f;
 
+            // Чуть подняли броню, чтобы она органично смотрелась над уменьшенным таргетом
             if (!offhand.isEmpty()) {
-                RenderUtil.scaleStart(handX + 4, posY - 6, armorScaleAnimation.getValue());
-                RenderUtil.drawStack(offhand, handX, posY - 10, 0.5f);
+                RenderUtil.scaleStart(handX + 4, posY - 10, armorScaleAnimation.getValue());
+                RenderUtil.drawStack(offhand, handX, posY - 14, 0.5f);
                 RenderUtil.scaleEnd();
                 handX += 9;
             }
             if (!mainhand.isEmpty()) {
-                RenderUtil.scaleStart(handX + 4, posY - 6, armorScaleAnimation.getValue());
-                RenderUtil.drawStack(mainhand, handX, posY - 10, 0.5f);
+                RenderUtil.scaleStart(handX + 4, posY - 10, armorScaleAnimation.getValue());
+                RenderUtil.drawStack(mainhand, handX, posY - 14, 0.5f);
                 RenderUtil.scaleEnd();
                 handX += 9;
             }
             for (int i = 0; i < armorCount; i++) {
                 float itemX = handX + i * 9;
-                RenderUtil.scaleStart(itemX + 4, posY - 6, armorScaleAnimation.getValue());
-                RenderUtil.drawStack(armorStacks.get(i), itemX, posY - 10, 0.5f);
+                RenderUtil.scaleStart(itemX + 4, posY - 10, armorScaleAnimation.getValue());
+                RenderUtil.drawStack(armorStacks.get(i), itemX, posY - 14, 0.5f);
                 RenderUtil.scaleEnd();
             }
         }
@@ -231,11 +239,12 @@ public class TargetHudRender implements ElementRender {
     private void renderHealthBar(float posX, float posY, float hpBarWidth, float secondaryHpBarWidth, float currentHP, float absorption, float maxHP, float alpha) {
         if (hpBarWidth <= 0) return;
 
-        float barX = posX + 29.5F;
-        float barY = posY + 20.0f;
-        float barWidth = 52;
-        float barHeight = 5.0f;
-        float radius = 1.0f;
+        // Позиция полоски адаптирована под новую ширину и высоту
+        float barX = posX + 36.0F;
+        float barY = posY + 25.0f;
+        float barWidth = 73;
+        float barHeight = 4.5f;
+        float radius = 2.25f; // Увеличенное закругление полоски ХП
 
         if (hpbar.is("Клиентский")) {
             int activeColor = ThemeEditor.getColor(ThemeSettings.MODULE_VISUAL);
@@ -251,12 +260,13 @@ public class TargetHudRender implements ElementRender {
             RenderUtil.drawRoundedRectangleGradient(barX, barY, secondaryHpBarWidth, barHeight, radius, colors[2], colors[2], colors[3], colors[3], 140f / 255f * alpha);
             RenderUtil.drawRoundedRectangleGradient(barX, barY, hpBarWidth, barHeight, radius, colors[2], colors[2], colors[4], colors[4], alpha);
         }
+
         if (goldhealth.get() && absorption > 0f) {
             float animatedAbsorption = absorptionAnimation.getValue();
-            float absorptionBarWidth = 58 * Math.min(animatedAbsorption / maxHP, 1.0f);
+            float absorptionBarWidth = barWidth * Math.min(animatedAbsorption / maxHP, 1.0f);
 
             float lagAbsorption = secondaryAbsorptionAnimation.getValue();
-            float secondaryAbsorptionBarWidth = 58 * Math.min(lagAbsorption / maxHP, 1.0f);
+            float secondaryAbsorptionBarWidth = barWidth * Math.min(lagAbsorption / maxHP, 1.0f);
 
             int goldTop = ColorUtil.getColor(255, 210, 0);
             int goldBottom = ColorUtil.darken(goldTop, 0.5f);
@@ -276,15 +286,29 @@ public class TargetHudRender implements ElementRender {
         }
     }
 
-    private void renderText(MatrixStack ms, Entity renderTarget, float posX, float posY, float currentHP, float absorption, int textColor) {
+    private void renderText(MatrixStack ms, Entity renderTarget, float posX, float posY, float currentHP, float maxHP, float absorption, int textColor) {
         String plainName = TextFormatting.getTextWithoutFormattingCodes(renderTarget.getName().getString());
-        Fonts.sf_medium[16].drawSubString(ms, plainName, posX + 30.0F, posY + 6.5f, textColor, 47);
-        Fonts.sf_medium[12].drawString(ms, currentHP > 799 ? "???" : healthFormat.format(currentHP), posX + 97.0f - Fonts.sf_medium[12].getWidth(currentHP > 799 ? "???" : healthFormat.format(currentHP)), posY + 21.5f, textColor);
+
+        // Имя игрока (сдвинуто под новые габариты)
+        Fonts.sf_medium[16].drawSubString(ms, plainName, posX + 36.0F, posY + 5.0f, textColor, 73);
+
+        // Реализация переключателя healthMode (Число или Проценты)
+        float percentage = Math.max(0, Math.min((currentHP / maxHP) * 100.0f, 100.0f));
+        String healthDisplayStr;
+
+        if (healthMode.is("Число")) {
+            healthDisplayStr = currentHP > 799 ? "???" : healthFormat.format(currentHP);
+        } else {
+            healthDisplayStr = currentHP > 799 ? "???" : String.format(Locale.US, "%.1f%%", percentage);
+        }
+
+        // Отрисовка выбранного формата ХП
+        Fonts.sf_medium[14].drawString(ms, healthDisplayStr, posX + 36.0f, posY + 15.0f, textColor);
+
         if (goldhealth.get() && absorption > 0) {
-            String hpText = "HP: " + healthFormat.format(currentHP);
-            String goldText = healthFormat.format(absorption);
-            float goldX = posX + 30.0f;
-            Fonts.sf_medium[12].drawString(ms, goldText, goldX, posY + 15.0005f, textColor);
+            String goldText = "+" + healthFormat.format(absorption);
+            float offset = Fonts.sf_medium[14].getWidth(healthDisplayStr) + 2.0f;
+            Fonts.sf_medium[14].drawString(ms, goldText, posX + 36.0f + offset, posY + 15.0f, ColorUtil.getColor(255, 210, 0));
         }
     }
 
