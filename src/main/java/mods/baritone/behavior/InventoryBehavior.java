@@ -52,7 +52,7 @@ public final class InventoryBehavior extends Behavior implements Helper {
         if (!Baritone.settings().allowInventory.value) {
             return;
         }
-        if (event.getType() == TickEvent.Type.OUT) {
+        if (event.type() == TickEvent.Type.OUT) {
             return;
         }
         if (ctx.player().openContainer != ctx.player().container) {
@@ -76,9 +76,7 @@ public final class InventoryBehavior extends Behavior implements Helper {
     public boolean attemptToPutOnHotbar(int inMainInvy, Predicate<Integer> disallowedHotbar) {
         OptionalInt destination = getTempHotbarSlot(disallowedHotbar);
         if (destination.isPresent()) {
-            if (!requestSwapWithHotBar(inMainInvy, destination.getAsInt())) {
-                return false;
-            }
+            return requestSwapWithHotBar(inMainInvy, destination.getAsInt());
         }
         return true;
     }

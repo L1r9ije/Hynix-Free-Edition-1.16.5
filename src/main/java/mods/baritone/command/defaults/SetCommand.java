@@ -166,7 +166,7 @@ public class SetCommand extends Command {
                 logDirect(String.format(
                         "Toggled setting %s to %s",
                         setting.getName(),
-                        Boolean.toString((Boolean) setting.value)
+                        setting.value
                 ));
             } else {
                 String newValue = args.getString();

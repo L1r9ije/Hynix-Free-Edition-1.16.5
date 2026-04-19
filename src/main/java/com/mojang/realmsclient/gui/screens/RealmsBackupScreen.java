@@ -64,7 +64,7 @@ public class RealmsBackupScreen extends RealmsScreen {
         this.field_224119_f = new RealmsBackupScreen.BackupObjectSelectionList();
 
         if (field_224115_b != -1) {
-            this.field_224119_f.setScrollAmount((double) field_224115_b);
+            this.field_224119_f.setScrollAmount(field_224115_b);
         }
 
         (new Thread("Realms-fetch-backups") {
@@ -86,7 +86,7 @@ public class RealmsBackupScreen extends RealmsScreen {
                         RealmsBackupScreen.this.func_224112_b();
                     });
                 } catch (RealmsServiceException realmsserviceexception) {
-                    RealmsBackupScreen.field_224114_a.error("Couldn't request backups", (Throwable) realmsserviceexception);
+                    RealmsBackupScreen.field_224114_a.error("Couldn't request backups", realmsserviceexception);
                 }
             }
         }).start();
@@ -242,7 +242,7 @@ public class RealmsBackupScreen extends RealmsScreen {
             int i = p_237744_3_ + 12;
             int j = p_237744_4_ - 12;
             int k = this.font.getStringPropertyWidth(p_237744_2_);
-            this.fillGradient(p_237744_1_, i - 3, j - 3, i + k + 3, j + 8 + 3, -1073741824, -1073741824);
+            fillGradient(p_237744_1_, i - 3, j - 3, i + k + 3, j + 8 + 3, -1073741824, -1073741824);
             this.font.func_243246_a(p_237744_1_, p_237744_2_, (float) i, (float) j, 16777215);
         }
     }
@@ -361,7 +361,7 @@ public class RealmsBackupScreen extends RealmsScreen {
             }
 
             if (!p_237767_2_.field_230557_e_.isEmpty()) {
-                this.func_237768_b_(p_237767_1_, l, p_237767_4_ + 0, p_237767_5_, p_237767_6_);
+                this.func_237768_b_(p_237767_1_, l, p_237767_4_, p_237767_5_, p_237767_6_);
             }
         }
 

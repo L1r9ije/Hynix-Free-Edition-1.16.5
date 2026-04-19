@@ -58,7 +58,7 @@ public class Paginator<E> implements Helper {
                                 "a valid page (1-%d)",
                                 pagi.getMaxPage()
                         ),
-                        consumer.consumed().getValue()
+                        consumer.consumed().value()
                 );
             }
         }

@@ -47,7 +47,7 @@ public class VoiceChatScreen extends VoiceChatScreenBase {
     private ToggleImageButton disable;
     private HoverArea recordingHoverArea;
 
-    private ClientPlayerStateManager stateManager;
+    private final ClientPlayerStateManager stateManager;
 
     public VoiceChatScreen() {
         super(TITLE, 195, 76);
@@ -156,7 +156,7 @@ public class VoiceChatScreen extends VoiceChatScreenBase {
         if (client != null && client.getRecorder() != null) {
             AudioRecorder recorder = client.getRecorder();
             StringTextComponent time = new StringTextComponent(recorder.getDuration());
-            font.func_243248_b(poseStack, time.mergeStyle(TextFormatting.DARK_RED), guiLeft + recordingHoverArea.getPosX() + recordingHoverArea.getWidth() / 2F - font.getStringPropertyWidth(time) / 2F, guiTop + recordingHoverArea.getPosY() + recordingHoverArea.getHeight() / 2F - font.FONT_HEIGHT / 2F, 0);
+            font.func_243248_b(poseStack, time.mergeStyle(TextFormatting.DARK_RED), guiLeft + recordingHoverArea.posX() + recordingHoverArea.width() / 2F - font.getStringPropertyWidth(time) / 2F, guiTop + recordingHoverArea.posY() + recordingHoverArea.height() / 2F - font.FONT_HEIGHT / 2F, 0);
 
             if (recordingHoverArea.isHovered(guiLeft, guiTop, mouseX, mouseY)) {
                 renderTooltip(poseStack, new TranslationTextComponent("message.voicechat.storage_size", recorder.getStorage()), mouseX, mouseY);

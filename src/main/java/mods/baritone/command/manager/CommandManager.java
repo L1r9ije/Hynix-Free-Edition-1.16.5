@@ -126,17 +126,7 @@ public class CommandManager implements ICommandManager {
         return command == null ? null : new ExecutionWrapper(command, label, args);
     }
 
-    private static final class ExecutionWrapper {
-
-        private ICommand command;
-        private String label;
-        private ArgConsumer args;
-
-        private ExecutionWrapper(ICommand command, String label, ArgConsumer args) {
-            this.command = command;
-            this.label = label;
-            this.args = args;
-        }
+    private record ExecutionWrapper(ICommand command, String label, ArgConsumer args) {
 
         private void execute() {
             try {

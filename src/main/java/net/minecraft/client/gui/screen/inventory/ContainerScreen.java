@@ -5,33 +5,27 @@ import com.google.common.collect.Sets;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
-import su.hynix.hynix;
-import su.hynix.events.EventContainerRender;
-import su.hynix.events.EventHandleMouseClick;
-import su.hynix.events.EventRender2D;
-import su.hynix.modules.impl.player.ItemScroller;
-import su.hynix.utils.math.TimeUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ChestContainer;
-import net.minecraft.inventory.container.ShulkerBoxContainer;
-import net.minecraft.inventory.container.HopperContainer;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.inventory.container.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.glfw.GLFW;
+import su.hynix.events.EventContainerRender;
+import su.hynix.events.EventHandleMouseClick;
+import su.hynix.hynix;
+import su.hynix.modules.impl.player.ItemScroller;
+import su.hynix.utils.math.TimeUtil;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -109,7 +103,7 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
     private int lastClickButton;
     private boolean doubleClick;
     private ItemStack shiftClickedSlot = ItemStack.EMPTY;
-    private TimeUtil timeUtil = new TimeUtil();
+    private final TimeUtil timeUtil = new TimeUtil();
 
     public ContainerScreen(T screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(titleIn);
@@ -125,7 +119,11 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
     protected void init() {
         super.init();
         this.guiLeft = (this.width - this.xSize) / 2;
-        this.guiTop = (this.height - this.ySize) / 2;
+        int centeredTop = (this.height - this.ySize) / 2;
+        this.guiTop = centeredTop;
+        if (this.guiTop + this.ySize > this.height) {
+            this.guiTop = this.height - this.ySize;
+        }
 
         if (isStorageContainer()) {
             addContainerButtons();
@@ -160,7 +158,7 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
                 this.moveItems(matrixStack, slot);
             }
 
-            if (this.isSlotSelected(slot, (double) mouseX, (double) mouseY) && slot.isEnabled()) {
+            if (this.isSlotSelected(slot, mouseX, mouseY) && slot.isEnabled()) {
                 ItemScroller itemScroller = (ItemScroller) hynix.getInstance().getModuleManager().getModule(ItemScroller.class);
                 if (itemScroller != null && itemScroller.isEnabled()) {
                     if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS &&
@@ -177,7 +175,7 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
                 int j1 = slot.xPos;
                 int k1 = slot.yPos;
                 RenderSystem.colorMask(true, true, true, false);
-                this.fillGradient(matrixStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+                fillGradient(matrixStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
                 RenderSystem.colorMask(true, true, true, true);
                 RenderSystem.enableDepthTest();
             }
@@ -200,7 +198,7 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
                 itemstack.setCount(this.dragSplittingRemnant);
 
                 if (itemstack.isEmpty()) {
-                    s = "" + TextFormatting.YELLOW + "0";
+                    s = TextFormatting.YELLOW + "0";
                 }
             }
 
@@ -219,7 +217,7 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
             int i3 = this.returningStackDestSlot.yPos - this.touchUpY;
             int l1 = this.touchUpX + (int) ((float) l2 * f);
             int i2 = this.touchUpY + (int) ((float) i3 * f);
-            this.drawItemStack(this.returningStack, l1, i2, (String) null);
+            this.drawItemStack(this.returningStack, l1, i2, null);
         }
 
         RenderSystem.popMatrix();
@@ -389,7 +387,7 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
                 }
 
                 if (this.minecraft.gameSettings.touchscreen && flag1 && this.minecraft.player.inventory.getItemStack().isEmpty()) {
-                    this.minecraft.displayGuiScreen((Screen) null);
+                    this.minecraft.displayGuiScreen(null);
                     return true;
                 }
 
@@ -576,13 +574,13 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
                     this.clickedSlot = null;
                 }
             } else if (this.dragSplitting && !this.dragSplittingSlots.isEmpty()) {
-                this.handleMouseClick((Slot) null, -999, Container.getQuickcraftMask(0, this.dragSplittingLimit), ClickType.QUICK_CRAFT);
+                this.handleMouseClick(null, -999, Container.getQuickcraftMask(0, this.dragSplittingLimit), ClickType.QUICK_CRAFT);
 
                 for (Slot slot1 : this.dragSplittingSlots) {
                     this.handleMouseClick(slot1, slot1.slotNumber, Container.getQuickcraftMask(1, this.dragSplittingLimit), ClickType.QUICK_CRAFT);
                 }
 
-                this.handleMouseClick((Slot) null, -999, Container.getQuickcraftMask(2, this.dragSplittingLimit), ClickType.QUICK_CRAFT);
+                this.handleMouseClick(null, -999, Container.getQuickcraftMask(2, this.dragSplittingLimit), ClickType.QUICK_CRAFT);
             } else if (!this.minecraft.player.inventory.getItemStack().isEmpty()) {
                 if (this.minecraft.gameSettings.keyBindPickBlock.matchesMouseKey(button)) {
                     this.handleMouseClick(slot, k, button, ClickType.CLONE);
@@ -863,8 +861,7 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
     }
 
     private int getContainerSlotCount() {
-        if (this.container instanceof ChestContainer) {
-            ChestContainer chest = (ChestContainer) this.container;
+        if (this.container instanceof ChestContainer chest) {
             return chest.getNumRows() * 9;
         } else if (this.container instanceof ShulkerBoxContainer) {
             return 27;

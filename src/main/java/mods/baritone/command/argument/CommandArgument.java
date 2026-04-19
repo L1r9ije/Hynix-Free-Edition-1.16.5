@@ -28,32 +28,7 @@ import java.util.stream.Stream;
  *
  * @author LoganDark
  */
-class CommandArgument implements ICommandArgument {
-
-    private final int index;
-    private final String value;
-    private final String rawRest;
-
-    CommandArgument(int index, String value, String rawRest) {
-        this.index = index;
-        this.value = value;
-        this.rawRest = rawRest;
-    }
-
-    @Override
-    public int getIndex() {
-        return this.index;
-    }
-
-    @Override
-    public String getValue() {
-        return this.value;
-    }
-
-    @Override
-    public String getRawRest() {
-        return this.rawRest;
-    }
+record CommandArgument(int index, String value, String rawRest) implements ICommandArgument {
 
     @Override
     public <E extends Enum<?>> E getEnum(Class<E> enumClass) throws CommandInvalidTypeException {

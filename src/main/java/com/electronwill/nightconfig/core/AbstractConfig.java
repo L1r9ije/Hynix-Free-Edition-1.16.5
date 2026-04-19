@@ -242,8 +242,7 @@ public abstract class AbstractConfig implements Config, Cloneable {
         }
         if (obj instanceof AbstractConfig) {
             return map.equals(((AbstractConfig) obj).map);
-        } else if (obj instanceof UnmodifiableConfig) {
-            UnmodifiableConfig conf = (UnmodifiableConfig) obj;
+        } else if (obj instanceof UnmodifiableConfig conf) {
             if (conf.size() != size()) {
                 return false;
             }
@@ -303,8 +302,7 @@ public abstract class AbstractConfig implements Config, Cloneable {
             if (obj == this) {
                 return true;
             }
-            if (obj instanceof EntryWrapper) {
-                EntryWrapper other = (EntryWrapper) obj;
+            if (obj instanceof EntryWrapper other) {
                 return Objects.equals(getKey(), other.getKey())
                         && Objects.equals(getValue(), other.getValue());
             }

@@ -13,26 +13,26 @@ public interface VolumeCategory {
     /**
      * @return the unique ID of the category
      */
-    String getId();
+    String id();
 
     /**
      * @return the full name of the category, that is displayed for the end user
      */
-    String getName();
+    String name();
 
     /**
      * @return the hover tooltip that is shown for this category
      */
     @Nullable
-    String getDescription();
+    String description();
 
     /**
      * @return the icon that is shown for this category
      */
     @Nullable
-    int[][] getIcon();
+    int[][] icon();
 
-    public interface Builder {
+    interface Builder {
 
         /**
          * This ID has to be between 1 and 16 characters and can only contain lowercase <code>a-z</code> and <code>_</code>.

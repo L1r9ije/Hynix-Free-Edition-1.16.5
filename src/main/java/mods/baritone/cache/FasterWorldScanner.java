@@ -17,14 +17,13 @@
 
 package mods.baritone.cache;
 
+import io.netty.buffer.Unpooled;
 import mods.baritone.api.api.java.baritone.api.cache.ICachedWorld;
 import mods.baritone.api.api.java.baritone.api.cache.IWorldScanner;
 import mods.baritone.api.api.java.baritone.api.utils.BetterBlockPos;
 import mods.baritone.api.api.java.baritone.api.utils.BlockOptionalMetaLookup;
 import mods.baritone.api.api.java.baritone.api.utils.IPlayerContext;
-import mods.baritone.utils.accessor.IBitArray;
 import mods.baritone.utils.accessor.IPalettedContainer;
-import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.network.PacketBuffer;
@@ -33,9 +32,11 @@ import net.minecraft.util.ObjectIntIdentityMap;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.palette.IPalette;
-import net.minecraft.util.palette.PalettedContainer;
 import net.minecraft.util.palette.IdentityPalette;
-import net.minecraft.world.chunk.*;
+import net.minecraft.util.palette.PalettedContainer;
+import net.minecraft.world.chunk.AbstractChunkProvider;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,8 +214,8 @@ public enum FasterWorldScanner implements IWorldScanner {
         BitArray array = ((IPalettedContainer<BlockState>) section.getData()).getStorage();
         long[] longArray = array.getBackingLongArray();
         int arraySize = array.size();
-        int bitsPerEntry = ((IBitArray) array).getBitsPerEntry();
-        long maxEntryValue = ((IBitArray) array).getMaxEntryValue();
+        int bitsPerEntry = array.getBitsPerEntry();
+        long maxEntryValue = array.getMaxEntryValue();
 
 
         int yOffset = section.getYLocation();

@@ -61,12 +61,12 @@ public class RealmsSettingsScreen extends RealmsScreen {
             }
         });
         this.addButton(button);
-        this.field_224570_f = new TextFieldWidget(this.minecraft.fontRenderer, i, func_239562_k_(4), 212, 20, (TextFieldWidget) null, new TranslationTextComponent("mco.configure.world.name"));
+        this.field_224570_f = new TextFieldWidget(this.minecraft.fontRenderer, i, func_239562_k_(4), 212, 20, null, new TranslationTextComponent("mco.configure.world.name"));
         this.field_224570_f.setMaxStringLength(32);
         this.field_224570_f.setText(this.field_224566_b.func_230775_b_());
         this.addListener(this.field_224570_f);
         this.setListenerDefault(this.field_224570_f);
-        this.field_224569_e = new TextFieldWidget(this.minecraft.fontRenderer, i, func_239562_k_(8), 212, 20, (TextFieldWidget) null, new TranslationTextComponent("mco.configure.world.description"));
+        this.field_224569_e = new TextFieldWidget(this.minecraft.fontRenderer, i, func_239562_k_(8), 212, 20, null, new TranslationTextComponent("mco.configure.world.description"));
         this.field_224569_e.setMaxStringLength(32);
         this.field_224569_e.setText(this.field_224566_b.func_230768_a_());
         this.addListener(this.field_224569_e);

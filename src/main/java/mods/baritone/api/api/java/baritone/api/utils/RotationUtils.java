@@ -87,7 +87,7 @@ public final class RotationUtils {
      */
     public static Rotation wrapAnglesToRelative(Rotation current, Rotation target) {
         if (current.yawIsReallyClose(target)) {
-            return new Rotation(current.getYaw(), target.getPitch());
+            return new Rotation(current.yaw(), target.pitch());
         }
         return target.subtract(current).normalize().add(current);
     }
@@ -131,11 +131,11 @@ public final class RotationUtils {
      * @return Look vector for the rotation
      */
     public static Vector3d calcVector3dFromRotation(Rotation rotation) {
-        float f = MathHelper.cos(-rotation.getYaw() * (float) DEG_TO_RAD - (float) Math.PI);
-        float f1 = MathHelper.sin(-rotation.getYaw() * (float) DEG_TO_RAD - (float) Math.PI);
-        float f2 = -MathHelper.cos(-rotation.getPitch() * (float) DEG_TO_RAD);
-        float f3 = MathHelper.sin(-rotation.getPitch() * (float) DEG_TO_RAD);
-        return new Vector3d((double) (f1 * f2), (double) f3, (double) (f * f2));
+        float f = MathHelper.cos(-rotation.yaw() * (float) DEG_TO_RAD - (float) Math.PI);
+        float f1 = MathHelper.sin(-rotation.yaw() * (float) DEG_TO_RAD - (float) Math.PI);
+        float f2 = -MathHelper.cos(-rotation.pitch() * (float) DEG_TO_RAD);
+        float f3 = MathHelper.sin(-rotation.pitch() * (float) DEG_TO_RAD);
+        return new Vector3d(f1 * f2, f3, f * f2);
     }
 
     /**

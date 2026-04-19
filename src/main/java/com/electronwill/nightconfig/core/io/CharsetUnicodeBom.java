@@ -36,7 +36,7 @@ class CharsetUnicodeBom extends Charset {
     }
 
     private static final class Decoder extends CharsetDecoder {
-        private boolean utf8Only;
+        private final boolean utf8Only;
         private CharsetDecoder decoder = null;
 
         Decoder(CharsetUnicodeBom cs) {

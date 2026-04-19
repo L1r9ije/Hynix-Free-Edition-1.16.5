@@ -70,7 +70,7 @@ public final class LookBehavior extends Behavior implements ILookBehavior {
 
     @Override
     public void onTick(TickEvent event) {
-        if (event.getType() == TickEvent.Type.IN) {
+        if (event.type() == TickEvent.Type.IN) {
             this.processor.tick();
         }
     }
@@ -86,8 +86,8 @@ public final class LookBehavior extends Behavior implements ILookBehavior {
         final float smoothYaw = (float) (Math.sin(t * 0.50F) * 8.0 + Math.sin(t * 0.04F + 17.2) * 1.5);
         final float smoothPitch = (float) (Math.sin(t * 0.65F) * 2.0 + Math.sin(t * 0.03F + 54.1) * 0.5);
         RotationComponent.update(new su.hynix.handlers.impl.Rotation(
-                actual.getYaw(),
-                actual.getPitch()
+                actual.yaw(),
+                actual.pitch()
         ), 180.0F, 1, 5);
         this.target = null;
     }
@@ -104,7 +104,7 @@ public final class LookBehavior extends Behavior implements ILookBehavior {
     public void pig() {
         if (this.target != null) {
             final Rotation desired = this.target.rotation;
-            RotationComponent.update(new su.hynix.handlers.impl.Rotation(desired.getYaw(), ctx.player().rotationPitch), 180.0F, 2, 100);
+            RotationComponent.update(new su.hynix.handlers.impl.Rotation(desired.yaw(), ctx.player().rotationPitch), 180.0F, 2, 100);
         }
     }
 
@@ -148,12 +148,12 @@ public final class LookBehavior extends Behavior implements ILookBehavior {
         public final Rotation peekRotation(final Rotation rotation) {
             final Rotation prev = this.getPrevRotation();
 
-            float desiredYaw = rotation.getYaw();
-            float desiredPitch = rotation.getPitch();
+            float desiredYaw = rotation.yaw();
+            float desiredPitch = rotation.pitch();
 
             // In other words, the target doesn't care about the pitch, so it used playerRotations().getPitch()
             // and it's safe to adjust it to a normal level
-            if (desiredPitch == prev.getPitch()) {
+            if (desiredPitch == prev.pitch()) {
                 desiredPitch = nudgeToLevel(desiredPitch);
             }
 
@@ -161,8 +161,8 @@ public final class LookBehavior extends Behavior implements ILookBehavior {
             desiredPitch += this.randomPitchOffset;
 
             return new Rotation(
-                    this.calculateMouseMove(prev.getYaw(), desiredYaw),
-                    this.calculateMouseMove(prev.getPitch(), desiredPitch)
+                    this.calculateMouseMove(prev.yaw(), desiredYaw),
+                    this.calculateMouseMove(prev.pitch(), desiredPitch)
             ).clamp();
         }
 
@@ -239,14 +239,10 @@ public final class LookBehavior extends Behavior implements ILookBehavior {
         }
     }
 
-    private static class Target {
+    private record Target(Rotation rotation, Mode mode) {
 
-        public final Rotation rotation;
-        public final Mode mode;
-
-        public Target(Rotation rotation, boolean blockInteract) {
-            this.rotation = rotation;
-            this.mode = Mode.resolve(blockInteract);
+        private Target(Rotation rotation, boolean mode) {
+            this(rotation, Mode.resolve(mode));
         }
 
         enum Mode {

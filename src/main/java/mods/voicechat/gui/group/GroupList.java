@@ -26,8 +26,7 @@ public class GroupList extends ListScreenListBase<GroupEntry> {
 
     public static void update() {
         Screen screen = Minecraft.getInstance().currentScreen;
-        if (screen instanceof GroupScreen) {
-            GroupScreen groupScreen = (GroupScreen) screen;
+        if (screen instanceof GroupScreen groupScreen) {
             groupScreen.groupList.updateMembers();
         }
     }

@@ -45,14 +45,14 @@ public interface OpenALSoundEvent extends ClientEvent {
     /**
      * This event is emitted before any OpenAL calls were made by the voice chat.
      */
-    public interface Pre extends OpenALSoundEvent {
+    interface Pre extends OpenALSoundEvent {
 
     }
 
     /**
      * This event is emitted after all OpenAL calls by the voice chat and the audio is added to the buffer queue.
      */
-    public interface Post extends OpenALSoundEvent {
+    interface Post extends OpenALSoundEvent {
 
     }
 

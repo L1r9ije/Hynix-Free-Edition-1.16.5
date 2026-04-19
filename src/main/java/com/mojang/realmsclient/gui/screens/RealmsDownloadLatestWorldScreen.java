@@ -62,7 +62,7 @@ public class RealmsDownloadLatestWorldScreen extends RealmsScreen {
         this.field_224177_c = p_i232203_2_;
         this.field_224182_h = new RealmsDownloadLatestWorldScreen.DownloadStatus();
         this.field_224178_d = new TranslationTextComponent("mco.download.title");
-        this.field_224179_e = RateLimiter.create((double) 0.1F);
+        this.field_224179_e = RateLimiter.create(0.1F);
     }
 
     public void init() {
@@ -177,7 +177,7 @@ public class RealmsDownloadLatestWorldScreen extends RealmsScreen {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        double d1 = (double) (this.width / 2 - 100);
+        double d1 = this.width / 2 - 100;
         double d2 = 0.5D;
         bufferbuilder.pos(d1 - 0.5D, 95.5D, 0.0D).color(217, 210, 210, 255).endVertex();
         bufferbuilder.pos(d1 + 200.0D * d0 + 0.5D, 95.5D, 0.0D).color(217, 210, 210, 255).endVertex();
@@ -273,11 +273,9 @@ public class RealmsDownloadLatestWorldScreen extends RealmsScreen {
                 this.field_224184_j = new TranslationTextComponent("mco.download.failed");
             } catch (InterruptedException interruptedexception1) {
                 field_224175_a.error("Could not acquire upload lock");
-                return;
             } catch (Exception exception) {
                 this.field_224183_i = new TranslationTextComponent("mco.download.failed");
                 exception.printStackTrace();
-                return;
             } finally {
                 if (!field_237832_b_.isHeldByCurrentThread()) {
                     return;

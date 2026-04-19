@@ -342,7 +342,7 @@ public class RealmsConfigureWorldScreen extends NotifableRealmsScreen {
             i = i - k - 20;
         }
 
-        this.fillGradient(p_237796_1_, i - 3, j - 3, i + k + 3, j + 8 + 3, -1073741824, -1073741824);
+        fillGradient(p_237796_1_, i - 3, j - 3, i + k + 3, j + 8 + 3, -1073741824, -1073741824);
         this.font.func_243246_a(p_237796_1_, p_237796_2_, (float) i, (float) j, 16777215);
     }
 

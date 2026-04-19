@@ -65,7 +65,7 @@ public class JoinGroupEntry extends ListScreenEntryBase<JoinGroupEntry> {
             poseStack.pop();
         }
 
-        StringTextComponent groupName = new StringTextComponent(group.group.getName());
+        StringTextComponent groupName = new StringTextComponent(group.group.name());
         minecraft.fontRenderer.func_243248_b(poseStack, groupName, left + PADDING + (hasPassword ? 16 + PADDING : 0), top + height / 2 - minecraft.fontRenderer.FONT_HEIGHT / 2, PLAYER_NAME_COLOR);
 
         int textWidth = minecraft.fontRenderer.getStringPropertyWidth(groupName) + (hasPassword ? 16 + PADDING : 0);
@@ -103,10 +103,10 @@ public class JoinGroupEntry extends ListScreenEntryBase<JoinGroupEntry> {
         }
         List<IReorderingProcessor> tooltip = Lists.newArrayList();
 
-        if (group.getGroup().getType().equals(mods.voicechat.api.Group.Type.NORMAL)) {
-            tooltip.add(new TranslationTextComponent("message.voicechat.group_title", new StringTextComponent(group.getGroup().getName())).func_241878_f());
+        if (group.getGroup().type().equals(mods.voicechat.api.Group.Type.NORMAL)) {
+            tooltip.add(new TranslationTextComponent("message.voicechat.group_title", new StringTextComponent(group.getGroup().name())).func_241878_f());
         } else {
-            tooltip.add(new TranslationTextComponent("message.voicechat.group_type_title", new StringTextComponent(group.getGroup().getName()), GroupType.fromType(group.getGroup().getType()).getTranslation()).func_241878_f());
+            tooltip.add(new TranslationTextComponent("message.voicechat.group_type_title", new StringTextComponent(group.getGroup().name()), GroupType.fromType(group.getGroup().type()).getTranslation()).func_241878_f());
         }
         if (group.getMembers().isEmpty()) {
             tooltip.add(NO_GROUP_MEMBERS.func_241878_f());

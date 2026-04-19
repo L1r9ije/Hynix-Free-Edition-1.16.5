@@ -85,12 +85,7 @@ public final class FakeCommentedConfig extends ConfigWrapper<Config> implements 
         return CommentedConfig.fake(super.createSubConfig());
     }
 
-    private static final class FakeCommentedEntry implements CommentedConfig.Entry {
-        private final Config.Entry entry;
-
-        private FakeCommentedEntry(Config.Entry entry) {
-            this.entry = entry;
-        }
+    private record FakeCommentedEntry(Config.Entry entry) implements CommentedConfig.Entry {
 
         @Override
         public String getComment() {

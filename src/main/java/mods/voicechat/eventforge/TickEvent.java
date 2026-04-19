@@ -14,7 +14,7 @@ public class TickEvent extends EventCancellable implements Event {
 
     public enum Phase {
         START,
-        END;
+        END
     }
 
     public enum Type {
@@ -22,7 +22,7 @@ public class TickEvent extends EventCancellable implements Event {
         PLAYER,
         CLIENT,
         SERVER,
-        RENDER;
+        RENDER
     }
 
     public static class ServerTickEvent extends TickEvent {

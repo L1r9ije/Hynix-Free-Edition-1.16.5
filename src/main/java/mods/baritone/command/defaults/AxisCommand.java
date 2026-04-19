@@ -39,7 +39,7 @@ public class AxisCommand extends Command {
         args.requireMax(0);
         Goal goal = new GoalAxis();
         baritone.getCustomGoalProcess().setGoal(goal);
-        logDirect(String.format("Goal: %s", goal.toString()));
+        logDirect(String.format("Goal: %s", goal));
     }
 
     @Override

@@ -73,7 +73,7 @@ public class RealmsUploadScreen extends RealmsScreen {
         this.field_224697_b = p_i232226_4_;
         this.field_224698_c = p_i232226_5_;
         this.field_224701_f = new UploadStatus();
-        this.field_224702_g = RateLimiter.create((double) 0.1F);
+        this.field_224702_g = RateLimiter.create(0.1F);
         this.field_238080_I_ = p_i232226_6_;
     }
 
@@ -170,7 +170,7 @@ public class RealmsUploadScreen extends RealmsScreen {
         this.field_224705_j = String.format(Locale.ROOT, "%.1f", d0 * 100.0D);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableTexture();
-        double d1 = (double) (this.width / 2 - 100);
+        double d1 = this.width / 2 - 100;
         double d2 = 0.5D;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -261,7 +261,7 @@ public class RealmsUploadScreen extends RealmsScreen {
                                 break;
                             }
                         } catch (RetryCallException retrycallexception) {
-                            Thread.sleep((long) (retrycallexception.field_224985_e * 1000));
+                            Thread.sleep((long) (retrycallexception.field_224985_e * 1000L));
                         }
                     }
 
@@ -341,13 +341,10 @@ public class RealmsUploadScreen extends RealmsScreen {
                 this.field_224704_i = new TranslationTextComponent("mco.upload.close.failure");
             } catch (IOException ioexception) {
                 this.func_238085_a_(new TranslationTextComponent("mco.upload.failed", ioexception.getMessage()));
-                return;
             } catch (RealmsServiceException realmsserviceexception) {
                 this.func_238085_a_(new TranslationTextComponent("mco.upload.failed", realmsserviceexception.toString()));
-                return;
             } catch (InterruptedException interruptedexception1) {
                 field_224696_a.error("Could not acquire upload lock");
-                return;
             } finally {
                 this.field_224707_l = true;
 

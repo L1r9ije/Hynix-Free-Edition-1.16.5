@@ -24,7 +24,7 @@ public class EnterPasswordScreen extends VoiceChatScreenBase {
 
     private TextFieldWidget password;
     private Button joinGroup;
-    private ClientGroup group;
+    private final ClientGroup group;
 
     public EnterPasswordScreen(ClientGroup group) {
         super(TITLE, 195, 74);
@@ -53,7 +53,7 @@ public class EnterPasswordScreen extends VoiceChatScreenBase {
 
     private void joinGroup() {
         if (!password.getText().isEmpty()) {
-            ClientServerNetManager.sendToServer(new JoinGroupPacket(group.getId(), password.getText()));
+            ClientServerNetManager.sendToServer(new JoinGroupPacket(group.id(), password.getText()));
         }
     }
 

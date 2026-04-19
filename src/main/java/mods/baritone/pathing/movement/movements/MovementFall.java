@@ -116,7 +116,7 @@ public class MovementFall extends Movement {
             if (ctx.player().getPositionVec().y - dest.getY() < ctx.playerController().getBlockReachDistance() && !ctx.player().isOnGround()) {
                 ctx.player().inventory.currentItem = ctx.player().inventory.getSlotFor(STACK_BUCKET_WATER);
 
-                targetRotation = new Rotation(toDest.getYaw(), 90.0F);
+                targetRotation = new Rotation(toDest.yaw(), 90.0F);
 
                 if (ctx.isLookingAt(dest) || ctx.isLookingAt(dest.down())) {
                     state.setInput(Input.CLICK_RIGHT, true);

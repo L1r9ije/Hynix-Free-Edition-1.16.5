@@ -5,7 +5,7 @@ import mods.voicechat.api.events.ClientSoundEvent;
 public class ClientSoundEventImpl extends ClientEventImpl implements ClientSoundEvent {
 
     private short[] rawAudio;
-    private boolean whispering;
+    private final boolean whispering;
 
     public ClientSoundEventImpl(short[] rawAudio, boolean whispering) {
         this.rawAudio = rawAudio;

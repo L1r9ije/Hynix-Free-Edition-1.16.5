@@ -24,7 +24,7 @@ public class ClientCategoryManager extends CategoryManager {
         images = new ConcurrentHashMap<>();
         ClientServerNetManager.setClientListener(CommonCompatibilityManager.INSTANCE.getNetManager().addCategoryChannel, (client, handler, packet) -> {
             addCategory(packet.getCategory());
-            Voicechat.LOGGER.debug("Added category {}", packet.getCategory().getId());
+            Voicechat.LOGGER.debug("Added category {}", packet.getCategory().id());
         });
         ClientServerNetManager.setClientListener(CommonCompatibilityManager.INSTANCE.getNetManager().removeCategoryChannel, (client, handler, packet) -> {
             removeCategory(packet.getCategoryId());
@@ -37,8 +37,8 @@ public class ClientCategoryManager extends CategoryManager {
     public void addCategory(VolumeCategoryImpl category) {
         super.addCategory(category);
 
-        if (category.getIcon() != null) {
-            registerImage(category.getId(), fromIntArray(category.getIcon()));
+        if (category.icon() != null) {
+            registerImage(category.id(), fromIntArray(category.icon()));
         }
         AdjustVolumeList.update();
     }

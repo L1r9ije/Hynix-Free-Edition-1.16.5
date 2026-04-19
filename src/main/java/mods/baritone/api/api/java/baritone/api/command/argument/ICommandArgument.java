@@ -35,17 +35,17 @@ public interface ICommandArgument {
     /**
      * @return The index of this command argument in the list of command arguments generated
      */
-    int getIndex();
+    int index();
 
     /**
      * @return The raw value of just this argument
      */
-    String getValue();
+    String value();
 
     /**
      * @return The raw value of the remaining arguments after this one was captured
      */
-    String getRawRest();
+    String rawRest();
 
     /**
      * Gets an enum value from the enum class with the same name as this argument's value

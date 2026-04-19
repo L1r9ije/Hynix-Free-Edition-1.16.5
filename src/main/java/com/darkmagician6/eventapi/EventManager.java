@@ -71,7 +71,7 @@ public final class EventManager {
     public static void unregister(Object object) {
         for (final List<MethodData> dataList : REGISTRY_MAP.values()) {
             for (final MethodData data : dataList) {
-                if (data.getSource().equals(object)) {
+                if (data.source().equals(object)) {
                     dataList.remove(data);
                 }
             }
@@ -89,7 +89,7 @@ public final class EventManager {
     public static void unregister(Object object, Class<? extends Event> eventClass) {
         if (REGISTRY_MAP.containsKey(eventClass)) {
             for (final MethodData data : REGISTRY_MAP.get(eventClass)) {
-                if (data.getSource().equals(object)) {
+                if (data.source().equals(object)) {
                     REGISTRY_MAP.get(eventClass).remove(data);
                 }
             }
@@ -114,8 +114,8 @@ public final class EventManager {
         final MethodData data = new MethodData(object, method, method.getAnnotation(EventTarget.class).value());
 
         //Set's the method to accessible so that we can also invoke it if it's protected or private.
-        if (!data.getTarget().isAccessible()) {
-            data.getTarget().setAccessible(true);
+        if (!data.target().isAccessible()) {
+            data.target().setAccessible(true);
         }
 
         if (REGISTRY_MAP.containsKey(indexClass)) {
@@ -177,7 +177,7 @@ public final class EventManager {
 
         for (final byte priority : Priority.VALUE_ARRAY) {
             for (final MethodData data : REGISTRY_MAP.get(indexClass)) {
-                if (data.getPriority() == priority) {
+                if (data.priority() == priority) {
                     sortedList.add(data);
                 }
             }
@@ -225,12 +225,11 @@ public final class EventManager {
      * @param event Event to dispatch.
      * @return Event in the state after dispatching it.
      */
-    public static final Event call(final Event event) {
+    public static Event call(final Event event) {
         List<MethodData> dataList = REGISTRY_MAP.get(event.getClass());
 
         if (dataList != null) {
-            if (event instanceof EventStoppable) {
-                EventStoppable stoppable = (EventStoppable) event;
+            if (event instanceof EventStoppable stoppable) {
 
                 for (final MethodData data : dataList) {
                     invoke(data, event);
@@ -259,7 +258,7 @@ public final class EventManager {
      */
     private static void invoke(MethodData data, Event argument) {
         try {
-            data.getTarget().invoke(data.getSource(), argument);
+            data.target().invoke(data.source(), argument);
         } catch (IllegalAccessException e) {
         } catch (IllegalArgumentException e) {
         } catch (InvocationTargetException e) {
@@ -271,13 +270,7 @@ public final class EventManager {
      * @author DarkMagician6
      * @since January 2, 2014
      */
-    private static final class MethodData {
-
-        private final Object source;
-
-        private final Method target;
-
-        private final byte priority;
+    private record MethodData(Object source, Method target, byte priority) {
 
         /**
          * Sets the values of the data.
@@ -288,10 +281,7 @@ public final class EventManager {
          * @param priority The priority of this Method. Used by the registry to sort
          *                 the data on.
          */
-        public MethodData(Object source, Method target, byte priority) {
-            this.source = source;
-            this.target = target;
-            this.priority = priority;
+        private MethodData {
         }
 
         /**
@@ -299,25 +289,28 @@ public final class EventManager {
          *
          * @return Source Object of the targeted Method.
          */
-        public Object getSource() {
+        @Override
+        public Object source() {
             return source;
         }
 
-        /**
-         * Gets the targeted Method.
-         *
-         * @return The Method that is listening to certain Event calls.
-         */
-        public Method getTarget() {
-            return target;
-        }
+            /**
+             * Gets the targeted Method.
+             *
+             * @return The Method that is listening to certain Event calls.
+             */
+            @Override
+            public Method target() {
+                return target;
+            }
 
         /**
          * Gets the priority value of the targeted Method.
          *
          * @return The priority value of the targeted Method.
          */
-        public byte getPriority() {
+        @Override
+        public byte priority() {
             return priority;
         }
 

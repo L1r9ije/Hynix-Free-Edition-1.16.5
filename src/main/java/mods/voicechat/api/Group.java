@@ -38,28 +38,28 @@ public interface Group {
      */
     Type getType();
 
-    public interface Type {
+    interface Type {
 
         /**
          * Players in a group can hear nearby players that are not in a group
          */
-        public static final Type NORMAL = new Type() {
+        Type NORMAL = new Type() {
         };
 
         /**
          * Players in a group can hear nearby players and nearby players can hear players in the group
          */
-        public static final Type OPEN = new Type() {
+        Type OPEN = new Type() {
         };
 
         /**
          * Players in a group can only hear other players in the group
          */
-        public static final Type ISOLATED = new Type() {
+        Type ISOLATED = new Type() {
         };
     }
 
-    public interface Builder {
+    interface Builder {
 
         /**
          * Sets the ID of the group.

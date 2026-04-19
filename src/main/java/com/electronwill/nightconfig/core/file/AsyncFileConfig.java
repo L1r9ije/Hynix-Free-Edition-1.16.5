@@ -127,7 +127,7 @@ final class AsyncFileConfig extends ConcurrentCommentedConfigWrapper<StampedConf
                     configWriter.write(copy, writer);
                 } catch (IOException e) {
                     String msg = String.format("Failed to write (%s) the config to: %s",
-                            writingMode.toString(), tmp.toString());
+                            writingMode, tmp);
                     throw new WritingException(msg, e);
                 }
                 // Flush and close the output before atomically moving the file.
@@ -139,14 +139,14 @@ final class AsyncFileConfig extends ConcurrentCommentedConfigWrapper<StampedConf
                     // can fail in some conditions (OS and filesystem-dependent)
                     String msg = String.format(
                             "Failed to atomically move the config from '%s' to '%s': WritingMode.REPLACE_ATOMIC is not supported for this path, use WritingMode.REPLACE instead.\n%s",
-                            tmp.toString(), nioPath.toString(),
+                            tmp, nioPath,
                             "Note: you may see *.new.tmp files after this error, they contain the \"new version\" of your configurations and can be safely removed."
                                     + "If you want, you can manually copy their content into your regular configuration files (replacing the old config).");
                     throw new WritingException(msg, e);
                 } catch (IOException e) {
                     // regular IO exception
                     String msg = String.format("Failed to atomically write (%s) the config to: %s",
-                            writingMode.toString(), tmp.toString());
+                            writingMode, tmp);
                     throw new WritingException(msg, e);
                 }
             } else {

@@ -60,7 +60,7 @@ public interface IVertexBuilder extends IForgeVertexBuilder {
     void endVertex();
 
     default void addVertex(float x, float y, float z, float red, float green, float blue, float alpha, float texU, float texV, int overlayUV, int lightmapUV, float normalX, float normalY, float normalZ) {
-        this.pos((double) x, (double) y, (double) z);
+        this.pos(x, y, z);
         this.color(red, green, blue, alpha);
         this.tex(texU, texV);
         this.overlay(overlayUV);
@@ -129,7 +129,7 @@ public interface IVertexBuilder extends IForgeVertexBuilder {
 
         for (int i1 = 0; i1 < k; ++i1) {
             int j1 = i1 * j;
-            float f6 = Float.intBitsToFloat(aint[j1 + 0]);
+            float f6 = Float.intBitsToFloat(aint[j1]);
             float f7 = Float.intBitsToFloat(aint[j1 + 1]);
             float f8 = Float.intBitsToFloat(aint[j1 + 2]);
             float f12 = 1.0F;
@@ -195,7 +195,7 @@ public interface IVertexBuilder extends IForgeVertexBuilder {
         float f = matrixIn.getTransformX(x, y, z, 1.0F);
         float f1 = matrixIn.getTransformY(x, y, z, 1.0F);
         float f2 = matrixIn.getTransformZ(x, y, z, 1.0F);
-        return this.pos((double) f, (double) f1, (double) f2);
+        return this.pos(f, f1, f2);
     }
 
     default IVertexBuilder normal(Matrix3f matrixIn, float x, float y, float z) {

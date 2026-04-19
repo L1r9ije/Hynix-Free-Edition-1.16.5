@@ -97,7 +97,7 @@ public class RealmsResetWorldScreen extends NotifableRealmsScreen {
                         RealmsResetWorldScreen.this.field_224471_q = worldtemplatepaginatedlist3;
                     });
                 } catch (RealmsServiceException realmsserviceexception) {
-                    RealmsResetWorldScreen.field_224456_b.error("Couldn't fetch templates in reset world", (Throwable) realmsserviceexception);
+                    RealmsResetWorldScreen.field_224456_b.error("Couldn't fetch templates in reset world", realmsserviceexception);
                 }
             }
         }).start();
@@ -241,11 +241,11 @@ public class RealmsResetWorldScreen extends NotifableRealmsScreen {
     }
 
     public void func_224435_b(WorldTemplate p_224435_1_) {
-        this.func_237953_a_((String) null, p_224435_1_, -1, true);
+        this.func_237953_a_(null, p_224435_1_, -1, true);
     }
 
     private void func_224437_b(RealmsResetWorldScreen.ResetWorldInfo p_224437_1_) {
-        this.func_237953_a_(p_224437_1_.field_225157_a, (WorldTemplate) null, p_224437_1_.field_225158_b, p_224437_1_.field_225159_c);
+        this.func_237953_a_(p_224437_1_.field_225157_a, null, p_224437_1_.field_225158_b, p_224437_1_.field_225159_c);
     }
 
     private void func_237953_a_(@Nullable String p_237953_1_, @Nullable WorldTemplate p_237953_2_, int p_237953_3_, boolean p_237953_4_) {
@@ -262,14 +262,14 @@ public class RealmsResetWorldScreen extends NotifableRealmsScreen {
         }
     }
 
-    static enum ResetType {
+    enum ResetType {
         NONE,
         GENERATE,
         UPLOAD,
         ADVENTURE,
         SURVIVAL_SPAWN,
         EXPERIENCE,
-        INSPIRATION;
+        INSPIRATION
     }
 
     public static class ResetWorldInfo {
@@ -293,7 +293,7 @@ public class RealmsResetWorldScreen extends NotifableRealmsScreen {
         }
 
         public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-            RealmsResetWorldScreen.this.func_237948_a_(matrixStack, this.x, this.y, this.getMessage(), this.field_223824_c, this.isHovered(), this.isMouseOver((double) mouseX, (double) mouseY));
+            RealmsResetWorldScreen.this.func_237948_a_(matrixStack, this.x, this.y, this.getMessage(), this.field_223824_c, this.isHovered(), this.isMouseOver(mouseX, mouseY));
         }
     }
 }

@@ -22,35 +22,13 @@ import mods.baritone.api.api.java.baritone.api.event.events.type.EventState;
 
 import java.util.function.BiFunction;
 
-public final class TickEvent {
+public record TickEvent(EventState state, Type type, int count) {
 
     private static int overallTickCount;
-
-    private final EventState state;
-    private final Type type;
-    private final int count;
-
-    public TickEvent(EventState state, Type type, int count) {
-        this.state = state;
-        this.type = type;
-        this.count = count;
-    }
 
     public static synchronized BiFunction<EventState, Type, TickEvent> createNextProvider() {
         final int count = overallTickCount++;
         return (state, type) -> new TickEvent(state, type, count);
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public EventState getState() {
-        return state;
     }
 
     public enum Type {

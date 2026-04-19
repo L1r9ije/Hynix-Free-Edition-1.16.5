@@ -93,7 +93,7 @@ public class FileUpload {
                 uploadresult = this.func_224876_b(i, p_224879_1_);
             } catch (Exception exception) {
                 if (!this.field_224892_j.get()) {
-                    field_224883_a.error("Caught exception while uploading: ", (Throwable) exception);
+                    field_224883_a.error("Caught exception while uploading: ", exception);
                 }
 
                 return uploadresult$builder.func_225174_a();
@@ -141,7 +141,7 @@ public class FileUpload {
                     JsonParser jsonparser = new JsonParser();
                     JsonElement jsonelement = jsonparser.parse(s).getAsJsonObject().get("errorMsg");
                     Optional<String> optional = Optional.ofNullable(jsonelement).map(JsonElement::getAsString);
-                    p_224875_2_.func_225176_a(optional.orElse((String) null));
+                    p_224875_2_.func_225176_a(optional.orElse(null));
                 } catch (Exception exception) {
                 }
             }
@@ -188,7 +188,7 @@ public class FileUpload {
                 if (this.field_224869_a < 0L) {
                     while ((j = inputstream.read(abyte)) != -1) {
                         p_writeTo_1_.write(abyte, 0, j);
-                        this.field_224871_c.field_224978_a += (long) j;
+                        this.field_224871_c.field_224978_a += j;
                     }
                 } else {
                     long i = this.field_224869_a;
@@ -201,8 +201,8 @@ public class FileUpload {
                         }
 
                         p_writeTo_1_.write(abyte, 0, j);
-                        this.field_224871_c.field_224978_a += (long) j;
-                        i -= (long) j;
+                        this.field_224871_c.field_224978_a += j;
+                        i -= j;
                         p_writeTo_1_.flush();
                     }
                 }

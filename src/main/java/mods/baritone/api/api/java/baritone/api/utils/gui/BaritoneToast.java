@@ -30,7 +30,7 @@ public class BaritoneToast implements IToast {
     private String subtitle;
     private long firstDrawTime;
     private boolean newDisplay;
-    private long totalShowTime;
+    private final long totalShowTime;
 
     public BaritoneToast(ITextComponent titleComponent, ITextComponent subtitleComponent, long totalShowTime) {
         this.title = titleComponent.getString();

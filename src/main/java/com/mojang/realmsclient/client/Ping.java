@@ -65,7 +65,7 @@ public class Ping {
         return func_224867_a(Ping.Region.values());
     }
 
-    static enum Region {
+    enum Region {
         US_EAST_1("us-east-1", "ec2.us-east-1.amazonaws.com"),
         US_WEST_2("us-west-2", "ec2.us-west-2.amazonaws.com"),
         US_WEST_1("us-west-1", "ec2.us-west-1.amazonaws.com"),
@@ -78,7 +78,7 @@ public class Ping {
         private final String field_224862_i;
         private final String field_224863_j;
 
-        private Region(String p_i51602_3_, String p_i51602_4_) {
+        Region(String p_i51602_3_, String p_i51602_4_) {
             this.field_224862_i = p_i51602_3_;
             this.field_224863_j = p_i51602_4_;
         }

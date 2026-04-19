@@ -48,8 +48,8 @@ public class WaypointBehavior extends Behavior {
     public void onBlockInteract(BlockInteractEvent event) {
         if (!Baritone.settings().doBedWaypoints.value)
             return;
-        if (event.getType() == BlockInteractEvent.Type.USE) {
-            BetterBlockPos pos = BetterBlockPos.from(event.getPos());
+        if (event.type() == BlockInteractEvent.Type.USE) {
+            BetterBlockPos pos = BetterBlockPos.from(event.pos());
             BlockState state = BlockStateInterface.get(ctx, pos);
             if (state.getBlock() instanceof BedBlock) {
                 if (state.get(BedBlock.PART) == BedPart.FOOT) {

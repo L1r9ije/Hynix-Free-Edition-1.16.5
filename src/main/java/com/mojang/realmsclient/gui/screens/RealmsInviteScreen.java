@@ -39,7 +39,7 @@ public class RealmsInviteScreen extends RealmsScreen {
 
     public void init() {
         this.minecraft.keyboardListener.enableRepeatEvents(true);
-        this.field_224214_b = new TextFieldWidget(this.minecraft.fontRenderer, this.width / 2 - 100, func_239562_k_(2), 200, 20, (TextFieldWidget) null, new TranslationTextComponent("mco.configure.world.invite.profile.name"));
+        this.field_224214_b = new TextFieldWidget(this.minecraft.fontRenderer, this.width / 2 - 100, func_239562_k_(2), 200, 20, null, new TranslationTextComponent("mco.configure.world.invite.profile.name"));
         this.addListener(this.field_224214_b);
         this.setFocusedDefault(this.field_224214_b);
         this.addButton(new Button(this.width / 2 - 100, func_239562_k_(10), 200, 20, new TranslationTextComponent("mco.configure.world.buttons.invite"), (p_237844_1_) ->

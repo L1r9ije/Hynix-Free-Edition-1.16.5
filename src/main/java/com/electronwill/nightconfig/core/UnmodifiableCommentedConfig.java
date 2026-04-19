@@ -146,10 +146,7 @@ public interface UnmodifiableCommentedConfig extends UnmodifiableConfig {
         String getComment();
     }
 
-    final class CommentNode {
-        private final String comment;
-        private final Map<String, CommentNode> children;
-
+    record CommentNode(String comment, Map<String, CommentNode> children) {
         /**
          * Creates a new CommentNode.
          * <p>
@@ -158,26 +155,26 @@ public interface UnmodifiableCommentedConfig extends UnmodifiableConfig {
          * @param comment  the comment, may be null
          * @param children the children Map, may be null
          */
-        public CommentNode(String comment, Map<String, CommentNode> children) {
+        public CommentNode {
             if (comment == null && children == null) {
                 throw new IllegalArgumentException("There is no point in creating a CommentNode "
                         + "if the comment AND the children are null.");
             }
-            this.comment = comment;
-            this.children = children;
         }
 
         /**
          * @return the node's comment
          */
-        public String getComment() {
+        @Override
+        public String comment() {
             return comment;
         }
 
         /**
          * @return the Map of the node's children
          */
-        public Map<String, CommentNode> getChildren() {
+        @Override
+        public Map<String, CommentNode> children() {
             return children;
         }
     }

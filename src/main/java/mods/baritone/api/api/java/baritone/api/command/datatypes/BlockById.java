@@ -32,7 +32,7 @@ public enum BlockById implements IDatatypeFor<Block> {
     /**
      * Matches (domain:)?name? where domain and name are [a-z0-9_.-]+ and [a-z0-9/_.-]+ respectively.
      */
-    private static Pattern PATTERN = Pattern.compile("(?:[a-z0-9_.-]+:)?[a-z0-9/_.-]*");
+    private static final Pattern PATTERN = Pattern.compile("(?:[a-z0-9_.-]+:)?[a-z0-9/_.-]*");
 
     @Override
     public Block get(IDatatypeContext ctx) throws CommandException {

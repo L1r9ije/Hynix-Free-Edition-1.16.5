@@ -65,7 +65,7 @@ public class RealmsBackupInfoScreen extends RealmsScreen {
         if (s.contains("game") && s.contains("mode")) {
             return this.func_237735_b_(p_237733_2_);
         } else {
-            return (ITextComponent) (s.contains("game") && s.contains("difficulty") ? this.func_237732_a_(p_237733_2_) : new StringTextComponent(p_237733_2_));
+            return s.contains("game") && s.contains("difficulty") ? this.func_237732_a_(p_237733_2_) : new StringTextComponent(p_237733_2_);
         }
     }
 

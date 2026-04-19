@@ -57,8 +57,7 @@ public abstract class VoicechatApiImpl implements VoicechatApi {
 
     @Override
     public Entity fromEntity(Object entity) {
-        if (entity instanceof net.minecraft.entity.Entity) {
-            net.minecraft.entity.Entity e = (net.minecraft.entity.Entity) entity;
+        if (entity instanceof net.minecraft.entity.Entity e) {
             return new EntityImpl(e);
         } else {
             throw new IllegalArgumentException("entity is not an instance of Entity");
@@ -67,8 +66,7 @@ public abstract class VoicechatApiImpl implements VoicechatApi {
 
     @Override
     public ServerLevel fromServerLevel(Object serverLevel) {
-        if (serverLevel instanceof ServerWorld) {
-            ServerWorld l = (ServerWorld) serverLevel;
+        if (serverLevel instanceof ServerWorld l) {
             return new ServerLevelImpl(l);
         } else {
             throw new IllegalArgumentException("serverLevel is not an instance of ServerLevel");
@@ -77,8 +75,7 @@ public abstract class VoicechatApiImpl implements VoicechatApi {
 
     @Override
     public ServerPlayer fromServerPlayer(Object serverPlayer) {
-        if (serverPlayer instanceof ServerPlayerEntity) {
-            ServerPlayerEntity p = (ServerPlayerEntity) serverPlayer;
+        if (serverPlayer instanceof ServerPlayerEntity p) {
             return new ServerPlayerImpl(p);
         } else {
             throw new IllegalArgumentException("serverPlayer is not an instance of ServerPlayer");

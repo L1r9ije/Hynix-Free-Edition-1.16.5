@@ -298,7 +298,7 @@ public interface VoicechatServerApi extends VoicechatApi {
      * @param category the category to remove
      */
     default void unregisterVolumeCategory(VolumeCategory category) {
-        unregisterVolumeCategory(category.getId());
+        unregisterVolumeCategory(category.id());
     }
 
     /**

@@ -17,7 +17,7 @@ public class RealmsResetNormalWorldScreen extends RealmsScreen {
     private TextFieldWidget field_224356_d;
     private Boolean field_224357_e = true;
     private Integer field_224358_f = 0;
-    private ITextComponent field_224365_m;
+    private final ITextComponent field_224365_m;
 
     public RealmsResetNormalWorldScreen(RealmsResetWorldScreen p_i232214_1_, ITextComponent p_i232214_2_) {
         this.field_224354_b = p_i232214_1_;
@@ -33,7 +33,7 @@ public class RealmsResetNormalWorldScreen extends RealmsScreen {
         this.minecraft.keyboardListener.enableRepeatEvents(true);
         this.field_224355_c = new RealmsLabel(new TranslationTextComponent("mco.reset.world.generate"), this.width / 2, 17, 16777215);
         this.addListener(this.field_224355_c);
-        this.field_224356_d = new TextFieldWidget(this.minecraft.fontRenderer, this.width / 2 - 100, func_239562_k_(2), 200, 20, (TextFieldWidget) null, new TranslationTextComponent("mco.reset.world.seed"));
+        this.field_224356_d = new TextFieldWidget(this.minecraft.fontRenderer, this.width / 2 - 100, func_239562_k_(2), 200, 20, null, new TranslationTextComponent("mco.reset.world.seed"));
         this.field_224356_d.setMaxStringLength(32);
         this.addListener(this.field_224356_d);
         this.setFocusedDefault(this.field_224356_d);

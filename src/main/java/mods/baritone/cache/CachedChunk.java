@@ -192,7 +192,7 @@ public final class CachedChunk {
         }
     }
 
-    private final void setSpecial() {
+    private void setSpecial() {
         for (Map.Entry<String, List<BlockPos>> entry : specialBlockLocations.entrySet()) {
             for (BlockPos pos : entry.getValue()) {
                 special.put(getPositionIndex(pos.getX(), pos.getY(), pos.getZ()), entry.getKey());
@@ -200,7 +200,7 @@ public final class CachedChunk {
         }
     }
 
-    public final BlockState getBlock(int x, int y, int z, RegistryKey<World> dimension) {
+    public BlockState getBlock(int x, int y, int z, RegistryKey<World> dimension) {
         int index = getPositionIndex(x, y, z);
         PathingBlockType type = getType(index);
         int internalPos = z << 4 | x;
@@ -256,15 +256,15 @@ public final class CachedChunk {
         }
     }
 
-    public final BlockState[] getOverview() {
+    public BlockState[] getOverview() {
         return overview;
     }
 
-    public final Map<String, List<BlockPos>> getRelativeBlocks() {
+    public Map<String, List<BlockPos>> getRelativeBlocks() {
         return specialBlockLocations;
     }
 
-    public final ArrayList<BlockPos> getAbsoluteBlocks(String blockType) {
+    public ArrayList<BlockPos> getAbsoluteBlocks(String blockType) {
         if (specialBlockLocations.get(blockType) == null) {
             return null;
         }
@@ -278,7 +278,7 @@ public final class CachedChunk {
     /**
      * @return Returns the raw packed chunk data as a byte array
      */
-    public final byte[] toByteArray() {
+    public byte[] toByteArray() {
         return this.data.toByteArray();
     }
 }

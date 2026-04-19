@@ -69,16 +69,14 @@ public class ForgeCommonCompatibilityManager extends CommonCompatibilityManager 
 
     @EventTarget
     public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getPlayer() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        if (event.getPlayer() instanceof ServerPlayerEntity player) {
             playerLoggedInEvents.forEach(consumer -> consumer.accept(player));
         }
     }
 
     @EventTarget
     public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getPlayer() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        if (event.getPlayer() instanceof ServerPlayerEntity player) {
             playerLoggedOutEvents.forEach(consumer -> consumer.accept(player));
         }
     }

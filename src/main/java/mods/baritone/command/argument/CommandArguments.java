@@ -36,7 +36,7 @@ public final class CommandArguments {
     }
 
     /**
-     * Turn a string into a list of {@link ICommandArgument}s. This is needed because of {@link ICommandArgument#getRawRest()}
+     * Turn a string into a list of {@link ICommandArgument}s. This is needed because of {@link ICommandArgument#rawRest()}
      *
      * @param string            The string to convert
      * @param preserveEmptyLast If the string ends with whitespace, add an empty {@link ICommandArgument} to the end This

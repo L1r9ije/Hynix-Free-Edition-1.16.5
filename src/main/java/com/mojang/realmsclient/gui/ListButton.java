@@ -50,11 +50,7 @@ public abstract class ListButton {
     public void func_237726_a_(MatrixStack p_237726_1_, int p_237726_2_, int p_237726_3_, int p_237726_4_, int p_237726_5_) {
         int i = p_237726_2_ + this.field_225127_c;
         int j = p_237726_3_ + this.field_225128_d;
-        boolean flag = false;
-
-        if (p_237726_4_ >= i && p_237726_4_ <= i + this.field_225125_a && p_237726_5_ >= j && p_237726_5_ <= j + this.field_225126_b) {
-            flag = true;
-        }
+        boolean flag = p_237726_4_ >= i && p_237726_4_ <= i + this.field_225125_a && p_237726_5_ >= j && p_237726_5_ <= j + this.field_225126_b;
 
         this.func_230435_a_(p_237726_1_, i, j, flag);
     }

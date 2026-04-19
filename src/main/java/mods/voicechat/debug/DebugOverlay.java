@@ -25,7 +25,7 @@ public class DebugOverlay {
     private boolean active;
     @Nullable
     private TimerThread timer;
-    private List<String> rightText = new ArrayList<>();
+    private final List<String> rightText = new ArrayList<>();
 
     public DebugOverlay() {
         audioChannelInfoMap = new LinkedHashMap<>();
@@ -125,11 +125,11 @@ public class DebugOverlay {
         }
         return String.format(
                 "Group: %s Name: %s Password: %s Persistent: %s Type: %s",
-                group.getId().toString().substring(24),
-                group.getName(),
+                group.id().toString().substring(24),
+                group.name(),
                 group.hasPassword(),
-                group.isPersistent(),
-                GroupType.fromType(group.getType()).name()
+                group.persistent(),
+                GroupType.fromType(group.type()).name()
         );
     }
 

@@ -21,24 +21,17 @@ package mods.baritone.api.api.java.baritone.api.event.events;
 import mods.baritone.api.api.java.baritone.api.event.events.type.EventState;
 
 /**
+ * @param state The state of the event
  * @author Brady
  * @since 8/21/2018
  */
-public final class PlayerUpdateEvent {
-
-    /**
-     * The state of the event
-     */
-    private final EventState state;
-
-    public PlayerUpdateEvent(EventState state) {
-        this.state = state;
-    }
+public record PlayerUpdateEvent(EventState state) {
 
     /**
      * @return The state of the event
      */
-    public final EventState getState() {
+    @Override
+    public EventState state() {
         return this.state;
     }
 }

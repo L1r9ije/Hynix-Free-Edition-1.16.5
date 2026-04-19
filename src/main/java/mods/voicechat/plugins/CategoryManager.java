@@ -16,7 +16,7 @@ public class CategoryManager {
     }
 
     public void addCategory(VolumeCategoryImpl category) {
-        categories.put(category.getId(), category);
+        categories.put(category.id(), category);
     }
 
     @Nullable

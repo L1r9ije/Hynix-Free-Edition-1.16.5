@@ -154,9 +154,7 @@ final class ValueParser {
             throw new ParsingException("Invalid integer value: " + valueChars);
         }
         int intValue = (int) longValue;
-        if (intValue == longValue) {
-            return intValue;// returns an int if it is enough to represent the value correctly
-        }
+        // returns an int if it is enough to represent the value correctly
         return longValue;
     }
 

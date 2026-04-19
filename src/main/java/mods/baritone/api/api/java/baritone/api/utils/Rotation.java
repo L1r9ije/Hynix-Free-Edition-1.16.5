@@ -18,20 +18,12 @@
 package mods.baritone.api.api.java.baritone.api.utils;
 
 /**
+ * @param yaw   The yaw angle of this Rotation
+ * @param pitch The pitch angle of this Rotation
  * @author Brady
  * @since 9/25/2018
  */
-public class Rotation {
-
-    /**
-     * The yaw angle of this Rotation
-     */
-    private final float yaw;
-
-    /**
-     * The pitch angle of this Rotation
-     */
-    private final float pitch;
+public record Rotation(float yaw, float pitch) {
 
     public Rotation(float yaw, float pitch) {
         this.yaw = yaw;
@@ -71,14 +63,16 @@ public class Rotation {
     /**
      * @return The yaw of this rotation
      */
-    public float getYaw() {
+    @Override
+    public float yaw() {
         return this.yaw;
     }
 
     /**
      * @return The pitch of this rotation
      */
-    public float getPitch() {
+    @Override
+    public float pitch() {
         return this.pitch;
     }
 

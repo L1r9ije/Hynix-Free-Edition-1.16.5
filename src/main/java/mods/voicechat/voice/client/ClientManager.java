@@ -67,10 +67,9 @@ public class ClientManager {
         if (socketAddress instanceof LocalAddress) {
             return "127.0.0.1";
         }
-        if (!(socketAddress instanceof InetSocketAddress)) {
+        if (!(socketAddress instanceof InetSocketAddress address)) {
             throw new IOException(String.format("Failed to determine server address with SocketAddress of type %s", socketAddress.getClass().getSimpleName()));
         }
-        InetSocketAddress address = (InetSocketAddress) socketAddress;
         InetAddress inetAddress = address.getAddress();
         if (inetAddress == null) {
             return address.getHostString();

@@ -193,8 +193,8 @@ public class MovementTraverse extends Movement {
 
             // combine the yaw to the center of the destination, and the pitch to the specific block we're trying to break
             // it's safe to do this since the two blocks we break (in a traverse) are right on top of each other and so will have the same yaw
-            float yawToDest = RotationUtils.calcRotationFromVec3d(ctx.playerHead(), VecUtils.calculateBlockCenter(ctx.world(), dest), ctx.playerRotations()).getYaw();
-            float pitchToBreak = state.getTarget().getRotation().get().getPitch();
+            float yawToDest = RotationUtils.calcRotationFromVec3d(ctx.playerHead(), VecUtils.calculateBlockCenter(ctx.world(), dest), ctx.playerRotations()).yaw();
+            float pitchToBreak = state.getTarget().getRotation().get().pitch();
             if ((MovementHelper.isBlockNormalCube(pb0) || pb0.getBlock() instanceof AirBlock && (MovementHelper.isBlockNormalCube(pb1) || pb1.getBlock() instanceof AirBlock))) {
                 // in the meantime, before we're right up against the block, we can break efficiently at this angle
                 pitchToBreak = 26;
@@ -301,8 +301,8 @@ public class MovementTraverse extends Movement {
                 case ATTEMPTING: {
                     if (dist1 > 0.83) {
                         // might need to go forward a bit
-                        float yaw = RotationUtils.calcRotationFromVec3d(ctx.playerHead(), VecUtils.getBlockPosCenter(dest), ctx.playerRotations()).getYaw();
-                        if (Math.abs(state.getTarget().rotation.getYaw() - yaw) < 0.1) {
+                        float yaw = RotationUtils.calcRotationFromVec3d(ctx.playerHead(), VecUtils.getBlockPosCenter(dest), ctx.playerRotations()).yaw();
+                        if (Math.abs(state.getTarget().rotation.yaw() - yaw) < 0.1) {
                             // but only if our attempted place is straight ahead
                             return state.setInput(Input.MOVE_FORWARD, true);
                         }
@@ -325,10 +325,10 @@ public class MovementTraverse extends Movement {
                 BlockPos goalLook = src.down(); // this is the block we were just standing on, and the one we want to place against
 
                 Rotation backToFace = RotationUtils.calcRotationFromVec3d(ctx.playerHead(), new Vector3d(faceX, faceY, faceZ), ctx.playerRotations());
-                float pitch = backToFace.getPitch();
+                float pitch = backToFace.pitch();
                 double dist2 = Math.max(Math.abs(ctx.player().getPositionVec().x - faceX), Math.abs(ctx.player().getPositionVec().z - faceZ));
                 if (dist2 < 0.29) { // see issue #208
-                    float yaw = RotationUtils.calcRotationFromVec3d(VecUtils.getBlockPosCenter(dest), ctx.playerHead(), ctx.playerRotations()).getYaw();
+                    float yaw = RotationUtils.calcRotationFromVec3d(VecUtils.getBlockPosCenter(dest), ctx.playerHead(), ctx.playerRotations()).yaw();
                     state.setTarget(new MovementState.MovementTarget(new Rotation(yaw, pitch), true));
                     state.setInput(Input.MOVE_BACK, true);
                 } else {

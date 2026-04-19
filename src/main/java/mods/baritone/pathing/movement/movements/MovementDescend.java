@@ -235,7 +235,7 @@ public class MovementDescend extends Movement {
             state.setTarget(new MovementState.MovementTarget(
                     RotationUtils.calcRotationFromVec3d(ctx.playerHead(),
                             new Vector3d(destX, dest.getY(), destZ),
-                            ctx.playerRotations()).withPitch(ctx.playerRotations().getPitch()),
+                            ctx.playerRotations()).withPitch(ctx.playerRotations().pitch()),
                     false
             )).setInput(Input.MOVE_FORWARD, true);
             return state;

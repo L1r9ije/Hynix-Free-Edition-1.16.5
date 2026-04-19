@@ -36,9 +36,9 @@ public class CompositeSchematic extends AbstractSchematic {
     private void recalcArr() {
         schematicArr = schematics.toArray(new CompositeSchematicEntry[0]);
         for (CompositeSchematicEntry entry : schematicArr) {
-            this.x = Math.max(x, entry.x + entry.schematic.widthX());
-            this.y = Math.max(y, entry.y + entry.schematic.heightY());
-            this.z = Math.max(z, entry.z + entry.schematic.lengthZ());
+            this.x = Math.max(x, entry.x() + entry.schematic().widthX());
+            this.y = Math.max(y, entry.y() + entry.schematic().heightY());
+            this.z = Math.max(z, entry.z() + entry.schematic().lengthZ());
         }
     }
 
@@ -49,8 +49,8 @@ public class CompositeSchematic extends AbstractSchematic {
 
     private CompositeSchematicEntry getSchematic(int x, int y, int z, BlockState currentState) {
         for (CompositeSchematicEntry entry : schematicArr) {
-            if (x >= entry.x && y >= entry.y && z >= entry.z &&
-                    entry.schematic.inSchematic(x - entry.x, y - entry.y, z - entry.z, currentState)) {
+            if (x >= entry.x() && y >= entry.y() && z >= entry.z() &&
+                    entry.schematic().inSchematic(x - entry.x(), y - entry.y(), z - entry.z(), currentState)) {
                 return entry;
             }
         }
@@ -60,7 +60,7 @@ public class CompositeSchematic extends AbstractSchematic {
     @Override
     public boolean inSchematic(int x, int y, int z, BlockState currentState) {
         CompositeSchematicEntry entry = getSchematic(x, y, z, currentState);
-        return entry != null && entry.schematic.inSchematic(x - entry.x, y - entry.y, z - entry.z, currentState);
+        return entry != null && entry.schematic().inSchematic(x - entry.x(), y - entry.y(), z - entry.z(), currentState);
     }
 
     @Override
@@ -69,13 +69,13 @@ public class CompositeSchematic extends AbstractSchematic {
         if (entry == null) {
             throw new IllegalStateException("couldn't find schematic for this position");
         }
-        return entry.schematic.desiredState(x - entry.x, y - entry.y, z - entry.z, current, approxPlaceable);
+        return entry.schematic().desiredState(x - entry.x(), y - entry.y(), z - entry.z(), current, approxPlaceable);
     }
 
     @Override
     public void reset() {
         for (CompositeSchematicEntry entry : schematicArr) {
-            entry.schematic.reset();
+            entry.schematic().reset();
         }
     }
 }

@@ -4,14 +4,6 @@ import com.google.common.util.concurrent.Runnables;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.function.BiConsumer;
-import javax.annotation.Nullable;
-
 import net.minecraft.client.gui.AccessibilityScreen;
 import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.toasts.SystemToast;
@@ -38,7 +30,14 @@ import net.optifine.reflect.Reflector;
 import net.optifine.reflect.ReflectorForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import su.hynix.ui.screens.AccountsScreen;
+import su.hynix.ui.screens.HynixMainMenuScreen;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.function.BiConsumer;
 
 public class MainMenuScreen extends Screen {
     public static final RenderSkyboxCube PANORAMA_RESOURCES = new RenderSkyboxCube(new ResourceLocation("textures/gui/title/background/panorama"));
@@ -103,6 +102,8 @@ public class MainMenuScreen extends Screen {
     }
 
     protected void init() {
+        this.minecraft.displayGuiScreen(new HynixMainMenuScreen());
+
         if (this.splashText == null) {
             this.splashText = this.minecraft.getSplashes().getSplashText();
         }
@@ -172,13 +173,13 @@ public class MainMenuScreen extends Screen {
                 this.renderTooltip(p_lambda$addSingleplayerMultiplayerButtons$5_2_, this.minecraft.fontRenderer.trimStringToWidth(new TranslationTextComponent("title.multiplayer.disabled"), Math.max(this.width / 2 - 43, 170)), p_lambda$addSingleplayerMultiplayerButtons$5_3_, p_lambda$addSingleplayerMultiplayerButtons$5_4_);
             }
         };
-        this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 3, 200, 20, new StringTextComponent("Аккаунты"), p_onPress_1_ -> {
-            this.minecraft.displayGuiScreen(new AccountsScreen());
+        this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 3, 200, 20, new StringTextComponent("Main menu"), p_onPress_1_ -> {
+            this.minecraft.displayGuiScreen(new HynixMainMenuScreen());
         }));
 
-        (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent("menu.multiplayer"), (p_lambda$addSingleplayerMultiplayerButtons$6_1_) ->
+        (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn, 200, 20, new TranslationTextComponent("menu.multiplayer"), (p_lambda$addSingleplayerMultiplayerButtons$6_1_) ->
         {
-            Screen screen = (Screen) (this.minecraft.gameSettings.skipMultiplayerWarning ? new MultiplayerScreen(this) : new MultiplayerWarningScreen(this));
+            Screen screen = this.minecraft.gameSettings.skipMultiplayerWarning ? new MultiplayerScreen(this) : new MultiplayerWarningScreen(this);
             this.minecraft.displayGuiScreen(screen);
         }, button$itooltip))).active = flag;
         (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, new TranslationTextComponent("menu.online"), (p_lambda$addSingleplayerMultiplayerButtons$7_1_) ->
@@ -207,7 +208,7 @@ public class MainMenuScreen extends Screen {
                 this.minecraft.createWorld("Demo_World", MinecraftServer.DEMO_WORLD_SETTINGS, dynamicregistries$impl, DimensionGeneratorSettings.func_242752_a(dynamicregistries$impl));
             }
         }));
-        this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent("menu.resetdemo"), (p_lambda$addDemoButtons$9_1_) ->
+        this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn, 200, 20, new TranslationTextComponent("menu.resetdemo"), (p_lambda$addDemoButtons$9_1_) ->
         {
             SaveFormat saveformat = this.minecraft.getSaveLoader();
 
@@ -219,7 +220,7 @@ public class MainMenuScreen extends Screen {
                 }
             } catch (IOException ioexception1) {
                 SystemToast.func_238535_a_(this.minecraft, "Demo_World");
-                field_238656_b_.warn("Failed to access demo world", (Throwable) ioexception1);
+                field_238656_b_.warn("Failed to access demo world", ioexception1);
             }
         }));
         this.buttonResetDemo.active = flag;
@@ -230,7 +231,7 @@ public class MainMenuScreen extends Screen {
             return saveformat$levelsave.readWorldSummary() != null;
         } catch (IOException ioexception1) {
             SystemToast.func_238535_a_(this.minecraft, "Demo_World");
-            field_238656_b_.warn("Failed to read demo world data", (Throwable) ioexception1);
+            field_238656_b_.warn("Failed to read demo world data", ioexception1);
             return false;
         }
     }
@@ -267,7 +268,7 @@ public class MainMenuScreen extends Screen {
             if (this.showTitleWronglySpelled) {
                 this.blitBlackOutline(j, 30, (p_lambda$render$10_2_, p_lambda$render$10_3_) ->
                 {
-                    this.blit(matrixStack, p_lambda$render$10_2_ + 0, p_lambda$render$10_3_, 0, 0, 99, 44);
+                    this.blit(matrixStack, p_lambda$render$10_2_, p_lambda$render$10_3_, 0, 0, 99, 44);
                     this.blit(matrixStack, p_lambda$render$10_2_ + 99, p_lambda$render$10_3_, 129, 0, 27, 44);
                     this.blit(matrixStack, p_lambda$render$10_2_ + 99 + 26, p_lambda$render$10_3_, 126, 0, 3, 44);
                     this.blit(matrixStack, p_lambda$render$10_2_ + 99 + 26 + 3, p_lambda$render$10_3_, 99, 0, 26, 44);
@@ -276,7 +277,7 @@ public class MainMenuScreen extends Screen {
             } else {
                 this.blitBlackOutline(j, 30, (p_lambda$render$11_2_, p_lambda$render$11_3_) ->
                 {
-                    this.blit(matrixStack, p_lambda$render$11_2_ + 0, p_lambda$render$11_3_, 0, 0, 155, 44);
+                    this.blit(matrixStack, p_lambda$render$11_2_, p_lambda$render$11_3_, 0, 0, 155, 44);
                     this.blit(matrixStack, p_lambda$render$11_2_ + 155, p_lambda$render$11_3_, 0, 45, 155, 44);
                 });
             }
@@ -379,7 +380,7 @@ public class MainMenuScreen extends Screen {
                 saveformat$levelsave.deleteSave();
             } catch (IOException ioexception1) {
                 SystemToast.func_238538_b_(this.minecraft, "Demo_World");
-                field_238656_b_.warn("Failed to delete demo world", (Throwable) ioexception1);
+                field_238656_b_.warn("Failed to delete demo world", ioexception1);
             }
         }
 

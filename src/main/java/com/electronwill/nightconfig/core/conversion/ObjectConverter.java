@@ -193,9 +193,8 @@ public final class ObjectConverter {
                         Config converted = destination.createSubConfig();
                         convertToConfig(value, valueType, converted);
                         destination.set(path, converted);
-                    } else if (value instanceof Collection) {
+                    } else if (value instanceof Collection<?> src) {
                         // Checks that the ConfigFormat supports the type of the collection's elements
-                        Collection<?> src = (Collection<?>) value;
                         Class<?> bottomType = bottomElementType(src);
                         if (format.supportsType(bottomType)) {
                             // Everything is supported, no conversion needed
@@ -251,9 +250,8 @@ public final class ObjectConverter {
                 // --- Writes the value to the object's field, converting it if needed ---
                 Class<?> fieldType = field.getType();
                 try {
-                    if (value instanceof UnmodifiableConfig && !(fieldType.isAssignableFrom(value.getClass()))) {
+                    if (value instanceof UnmodifiableConfig cfg && !(fieldType.isAssignableFrom(value.getClass()))) {
                         // --- Read as a sub-object ---
-                        final UnmodifiableConfig cfg = (UnmodifiableConfig) value;
 
                         // Gets or creates the field and convert it
                         Object fieldValue = field.get(object);
@@ -265,9 +263,8 @@ public final class ObjectConverter {
                             convertToObject(cfg, fieldValue, field.getType());
                         }
 
-                    } else if (value instanceof Collection && Collection.class.isAssignableFrom(fieldType)) {
+                    } else if (value instanceof Collection<?> src && Collection.class.isAssignableFrom(fieldType)) {
                         // --- Reads as a collection, maybe a list of objects with conversion ---
-                        final Collection<?> src = (Collection<?>) value;
                         final Class<?> srcBottomType = bottomElementType(src);
 
                         final ParameterizedType genericType = (ParameterizedType) field.getGenericType();
@@ -340,8 +337,7 @@ public final class ObjectConverter {
     private Class<?> bottomElementType(ParameterizedType genericType) {
         if (genericType != null && genericType.getActualTypeArguments().length > 0) {
             Type parameter = genericType.getActualTypeArguments()[0];
-            if (parameter instanceof ParameterizedType) {
-                ParameterizedType genericParameter = (ParameterizedType) parameter;
+            if (parameter instanceof ParameterizedType genericParameter) {
                 Class<?> paramClass = (Class<?>) genericParameter.getRawType();
                 if (paramClass.isAssignableFrom(Collection.class)) {
                     return bottomElementType(genericParameter);
@@ -359,8 +355,7 @@ public final class ObjectConverter {
     private void detectElementTypes(ParameterizedType genericType, List<Class<?>> storage) {
         if (genericType != null && genericType.getActualTypeArguments().length > 0) {
             Type parameter = genericType.getActualTypeArguments()[0];
-            if (parameter instanceof ParameterizedType) {
-                ParameterizedType genericParameter = (ParameterizedType) parameter;
+            if (parameter instanceof ParameterizedType genericParameter) {
                 Class<?> paramClass = (Class<?>) genericParameter.getRawType();
 
                 storage.add(paramClass);
@@ -422,8 +417,7 @@ public final class ObjectConverter {
         for (Object elem : src) {
             if (elem == null) {
                 dst.add(null);
-            } else if (elem instanceof Collection) {
-                final Collection<?> subSrc = (Collection<?>) elem;
+            } else if (elem instanceof Collection<?> subSrc) {
                 final Collection<Object> subDst;
 
                 if (currentType == ArrayList.class

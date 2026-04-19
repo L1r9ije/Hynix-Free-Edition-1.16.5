@@ -57,7 +57,7 @@ import java.util.stream.Stream;
 
 public class SelCommand extends Command {
 
-    private ISelectionManager manager = baritone.getSelectionManager();
+    private final ISelectionManager manager = baritone.getSelectionManager();
     private BetterBlockPos pos1 = null;
     private ISchematic clipboard = null;
     private Vector3i clipboardOffset = null;
@@ -75,7 +75,7 @@ public class SelCommand extends Command {
                 float lineWidth = Baritone.settings().selectionLineWidth.value;
                 boolean ignoreDepth = Baritone.settings().renderSelectionIgnoreDepth.value;
                 IRenderer.startLines(color, opacity, lineWidth, ignoreDepth);
-                IRenderer.emitAABB(event.getModelViewStack(), new AxisAlignedBB(pos1, pos1.add(1, 1, 1)));
+                IRenderer.emitAABB(event.modelViewStack(), new AxisAlignedBB(pos1, pos1.add(1, 1, 1)));
                 IRenderer.endLines(ignoreDepth);
             }
         });

@@ -243,18 +243,14 @@ public final class Settings {
      * <p>
      * If a schematic asks for air at a certain position, and that position currently contains a block on this list, it will be treated as correct.
      */
-    public final Setting<List<Block>> buildIgnoreBlocks = new Setting<>(new ArrayList<>(Arrays.asList(
-
-    )));
+    public final Setting<List<Block>> buildIgnoreBlocks = new Setting<>(new ArrayList<>(List.of()));
 
     /**
      * A list of blocks to be treated as correct.
      * <p>
      * If a schematic asks for any block on this list at a certain position, it will be treated as correct, regardless of what it currently is.
      */
-    public final Setting<List<Block>> buildSkipBlocks = new Setting<>(new ArrayList<>(Arrays.asList(
-
-    )));
+    public final Setting<List<Block>> buildSkipBlocks = new Setting<>(new ArrayList<>(List.of()));
 
     /**
      * A mapping of blocks to blocks treated as correct in their position
@@ -286,9 +282,7 @@ public final class Settings {
      * <p>
      * If a schematic asks for a block on this list, only air will be accepted at that location (and nothing on buildIgnoreBlocks)
      */
-    public final Setting<List<Block>> okIfAir = new Setting<>(new ArrayList<>(Arrays.asList(
-
-    )));
+    public final Setting<List<Block>> okIfAir = new Setting<>(new ArrayList<>(List.of()));
 
     /**
      * If this is true, the builder will treat all non-air blocks as correct. It will only place new blocks.
@@ -303,8 +297,7 @@ public final class Settings {
     /**
      * A list of names of block properties the builder will ignore.
      */
-    public final Setting<List<String>> buildIgnoreProperties = new Setting<>(new ArrayList<>(Arrays.asList(
-    )));
+    public final Setting<List<String>> buildIgnoreProperties = new Setting<>(new ArrayList<>(List.of()));
 
     /**
      * If this setting is true, Baritone will never break a block that is adjacent to an unsupported falling block.
@@ -1415,11 +1408,11 @@ public final class Settings {
          * @return the current setting value
          */
         @Deprecated
-        public final T get() {
+        public T get() {
             return value;
         }
 
-        public final String getName() {
+        public String getName() {
             return name;
         }
 
@@ -1440,7 +1433,7 @@ public final class Settings {
             value = defaultValue;
         }
 
-        public final Type getType() {
+        public Type getType() {
             return settingTypes.get(this);
         }
 

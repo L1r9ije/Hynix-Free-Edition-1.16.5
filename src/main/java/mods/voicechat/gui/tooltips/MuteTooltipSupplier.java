@@ -18,8 +18,8 @@ public class MuteTooltipSupplier implements ImageButton.TooltipSupplier {
     public static final TranslationTextComponent MUTE_MUTED = new TranslationTextComponent("message.voicechat.mute.enabled");
     public static final TranslationTextComponent MUTE_DISABLED_PTT = new TranslationTextComponent("message.voicechat.mute.disabled_ptt");
 
-    private Screen screen;
-    private ClientPlayerStateManager stateManager;
+    private final Screen screen;
+    private final ClientPlayerStateManager stateManager;
 
     public MuteTooltipSupplier(Screen screen, ClientPlayerStateManager stateManager) {
         this.screen = screen;

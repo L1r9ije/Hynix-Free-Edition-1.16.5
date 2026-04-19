@@ -53,12 +53,7 @@ public final class FakeUnmodifiableCommentedConfig
         return new TransformingSet<>(config.entrySet(), FakeCommentedEntry::new, o -> null, o -> o);
     }
 
-    private static final class FakeCommentedEntry implements UnmodifiableCommentedConfig.Entry {
-        private final UnmodifiableConfig.Entry entry;
-
-        private FakeCommentedEntry(UnmodifiableConfig.Entry entry) {
-            this.entry = entry;
-        }
+    private record FakeCommentedEntry(UnmodifiableConfig.Entry entry) implements UnmodifiableCommentedConfig.Entry {
 
         @Override
         public String getComment() {

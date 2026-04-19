@@ -35,7 +35,12 @@ public class LecternBlock extends ContainerBlock {
     public static final VoxelShape BASE_SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
     public static final VoxelShape POST_SHAPE = Block.makeCuboidShape(4.0D, 2.0D, 4.0D, 12.0D, 14.0D, 12.0D);
     public static final VoxelShape COMMON_SHAPE = VoxelShapes.or(BASE_SHAPE, POST_SHAPE);
-    public static final VoxelShape COLLISION_SHAPE = VoxelShapes.or(COMMON_SHAPE, TOP_PLATE_SHAPE);
+    public static final VoxelShape COLLISION_SHAPE;
+
+    static {
+        COLLISION_SHAPE = VoxelShapes.or(COMMON_SHAPE);
+    }
+
     public static final VoxelShape WEST_SHAPE = VoxelShapes.or(Block.makeCuboidShape(1.0D, 10.0D, 0.0D, 5.333333D, 14.0D, 16.0D), Block.makeCuboidShape(5.333333D, 12.0D, 0.0D, 9.666667D, 16.0D, 16.0D), Block.makeCuboidShape(9.666667D, 14.0D, 0.0D, 14.0D, 18.0D, 16.0D), COMMON_SHAPE);
     public static final VoxelShape NORTH_SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 10.0D, 1.0D, 16.0D, 14.0D, 5.333333D), Block.makeCuboidShape(0.0D, 12.0D, 5.333333D, 16.0D, 16.0D, 9.666667D), Block.makeCuboidShape(0.0D, 14.0D, 9.666667D, 16.0D, 18.0D, 14.0D), COMMON_SHAPE);
     public static final VoxelShape EAST_SHAPE = VoxelShapes.or(Block.makeCuboidShape(15.0D, 10.0D, 0.0D, 10.666667D, 14.0D, 16.0D), Block.makeCuboidShape(10.666667D, 12.0D, 0.0D, 6.333333D, 16.0D, 16.0D), Block.makeCuboidShape(6.333333D, 14.0D, 0.0D, 2.0D, 18.0D, 16.0D), COMMON_SHAPE);
@@ -62,11 +67,10 @@ public class LecternBlock extends ContainerBlock {
     private static void placeBook(World worldIn, BlockPos pos, BlockState state, ItemStack stack) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (tileentity instanceof LecternTileEntity) {
-            LecternTileEntity lecterntileentity = (LecternTileEntity) tileentity;
+        if (tileentity instanceof LecternTileEntity lecterntileentity) {
             lecterntileentity.setBook(stack.split(1));
             setHasBook(worldIn, pos, state, true);
-            worldIn.playSound((PlayerEntity) null, pos, SoundEvents.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            worldIn.playSound(null, pos, SoundEvents.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
 
@@ -131,7 +135,7 @@ public class LecternBlock extends ContainerBlock {
     }
 
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch ((Direction) state.get(FACING)) {
+        switch (state.get(FACING)) {
             case NORTH:
                 return NORTH_SHAPE;
 
@@ -200,13 +204,12 @@ public class LecternBlock extends ContainerBlock {
     private void dropBook(BlockState state, World world, BlockPos pos) {
         TileEntity tileentity = world.getTileEntity(pos);
 
-        if (tileentity instanceof LecternTileEntity) {
-            LecternTileEntity lecterntileentity = (LecternTileEntity) tileentity;
+        if (tileentity instanceof LecternTileEntity lecterntileentity) {
             Direction direction = state.get(FACING);
             ItemStack itemstack = lecterntileentity.getBook().copy();
             float f = 0.25F * (float) direction.getXOffset();
             float f1 = 0.25F * (float) direction.getZOffset();
-            ItemEntity itementity = new ItemEntity(world, (double) pos.getX() + 0.5D + (double) f, (double) (pos.getY() + 1), (double) pos.getZ() + 0.5D + (double) f1, itemstack);
+            ItemEntity itementity = new ItemEntity(world, (double) pos.getX() + 0.5D + (double) f, pos.getY() + 1, (double) pos.getZ() + 0.5D + (double) f1, itemstack);
             itementity.setDefaultPickupDelay();
             world.addEntity(itementity);
             lecterntileentity.clear();

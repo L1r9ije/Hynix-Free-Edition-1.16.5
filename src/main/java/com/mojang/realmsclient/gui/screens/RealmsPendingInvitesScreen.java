@@ -171,7 +171,7 @@ public class RealmsPendingInvitesScreen extends RealmsScreen {
             int i = p_237866_3_ + 12;
             int j = p_237866_4_ - 12;
             int k = this.font.getStringPropertyWidth(p_237866_2_);
-            this.fillGradient(p_237866_1_, i - 3, j - 3, i + k + 3, j + 8 + 3, -1073741824, -1073741824);
+            fillGradient(p_237866_1_, i - 3, j - 3, i + k + 3, j + 8 + 3, -1073741824, -1073741824);
             this.font.func_243246_a(p_237866_1_, p_237866_2_, (float) i, (float) j, 16777215);
         }
     }

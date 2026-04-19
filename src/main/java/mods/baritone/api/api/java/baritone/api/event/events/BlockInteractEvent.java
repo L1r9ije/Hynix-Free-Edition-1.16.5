@@ -22,37 +22,26 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Called when the local player interacts with a block, can be either {@link Type#START_BREAK} or {@link Type#USE}.
  *
+ * @param pos  The position of the block interacted with
+ * @param type The type of interaction that occurred
  * @author Brady
  * @since 8/22/2018
  */
-public final class BlockInteractEvent {
-
-    /**
-     * The position of the block interacted with
-     */
-    private final BlockPos pos;
-
-    /**
-     * The type of interaction that occurred
-     */
-    private final Type type;
-
-    public BlockInteractEvent(BlockPos pos, Type type) {
-        this.pos = pos;
-        this.type = type;
-    }
+public record BlockInteractEvent(BlockPos pos, Type type) {
 
     /**
      * @return The position of the block interacted with
      */
-    public final BlockPos getPos() {
+    @Override
+    public BlockPos pos() {
         return this.pos;
     }
 
     /**
      * @return The type of interaction with the target block
      */
-    public final Type getType() {
+    @Override
+    public Type type() {
         return this.type;
     }
 

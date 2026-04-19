@@ -21,37 +21,26 @@ import mods.baritone.api.api.java.baritone.api.event.events.type.EventState;
 import net.minecraft.client.world.ClientWorld;
 
 /**
+ * @param world The new world that is being loaded. {@code null} if being unloaded.
+ * @param state The state of the event
  * @author Brady
  * @since 8/4/2018
  */
-public final class WorldEvent {
-
-    /**
-     * The new world that is being loaded. {@code null} if being unloaded.
-     */
-    private final ClientWorld world;
-
-    /**
-     * The state of the event
-     */
-    private final EventState state;
-
-    public WorldEvent(ClientWorld world, EventState state) {
-        this.world = world;
-        this.state = state;
-    }
+public record WorldEvent(ClientWorld world, EventState state) {
 
     /**
      * @return The new world that is being loaded. {@code null} if being unloaded.
      */
-    public final ClientWorld getWorld() {
+    @Override
+    public ClientWorld world() {
         return this.world;
     }
 
     /**
      * @return The state of the event
      */
-    public final EventState getState() {
+    @Override
+    public EventState state() {
         return this.state;
     }
 }

@@ -5,16 +5,10 @@ import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.Objects;
 
-public class PositionImpl implements Position {
-
-    private final Vector3d position;
-
-    public PositionImpl(Vector3d position) {
-        this.position = position;
-    }
+public record PositionImpl(Vector3d position) implements Position {
 
     public PositionImpl(double x, double y, double z) {
-        this.position = new Vector3d(x, y, z);
+        this(new Vector3d(x, y, z));
     }
 
     @Override
@@ -32,10 +26,6 @@ public class PositionImpl implements Position {
         return position.z;
     }
 
-    public Vector3d getPosition() {
-        return position;
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -48,8 +38,4 @@ public class PositionImpl implements Position {
         return Objects.equals(position, position1.position);
     }
 
-    @Override
-    public int hashCode() {
-        return position != null ? position.hashCode() : 0;
-    }
 }

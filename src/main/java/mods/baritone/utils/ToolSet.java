@@ -114,8 +114,7 @@ public class ToolSet {
      * @return values from 0 up
      */
     private int getMaterialCost(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof TieredItem) {
-            TieredItem tool = (TieredItem) itemStack.getItem();
+        if (itemStack.getItem() instanceof TieredItem tool) {
             return tool.getTier().getHarvestLevel();
         } else {
             return -1;

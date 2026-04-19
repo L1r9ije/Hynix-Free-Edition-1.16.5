@@ -20,7 +20,6 @@ package mods.baritone.api.api.java.baritone.api.utils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.netty.util.concurrent.ThreadPerTaskExecutor;
-import mods.baritone.api.api.java.baritone.api.utils.accessor.IItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -44,8 +43,8 @@ public final class BlockOptionalMeta {
     // id or id[] or id[properties] where id and properties are any text with at least one character
     private static final Pattern PATTERN = Pattern.compile("^(?<id>.+?)(?:\\[(?<properties>.+?)?\\])?$");
     private static LootTableManager manager;
-    private static LootPredicateManager predicate = new LootPredicateManager();
-    private static Map<Block, List<Item>> drops = new HashMap<>();
+    private static final LootPredicateManager predicate = new LootPredicateManager();
+    private static final Map<Block, List<Item>> drops = new HashMap<>();
     private final Block block;
     private final String propertiesDescription; // exists so toString() can return something more useful than a list of all blockstates
     private final Set<BlockState> blockstates;
@@ -127,7 +126,7 @@ public final class BlockOptionalMeta {
                                 .stream()
                                 .map(item -> new ItemStack(item, 1))
                         )
-                        .map(stack -> ((IItemStack) (Object) stack).getBaritoneHash())
+                        .map(stack -> stack.getBaritoneHash())
                         .toArray(Integer[]::new)
         );
     }
@@ -192,7 +191,7 @@ public final class BlockOptionalMeta {
 
     public boolean matches(ItemStack stack) {
         //noinspection ConstantConditions
-        int hash = ((IItemStack) (Object) stack).getBaritoneHash();
+        int hash = stack.getBaritoneHash();
 
         hash -= stack.getDamage();
 

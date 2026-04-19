@@ -185,7 +185,7 @@ public final class ExploreProcess extends BaritoneProcessHelper implements IExpl
     }
 
     private enum Status {
-        EXPLORED, NOT_EXPLORED, UNKNOWN;
+        EXPLORED, NOT_EXPLORED, UNKNOWN
     }
 
     private interface IChunkFilter {

@@ -76,12 +76,10 @@ public class AdjustVolumeList extends ListScreenListBase<VolumeEntry> {
         List<VolumeEntry> filteredEntries = new ArrayList<>(entries);
         if (!filter.isEmpty()) {
             filteredEntries.removeIf(volumeEntry -> {
-                if (volumeEntry instanceof PlayerVolumeEntry) {
-                    PlayerVolumeEntry playerVolumeEntry = (PlayerVolumeEntry) volumeEntry;
+                if (volumeEntry instanceof PlayerVolumeEntry playerVolumeEntry) {
                     return playerVolumeEntry.getState() == null || !playerVolumeEntry.getState().getName().toLowerCase(Locale.ROOT).contains(filter);
-                } else if (volumeEntry instanceof CategoryVolumeEntry) {
-                    CategoryVolumeEntry categoryVolumeEntry = (CategoryVolumeEntry) volumeEntry;
-                    return !categoryVolumeEntry.getCategory().getName().toLowerCase(Locale.ROOT).contains(filter);
+                } else if (volumeEntry instanceof CategoryVolumeEntry categoryVolumeEntry) {
+                    return !categoryVolumeEntry.getCategory().name().toLowerCase(Locale.ROOT).contains(filter);
                 }
                 return true;
             });
@@ -104,12 +102,10 @@ public class AdjustVolumeList extends ListScreenListBase<VolumeEntry> {
     }
 
     private String volumeEntryToString(VolumeEntry entry) {
-        if (entry instanceof PlayerVolumeEntry) {
-            PlayerVolumeEntry playerVolumeEntry = (PlayerVolumeEntry) entry;
+        if (entry instanceof PlayerVolumeEntry playerVolumeEntry) {
             return playerVolumeEntry.getState() == null ? "" : playerVolumeEntry.getState().getName();
-        } else if (entry instanceof CategoryVolumeEntry) {
-            CategoryVolumeEntry categoryVolumeEntry = (CategoryVolumeEntry) entry;
-            return categoryVolumeEntry.getCategory().getName();
+        } else if (entry instanceof CategoryVolumeEntry categoryVolumeEntry) {
+            return categoryVolumeEntry.getCategory().name();
         }
         return "";
     }

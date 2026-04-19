@@ -68,8 +68,7 @@ public final class SynchronizedConfig implements ConcurrentCommentedConfig {
      * Convert all sub-configurations to SynchronizedConfigs.
      */
     private static void convertSubConfigs(Config c, SynchronizedConfig parent) {
-        if (c instanceof AbstractConfig) {
-            AbstractConfig conf = (AbstractConfig) c;
+        if (c instanceof AbstractConfig conf) {
             conf.valueMap().replaceAll((k, v) -> convertValue(v, parent));
         } else {
             for (Config.Entry entry : c.entrySet()) {
@@ -87,8 +86,7 @@ public final class SynchronizedConfig implements ConcurrentCommentedConfig {
             SynchronizedConfig subConfig = convert((Config) v, parent);
             convertSubConfigs(subConfig, subConfig);
             return subConfig;
-        } else if (v instanceof List) {
-            List<?> l = (List<?>) v;
+        } else if (v instanceof List<?> l) {
             List<Object> newList = new ArrayList<>(l);
             newList.replaceAll(elem -> convertValue(elem, parent));
             return newList;
@@ -444,7 +442,7 @@ public final class SynchronizedConfig implements ConcurrentCommentedConfig {
     private static final class DataHolder extends AbstractCommentedConfig {
 
         private final ConfigFormat<?> format;
-        private SynchronizedConfig syncConfig;
+        private final SynchronizedConfig syncConfig;
 
         DataHolder(SynchronizedConfig parent) {
             super(parent.dataHolder.mapCreator);
@@ -478,26 +476,12 @@ public final class SynchronizedConfig implements ConcurrentCommentedConfig {
 
     }
 
-    private static final class SynchronizedMap<K, V> implements Map<K, V> {
-        private final Map<K, V> map;
-        private final Object rootMonitor;
-
-        SynchronizedMap(Map<K, V> map, Object monitor) {
-            this.map = map;
-            this.rootMonitor = monitor;
-        }
+    private record SynchronizedMap<K, V>(Map<K, V> map, Object rootMonitor) implements Map<K, V> {
 
         @Override
         public boolean equals(Object obj) {
             synchronized (rootMonitor) {
                 return map.equals(obj);
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            synchronized (rootMonitor) {
-                return map.hashCode();
             }
         }
 
@@ -709,14 +693,7 @@ public final class SynchronizedConfig implements ConcurrentCommentedConfig {
 
     }
 
-    private static final class SynchronizedIterator<E> implements Iterator<E> {
-        private final Iterator<E> iter;
-        private final Object rootMonitor;
-
-        SynchronizedIterator(Iterator<E> iter, Object rootMonitor) {
-            this.iter = iter;
-            this.rootMonitor = rootMonitor;
-        }
+    private record SynchronizedIterator<E>(Iterator<E> iter, Object rootMonitor) implements Iterator<E> {
 
         @Override
         public void forEachRemaining(Consumer<? super E> action) {

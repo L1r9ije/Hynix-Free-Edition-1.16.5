@@ -32,10 +32,9 @@ public class Log4JVoicechatLogger implements VoicechatLogger {
     }
 
     private void initDebugLogLevel() throws Exception {
-        if (!(logger instanceof org.apache.logging.log4j.core.Logger)) {
+        if (!(logger instanceof org.apache.logging.log4j.core.Logger coreLogger)) {
             throw new IllegalStateException("Logger is not an instance of org.apache.logging.log4j.core.Logger");
         }
-        org.apache.logging.log4j.core.Logger coreLogger = (org.apache.logging.log4j.core.Logger) logger;
         Map<String, Appender> appenders = coreLogger.getAppenders();
         coreLogger.setAdditive(false);
         Configurator.setLevel(logger.getName(), Level.DEBUG);

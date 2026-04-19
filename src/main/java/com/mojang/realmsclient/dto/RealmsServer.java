@@ -45,11 +45,11 @@ public class RealmsServer extends ValueObject {
 
         try {
             realmsserver.field_230582_a_ = JsonUtils.func_225169_a("id", p_230770_0_, -1L);
-            realmsserver.field_230583_b_ = JsonUtils.func_225171_a("remoteSubscriptionId", p_230770_0_, (String) null);
-            realmsserver.field_230584_c_ = JsonUtils.func_225171_a("name", p_230770_0_, (String) null);
-            realmsserver.field_230585_d_ = JsonUtils.func_225171_a("motd", p_230770_0_, (String) null);
+            realmsserver.field_230583_b_ = JsonUtils.func_225171_a("remoteSubscriptionId", p_230770_0_, null);
+            realmsserver.field_230584_c_ = JsonUtils.func_225171_a("name", p_230770_0_, null);
+            realmsserver.field_230585_d_ = JsonUtils.func_225171_a("motd", p_230770_0_, null);
             realmsserver.field_230586_e_ = func_230780_d_(JsonUtils.func_225171_a("state", p_230770_0_, RealmsServer.Status.CLOSED.name()));
-            realmsserver.field_230587_f_ = JsonUtils.func_225171_a("owner", p_230770_0_, (String) null);
+            realmsserver.field_230587_f_ = JsonUtils.func_225171_a("owner", p_230770_0_, null);
 
             if (p_230770_0_.get("players") != null && p_230770_0_.get("players").isJsonArray()) {
                 realmsserver.field_230589_h_ = func_230769_a_(p_230770_0_.get("players").getAsJsonArray());
@@ -70,10 +70,10 @@ public class RealmsServer extends ValueObject {
                 realmsserver.field_230590_i_ = func_237697_e_();
             }
 
-            realmsserver.field_230596_o_ = JsonUtils.func_225171_a("minigameName", p_230770_0_, (String) null);
+            realmsserver.field_230596_o_ = JsonUtils.func_225171_a("minigameName", p_230770_0_, null);
             realmsserver.field_230595_n_ = JsonUtils.func_225172_a("activeSlot", p_230770_0_, -1);
             realmsserver.field_230597_p_ = JsonUtils.func_225172_a("minigameId", p_230770_0_, -1);
-            realmsserver.field_230598_q_ = JsonUtils.func_225171_a("minigameImage", p_230770_0_, (String) null);
+            realmsserver.field_230598_q_ = JsonUtils.func_225171_a("minigameImage", p_230770_0_, null);
         } catch (Exception exception) {
             field_230600_s_.error("Could not parse McoServer: " + exception.getMessage());
         }
@@ -95,8 +95,8 @@ public class RealmsServer extends ValueObject {
             try {
                 JsonObject jsonobject = jsonelement.getAsJsonObject();
                 PlayerInfo playerinfo = new PlayerInfo();
-                playerinfo.func_230758_a_(JsonUtils.func_225171_a("name", jsonobject, (String) null));
-                playerinfo.func_230761_b_(JsonUtils.func_225171_a("uuid", jsonobject, (String) null));
+                playerinfo.func_230758_a_(JsonUtils.func_225171_a("name", jsonobject, null));
+                playerinfo.func_230761_b_(JsonUtils.func_225171_a("uuid", jsonobject, null));
                 playerinfo.func_230759_a_(JsonUtils.func_225170_a("operator", jsonobject, false));
                 playerinfo.func_230762_b_(JsonUtils.func_225170_a("accepted", jsonobject, false));
                 playerinfo.func_230764_c_(JsonUtils.func_225170_a("online", jsonobject, false));
@@ -203,7 +203,7 @@ public class RealmsServer extends ValueObject {
                 try {
                     s1 = RealmsUtil.func_225193_a(s);
                 } catch (Exception exception) {
-                    field_230600_s_.error("Could not get name for " + s, (Throwable) exception);
+                    field_230600_s_.error("Could not get name for " + s, exception);
                     continue;
                 }
 
@@ -229,7 +229,7 @@ public class RealmsServer extends ValueObject {
             return false;
         } else {
             RealmsServer realmsserver = (RealmsServer) p_equals_1_;
-            return (new EqualsBuilder()).append(this.field_230582_a_, realmsserver.field_230582_a_).append((Object) this.field_230584_c_, (Object) realmsserver.field_230584_c_).append((Object) this.field_230585_d_, (Object) realmsserver.field_230585_d_).append((Object) this.field_230586_e_, (Object) realmsserver.field_230586_e_).append((Object) this.field_230587_f_, (Object) realmsserver.field_230587_f_).append(this.field_230591_j_, realmsserver.field_230591_j_).append((Object) this.field_230594_m_, (Object) this.field_230594_m_).isEquals();
+            return (new EqualsBuilder()).append(this.field_230582_a_, realmsserver.field_230582_a_).append(this.field_230584_c_, realmsserver.field_230584_c_).append(this.field_230585_d_, realmsserver.field_230585_d_).append(this.field_230586_e_, realmsserver.field_230586_e_).append(this.field_230587_f_, realmsserver.field_230587_f_).append(this.field_230591_j_, realmsserver.field_230591_j_).append(this.field_230594_m_, this.field_230594_m_).isEquals();
         }
     }
 
@@ -276,18 +276,18 @@ public class RealmsServer extends ValueObject {
         return new ServerData(this.field_230584_c_, p_244783_1_, false);
     }
 
-    public static enum ServerType {
+    public enum ServerType {
         NORMAL,
         MINIGAME,
         ADVENTUREMAP,
         EXPERIENCE,
-        INSPIRATION;
+        INSPIRATION
     }
 
-    public static enum Status {
+    public enum Status {
         CLOSED,
         OPEN,
-        UNINITIALIZED;
+        UNINITIALIZED
     }
 
     public static class ServerComparator implements Comparator<RealmsServer> {

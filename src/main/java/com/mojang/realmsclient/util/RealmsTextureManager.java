@@ -87,7 +87,7 @@ public class RealmsTextureManager {
                         MinecraftProfileTexture minecraftprofiletexture = map.get(Type.SKIN);
                         String s = minecraftprofiletexture.getUrl();
                         HttpURLConnection httpurlconnection = null;
-                        RealmsTextureManager.field_225212_d.debug("Downloading http texture from {}", (Object) s);
+                        RealmsTextureManager.field_225212_d.debug("Downloading http texture from {}", s);
 
                         try {
                             httpurlconnection = (HttpURLConnection) (new URL(s)).openConnection(Minecraft.getInstance().getProxy());
@@ -117,9 +117,8 @@ public class RealmsTextureManager {
 
                             RealmsTextureManager.field_225210_b.remove(p_225200_0_);
                         } catch (Exception exception1) {
-                            RealmsTextureManager.field_225212_d.error("Couldn't download http texture", (Throwable) exception1);
+                            RealmsTextureManager.field_225212_d.error("Couldn't download http texture", exception1);
                             RealmsTextureManager.field_225210_b.remove(p_225200_0_);
-                            return;
                         } finally {
                             if (httpurlconnection != null) {
                                 httpurlconnection.disconnect();

@@ -67,8 +67,7 @@ public class ConfigMigrator {
             try {
                 field.setAccessible(true);
                 Object configEntry = field.get(config);
-                if (configEntry instanceof ConfigEntry) {
-                    ConfigEntry entry = (ConfigEntry) configEntry;
+                if (configEntry instanceof ConfigEntry entry) {
                     if (randomEntry == null) {
                         randomEntry = entry;
                     }
@@ -90,8 +89,7 @@ public class ConfigMigrator {
                 return;
             }
 
-            if (configEntry instanceof EnumConfigEntry<?>) {
-                EnumConfigEntry<?> enumConfigEntry = (EnumConfigEntry<?>) configEntry;
+            if (configEntry instanceof EnumConfigEntry<?> enumConfigEntry) {
                 forgeValue = Enum.valueOf(enumConfigEntry.get().getClass(), forgeValue.toString());
             }
 
@@ -108,10 +106,9 @@ public class ConfigMigrator {
 
     @EventTarget
     public void onLoadLevel(WorldEvent.Load event) {
-        if (!(event.getWorld() instanceof ServerWorld)) {
+        if (!(event.getWorld() instanceof ServerWorld serverLevel)) {
             return;
         }
-        ServerWorld serverLevel = (ServerWorld) event.getWorld();
         migrateConfig(
                 ServerConfig.class,
                 Voicechat.SERVER_CONFIG,

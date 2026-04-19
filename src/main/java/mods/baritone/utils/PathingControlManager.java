@@ -47,7 +47,7 @@ public class PathingControlManager implements IPathingControlManager {
         baritone.getGameEventHandler().registerEventListener(new AbstractGameEventListener() { // needs to be after all behavior ticks
             @Override
             public void onTick(TickEvent event) {
-                if (event.getType() == TickEvent.Type.IN) {
+                if (event.type() == TickEvent.Type.IN) {
                     postTick();
                 }
             }
@@ -170,11 +170,9 @@ public class PathingControlManager implements IPathingControlManager {
         if (current != null) {
             Goal intended = current.getPath().getGoal();
             BlockPos end = current.getPath().getDest();
-            if (intended.isInGoal(end) && !newGoal.isInGoal(end)) {
-                // this path used to end in the goal
-                // but the goal has changed, so there's no reason to continue...
-                return true;
-            }
+            // this path used to end in the goal
+            // but the goal has changed, so there's no reason to continue...
+            return intended.isInGoal(end) && !newGoal.isInGoal(end);
         }
         return false;
     }

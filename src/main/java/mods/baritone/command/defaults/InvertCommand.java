@@ -45,7 +45,7 @@ public class InvertCommand extends Command {
             throw new CommandInvalidStateException("No goal");
         }
         if (goal instanceof GoalInverted) {
-            goal = ((GoalInverted) goal).origin;
+            goal = ((GoalInverted) goal).origin();
         } else {
             goal = new GoalInverted(goal);
         }

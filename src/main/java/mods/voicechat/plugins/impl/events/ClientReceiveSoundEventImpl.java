@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class ClientReceiveSoundEventImpl extends ClientEventImpl implements ClientReceiveSoundEvent {
 
-    private UUID id;
+    private final UUID id;
     private short[] rawAudio;
 
     public ClientReceiveSoundEventImpl(UUID id, short[] rawAudio) {
@@ -39,8 +39,8 @@ public class ClientReceiveSoundEventImpl extends ClientEventImpl implements Clie
     }
 
     public static class EntitySoundImpl extends ClientReceiveSoundEventImpl implements EntitySound {
-        private boolean whispering;
-        private float distance;
+        private final boolean whispering;
+        private final float distance;
 
         public EntitySoundImpl(UUID id, short[] rawAudio, boolean whispering, float distance) {
             super(id, rawAudio);
@@ -60,8 +60,8 @@ public class ClientReceiveSoundEventImpl extends ClientEventImpl implements Clie
     }
 
     public static class LocationalSoundImpl extends ClientReceiveSoundEventImpl implements LocationalSound {
-        private Position position;
-        private float distance;
+        private final Position position;
+        private final float distance;
 
         public LocationalSoundImpl(UUID id, short[] rawAudio, Position position, float distance) {
             super(id, rawAudio);

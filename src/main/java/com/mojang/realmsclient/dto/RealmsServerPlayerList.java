@@ -22,7 +22,7 @@ public class RealmsServerPlayerList extends ValueObject {
 
         try {
             realmsserverplayerlist.field_230609_a_ = JsonUtils.func_225169_a("serverId", p_230785_0_, -1L);
-            String s = JsonUtils.func_225171_a("playerList", p_230785_0_, (String) null);
+            String s = JsonUtils.func_225171_a("playerList", p_230785_0_, null);
 
             if (s != null) {
                 JsonElement jsonelement = field_237698_d_.parse(s);

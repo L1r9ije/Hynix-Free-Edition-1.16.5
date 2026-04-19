@@ -52,7 +52,7 @@ public class MatrixApplyingVertexBuilder extends DefaultColorVertexBuilder {
         vector4f.transform(direction.getRotation());
         float f = -vector4f.getX();
         float f1 = -vector4f.getY();
-        this.vertexBuilder.pos((double) this.posX, (double) this.posY, (double) this.posZ).color(1.0F, 1.0F, 1.0F, 1.0F).tex(f, f1).overlay(this.u, this.v).lightmap(this.light).normal(this.normalX, this.normalY, this.normalZ).endVertex();
+        this.vertexBuilder.pos(this.posX, this.posY, this.posZ).color(1.0F, 1.0F, 1.0F, 1.0F).tex(f, f1).overlay(this.u, this.v).lightmap(this.light).normal(this.normalX, this.normalY, this.normalZ).endVertex();
         this.reset();
     }
 

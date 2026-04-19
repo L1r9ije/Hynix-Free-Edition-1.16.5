@@ -27,7 +27,10 @@ import mods.baritone.api.api.java.baritone.api.utils.BetterBlockPos;
 import mods.baritone.cache.CachedChunk;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 

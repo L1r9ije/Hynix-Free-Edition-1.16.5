@@ -23,18 +23,10 @@ import mods.baritone.api.api.java.baritone.api.utils.SettingsUtil;
 /**
  * Useful for mining (getting to diamond / iron level)
  *
+ * @param level The target Y level
  * @author leijurv
  */
-public class GoalYLevel implements Goal, ActionCosts {
-
-    /**
-     * The target Y level
-     */
-    public final int level;
-
-    public GoalYLevel(int level) {
-        this.level = level;
-    }
+public record GoalYLevel(int level) implements Goal, ActionCosts {
 
     public static double calculate(int goalY, int currentY) {
         if (currentY > goalY) {
@@ -69,11 +61,6 @@ public class GoalYLevel implements Goal, ActionCosts {
 
         GoalYLevel goal = (GoalYLevel) o;
         return level == goal.level;
-    }
-
-    @Override
-    public int hashCode() {
-        return level * 1271009915;
     }
 
     @Override

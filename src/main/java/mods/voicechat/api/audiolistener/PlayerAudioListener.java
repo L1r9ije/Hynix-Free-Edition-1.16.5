@@ -13,7 +13,7 @@ public interface PlayerAudioListener extends AudioListener {
      */
     UUID getPlayerUuid();
 
-    public interface Builder {
+    interface Builder {
 
         /**
          * <b>Note</b>: It is required to either set a player with this method or with {@link #setPlayer(UUID)}

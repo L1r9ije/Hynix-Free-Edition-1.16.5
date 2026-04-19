@@ -66,7 +66,7 @@ public class RealmsDataFetcher {
 
     public boolean func_225083_a(RealmsDataFetcher.Task p_225083_1_) {
         Boolean obool = this.field_225108_u.get(p_225083_1_);
-        return obool == null ? false : obool;
+        return obool != null && obool;
     }
 
     public void func_225072_c() {
@@ -143,7 +143,7 @@ public class RealmsDataFetcher {
                 this.field_225107_t.cancel(false);
             }
         } catch (Exception exception) {
-            field_225088_a.error("Failed to cancel Realms tasks", (Throwable) exception);
+            field_225088_a.error("Failed to cancel Realms tasks", exception);
         }
     }
 
@@ -172,12 +172,12 @@ public class RealmsDataFetcher {
         return !this.field_225090_c;
     }
 
-    public static enum Task {
+    public enum Task {
         SERVER_LIST,
         PENDING_INVITE,
         TRIAL_AVAILABLE,
         LIVE_STATS,
-        UNREAD_NEWS;
+        UNREAD_NEWS
     }
 
     class LiveStatsTask implements Runnable {
@@ -196,7 +196,7 @@ public class RealmsDataFetcher {
                 RealmsDataFetcher.this.field_225098_k = realmsclient.func_224915_f();
                 RealmsDataFetcher.this.field_225108_u.put(RealmsDataFetcher.Task.LIVE_STATS, true);
             } catch (Exception exception) {
-                RealmsDataFetcher.field_225088_a.error("Couldn't get live stats", (Throwable) exception);
+                RealmsDataFetcher.field_225088_a.error("Couldn't get live stats", exception);
             }
         }
     }
@@ -217,7 +217,7 @@ public class RealmsDataFetcher {
                 RealmsDataFetcher.this.field_225099_l = realmsclient.func_224909_j();
                 RealmsDataFetcher.this.field_225108_u.put(RealmsDataFetcher.Task.PENDING_INVITE, true);
             } catch (Exception exception) {
-                RealmsDataFetcher.field_225088_a.error("Couldn't get pending invite count", (Throwable) exception);
+                RealmsDataFetcher.field_225088_a.error("Couldn't get pending invite count", exception);
             }
         }
     }
@@ -246,7 +246,7 @@ public class RealmsDataFetcher {
                 }
             } catch (Exception exception) {
                 RealmsDataFetcher.this.field_225108_u.put(RealmsDataFetcher.Task.SERVER_LIST, true);
-                RealmsDataFetcher.field_225088_a.error("Couldn't get server list", (Throwable) exception);
+                RealmsDataFetcher.field_225088_a.error("Couldn't get server list", exception);
             }
         }
     }
@@ -267,7 +267,7 @@ public class RealmsDataFetcher {
                 RealmsDataFetcher.this.field_225100_m = realmsclient.func_224914_n();
                 RealmsDataFetcher.this.field_225108_u.put(RealmsDataFetcher.Task.TRIAL_AVAILABLE, true);
             } catch (Exception exception) {
-                RealmsDataFetcher.field_225088_a.error("Couldn't get trial availability", (Throwable) exception);
+                RealmsDataFetcher.field_225088_a.error("Couldn't get trial availability", exception);
             }
         }
     }
@@ -308,7 +308,7 @@ public class RealmsDataFetcher {
                 RealmsDataFetcher.this.field_225102_o = realmspersistence$realmspersistencedata.field_225185_a;
                 RealmsDataFetcher.this.field_225108_u.put(RealmsDataFetcher.Task.UNREAD_NEWS, true);
             } catch (Exception exception1) {
-                RealmsDataFetcher.field_225088_a.error("Couldn't get unread news", (Throwable) exception1);
+                RealmsDataFetcher.field_225088_a.error("Couldn't get unread news", exception1);
             }
         }
     }

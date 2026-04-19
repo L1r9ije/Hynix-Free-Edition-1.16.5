@@ -82,7 +82,7 @@ public class RealmsSelectFileToUploadScreen extends RealmsScreen {
         try {
             this.func_224541_a();
         } catch (Exception exception) {
-            field_224547_a.error("Couldn't load level list", (Throwable) exception);
+            field_224547_a.error("Couldn't load level list", exception);
             this.minecraft.displayGuiScreen(new RealmsGenericErrorScreen(new StringTextComponent("Unable to load worlds"), ITextComponent.getTextComponentOrEmpty(exception.getMessage()), this.field_224548_b));
             return;
         }

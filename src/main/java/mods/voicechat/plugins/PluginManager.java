@@ -76,10 +76,9 @@ public class PluginManager {
     }
 
     public boolean registerAudioListener(AudioListener l) {
-        if (!(l instanceof PlayerAudioListener)) {
+        if (!(l instanceof PlayerAudioListener listener)) {
             return false;
         }
-        PlayerAudioListener listener = (PlayerAudioListener) l;
         boolean exists = playerAudioListeners
                 .values()
                 .stream()
@@ -263,24 +262,21 @@ public class PluginManager {
         }
 
         VoicechatConnection receiverConnection = new VoicechatConnectionImpl(receiver, receiverState);
-        if (p instanceof LocationSoundPacket) {
-            LocationSoundPacket packet = (LocationSoundPacket) p;
+        if (p instanceof LocationSoundPacket packet) {
             return dispatchEvent(LocationalSoundPacketEvent.class, new LocationalSoundPacketEventImpl(
                     new LocationalSoundPacketImpl(packet),
                     senderConnection,
                     receiverConnection,
                     source
             ));
-        } else if (p instanceof PlayerSoundPacket) {
-            PlayerSoundPacket packet = (PlayerSoundPacket) p;
+        } else if (p instanceof PlayerSoundPacket packet) {
             return dispatchEvent(EntitySoundPacketEvent.class, new EntitySoundPacketEventImpl(
                     new EntitySoundPacketImpl(packet),
                     senderConnection,
                     receiverConnection,
                     source
             ));
-        } else if (p instanceof GroupSoundPacket) {
-            GroupSoundPacket packet = (GroupSoundPacket) p;
+        } else if (p instanceof GroupSoundPacket packet) {
             return dispatchEvent(StaticSoundPacketEvent.class, new StaticSoundPacketEventImpl(
                     new StaticSoundPacketImpl(packet),
                     senderConnection,

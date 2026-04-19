@@ -194,11 +194,10 @@ public final class CharsWrapper implements CharSequence, Cloneable, Iterable<Cha
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof CharsWrapper)) {
+        if (!(obj instanceof CharsWrapper other)) {
             return false;
         }
 
-        final CharsWrapper other = (CharsWrapper) obj;
         final int l = other.length();
         if (length() != l) {
             return false;

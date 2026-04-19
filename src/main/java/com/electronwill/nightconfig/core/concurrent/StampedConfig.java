@@ -120,8 +120,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Object copyValueInAccumulator(Object v) {
-        if (v instanceof StampedConfig) {
-            StampedConfig stamped = (StampedConfig) v;
+        if (v instanceof StampedConfig stamped) {
             stamped.checkStateForNormalOp();
 
             // lock the config and copy the values and comments
@@ -467,8 +466,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
      * Convert all sub-configurations to StampedConfigs.
      */
     private void convertSubConfigs(Config c) {
-        if (c instanceof AbstractConfig) {
-            AbstractConfig conf = (AbstractConfig) c;
+        if (c instanceof AbstractConfig conf) {
             try {
                 conf.valueMap().replaceAll((k, v) -> convertValue(v));
             } catch (UnsupportedOperationException ex) {
@@ -492,8 +490,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
     private Object convertValue(Object v) {
         if (v instanceof StampedConfig) {
             return v;
-        } else if (v instanceof Config) {
-            Config c = (Config) v;
+        } else if (v instanceof Config c) {
             StampedConfig converted = createSubConfig();
             convertSubConfigs(c);
             converted.putAll(c);
@@ -531,8 +528,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
         if (other == this) {
             throw new IllegalArgumentException("I cannot putAll() into myself.");
         }
-        if (other instanceof StampedConfig) {
-            StampedConfig stamped = (StampedConfig) other;
+        if (other instanceof StampedConfig stamped) {
             long stamp = stamped.lock.tryReadLock();
             if (stamp == 0) {
                 stamped.checkStateForNormalOp(); // catch misuse, especially for other == this
@@ -559,8 +555,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
         if (other == this) {
             throw new IllegalArgumentException("I cannot removeAll() from myself.");
         }
-        if (other instanceof StampedConfig) {
-            StampedConfig stamped = (StampedConfig) other;
+        if (other instanceof StampedConfig stamped) {
             long stamp = stamped.lock.tryReadLock();
             if (stamp == 0) {
                 stamped.checkStateForNormalOp(); // catch misuse, especially for other == this
@@ -691,8 +686,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
         }
 
         bulkUpdate(view -> {
-            if (other instanceof StampedConfig) {
-                StampedConfig otherStamped = (StampedConfig) other;
+            if (other instanceof StampedConfig otherStamped) {
                 long otherStamp = otherStamped.lock.tryReadLock();
                 if (otherStamp == 0) {
                     otherStamped.checkStateForNormalOp();
@@ -760,8 +754,8 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
         }
         try {
             comments.forEach((key, node) -> {
-                this.comments.put(key, node.getComment());
-                Map<String, CommentNode> children = node.getChildren();
+                this.comments.put(key, node.comment());
+                Map<String, CommentNode> children = node.children();
                 if (children != null) {
                     Object config = values.get(key);
                     if (config instanceof StampedConfig) {
@@ -802,7 +796,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
             for (UnmodifiableConfig.Entry entry : view.entrySet()) {
                 builder.append(entry.getKey());
                 builder.append('=');
-                builder.append(String.valueOf((Object) entry.getRawValue()));
+                builder.append((Object) entry.getRawValue());
                 builder.append(", ");
             }
             builder.append('}');
@@ -925,7 +919,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
         return bulkUpdate((Function<? super Config, R>) action);
     }
 
-    private static enum ThreadConfigState {
+    private enum ThreadConfigState {
         /**
          * normal state
          */
@@ -941,7 +935,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
         /**
          * passed to otherConfig.replaceContentBy(this), cannot be used anymore
          */
-        CONSUMED;
+        CONSUMED
     }
 
     /**
@@ -1018,16 +1012,14 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
         }
 
         private Object replaceValue(Object v) {
-            if (v instanceof Accumulator) {
-                Accumulator acc = (Accumulator) v;
+            if (v instanceof Accumulator acc) {
                 acc.prepareReplacement();
                 return acc.mirror;
             } else if (v instanceof UnmodifiableConfig) {
                 throw new IllegalStateException("Invalid sub-configuration of type "
                         + v.getClass().getSimpleName()
                         + " in the Accumulator. Sub-configurations must always be created with createSubConfig().");
-            } else if (v instanceof List) {
-                List<?> l = (List<?>) v;
+            } else if (v instanceof List<?> l) {
                 List<Object> newList = new ArrayList<>(l);
                 newList.replaceAll(elem -> replaceValue(elem));
                 return newList;
@@ -1060,12 +1052,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
      * A "Map<K, V>" view of the StampedConfig. This implementation is limited because it's hard,
      * or maybe impossible, to provide it in a way that is correct, multi-readers and that behaves as a normal map.
      */
-    private static final class ValueMap implements Map<String, Object> {
-        private final CommentedConfig config;
-
-        ValueMap(CommentedConfig config) {
-            this.config = config;
-        }
+    private record ValueMap(CommentedConfig config) implements Map<String, Object> {
 
         @Override
         public void clear() {
@@ -1087,7 +1074,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
 
         @Override
         public Set<Entry<String, Object>> entrySet() {
-            return new Set<Map.Entry<String, Object>>() {
+            return new Set<Entry<String, Object>>() {
                 @Override
                 public int size() {
                     return config.size();
@@ -1101,10 +1088,9 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 @Override
                 @SuppressWarnings("unlikely-arg-type")
                 public boolean contains(Object o) {
-                    if (!(o instanceof Map.Entry)) {
+                    if (!(o instanceof Entry<?, ?> search)) {
                         return false;
                     }
-                    Map.Entry<?, ?> search = (Map.Entry<?, ?>) o;
                     if (!(search.getKey() instanceof String)) {
                         return false;
                     }
@@ -1126,7 +1112,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 @Override
                 public Iterator<Entry<String, Object>> iterator() {
                     Iterator<? extends Config.Entry> it = config.entrySet().iterator();
-                    return new Iterator<Map.Entry<String, Object>>() {
+                    return new Iterator<Entry<String, Object>>() {
 
                         @Override
                         public boolean hasNext() {
@@ -1181,10 +1167,9 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
 
                 @Override
                 public boolean remove(Object o) {
-                    if (!(o instanceof Map.Entry)) {
+                    if (!(o instanceof Entry<?, ?> entry)) {
                         return false;
                     }
-                    Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
                     Object key = entry.getKey();
                     if (!(key instanceof String)) {
                         return false;
@@ -1205,7 +1190,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 @Override
                 public boolean addAll(Collection<? extends Entry<String, Object>> c) {
                     boolean changed = false;
-                    for (Map.Entry<String, Object> o : c) {
+                    for (Entry<String, Object> o : c) {
                         changed |= add(o);
                     }
                     return changed;
@@ -1214,7 +1199,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 @Override
                 public boolean retainAll(Collection<?> c) {
                     boolean changed = false;
-                    Iterator<Map.Entry<String, Object>> it = iterator();
+                    Iterator<Entry<String, Object>> it = iterator();
                     while (it.hasNext()) {
                         if (!c.contains(it.next())) {
                             it.remove();
@@ -1271,7 +1256,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
 
         @Override
         public void putAll(Map<? extends String, ? extends Object> m) {
-            for (Map.Entry<? extends String, ? extends Object> entry : m.entrySet()) {
+            for (Entry<? extends String, ? extends Object> entry : m.entrySet()) {
                 config.set(Collections.singletonList(entry.getKey()), entry.getValue());
             }
         }
@@ -1368,12 +1353,11 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
 
         @Override
         public boolean contains(Object o) {
-            if (o instanceof UnmodifiableConfig.Entry) {
-                UnmodifiableConfig.Entry entry = (UnmodifiableConfig.Entry) o;
+            if (o instanceof UnmodifiableConfig.Entry entry) {
                 Object entryValue = entry.getRawValue();
                 Object value = StampedConfig.this
                         .getRaw(Collections.singletonList(entry.getKey()));
-                return entryValue == null ? (value == null) : (entryValue.equals(value));
+                return Objects.equals(entryValue, value);
             }
             return false;
         }
@@ -1457,7 +1441,6 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
             }
         }
 
-        ;
     }
 
     /**
@@ -1477,7 +1460,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
     private final class LockingLazyEntry extends LazyEntry {
         // private final EntrySet set;
 
-        protected LockingLazyEntry(String key, EntrySet set) {
+        private LockingLazyEntry(String key, EntrySet set) {
             super(key);
             // this.set = set;
         }
@@ -1529,7 +1512,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
     private final class InLockLazyEntry extends LazyEntry {
         private volatile boolean valid = true;
 
-        protected InLockLazyEntry(String key) {
+        private InLockLazyEntry(String key) {
             super(key);
         }
 
@@ -1664,8 +1647,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 }
                 default: {
                     Object maybeParent = values.get(path.get(0));
-                    if (maybeParent instanceof StampedConfig) {
-                        StampedConfig parent = (StampedConfig) maybeParent;
+                    if (maybeParent instanceof StampedConfig parent) {
                         return parent.containsComment(path.subList(1, path.size()));
                         // it is OK to acquire a read lock on sub-configurations
                     } else {
@@ -1687,8 +1669,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 }
                 default: {
                     Object maybeParent = values.get(path.get(0));
-                    if (maybeParent instanceof StampedConfig) {
-                        StampedConfig parent = (StampedConfig) maybeParent;
+                    if (maybeParent instanceof StampedConfig parent) {
                         return parent.getComment(path.subList(1, path.size()));
                     } else {
                         return null;
@@ -1715,8 +1696,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 }
                 default: {
                     Object maybeParent = values.get(path.get(0));
-                    if (maybeParent instanceof StampedConfig) {
-                        StampedConfig parent = (StampedConfig) maybeParent;
+                    if (maybeParent instanceof StampedConfig parent) {
                         return parent.contains(path.subList(1, path.size()));
                     } else {
                         return false;
@@ -1738,8 +1718,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 }
                 default: {
                     Object maybeParent = values.get(path.get(0));
-                    if (maybeParent instanceof StampedConfig) {
-                        StampedConfig parent = (StampedConfig) maybeParent;
+                    if (maybeParent instanceof StampedConfig parent) {
                         return parent.getRaw(path.subList(1, path.size()));
                     } else {
                         return null;
@@ -1768,7 +1747,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
             for (UnmodifiableCommentedConfig.Entry entry : entrySet()) {
                 builder.append(entry.getKey());
                 builder.append('=');
-                builder.append(String.valueOf((Object) entry.getRawValue()));
+                builder.append((Object) entry.getRawValue());
                 builder.append(", ");
             }
             builder.append("}");
@@ -1779,10 +1758,9 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
         public boolean equals(Object obj) {
             if (obj == this) {
                 return true;
-            } else if (!(obj instanceof UnmodifiableConfig)) {
+            } else if (!(obj instanceof UnmodifiableConfig conf)) {
                 return false;
             } else {
-                UnmodifiableConfig conf = (UnmodifiableConfig) obj;
                 if (conf.size() != size()) {
                     return false;
                 }
@@ -1936,8 +1914,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 default: {
                     int lastIndex = path.size() - 1;
                     Object maybeParent = getRaw(path.subList(0, lastIndex));
-                    if (maybeParent instanceof StampedConfig) {
-                        StampedConfig parent = (StampedConfig) maybeParent;
+                    if (maybeParent instanceof StampedConfig parent) {
                         String key = path.get(lastIndex);
                         return (T) parent.values.remove(key);
                     } else {
@@ -1960,8 +1937,7 @@ public final class StampedConfig implements ConcurrentCommentedConfig {
                 default: {
                     int lastIndex = path.size() - 1;
                     Object maybeParent = getRaw(path.subList(0, lastIndex));
-                    if (maybeParent instanceof StampedConfig) {
-                        StampedConfig parent = (StampedConfig) maybeParent;
+                    if (maybeParent instanceof StampedConfig parent) {
                         String key = path.get(lastIndex);
                         return parent.comments.remove(key);
                     } else {

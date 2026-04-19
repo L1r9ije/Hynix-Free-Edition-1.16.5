@@ -48,7 +48,7 @@ public final class ObjectSerializerBuilder {
     }
 
     public <V, R> void withSerializerProvider(ValueSerializerProvider<V, R> provider) {
-        generalProviders.add((ValueSerializerProvider<?, ?>) provider);
+        generalProviders.add(provider);
     }
 
     public <V, R> void withDefaultSerializerProvider(ValueSerializerProvider<V, R> provider) {

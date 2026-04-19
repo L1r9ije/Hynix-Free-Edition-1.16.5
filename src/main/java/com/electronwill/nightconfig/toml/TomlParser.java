@@ -110,9 +110,8 @@ public final class TomlParser implements ConfigParser<CommentedConfig> {
                     CommentedConfig table = TableParser.parseNormal(commentedConfig, input, this);
                     parsingMode.put(parentConfig, lastPath, table);
                 } else {
-                    if (alreadyDeclared instanceof Config) {
+                    if (alreadyDeclared instanceof Config table) {
                         // check that there is no conflict with the existing declaration
-                        Config table = (Config) alreadyDeclared;
                         checkContainsOnlySubtables(table, path);
                         CommentedConfig commentedTable = CommentedConfig.fake(table);
                         TableParser.parseNormal(input, this, commentedTable);
@@ -140,8 +139,7 @@ public final class TomlParser implements ConfigParser<CommentedConfig> {
                 currentConfig = sub;
             } else if (value instanceof Config) {
                 currentConfig = (Config) value;
-            } else if (value instanceof List) {
-                List<?> list = (List<?>) value;
+            } else if (value instanceof List<?> list) {
                 if (!list.isEmpty() && list.stream().allMatch(Config.class::isInstance)) {// Arrays of tables
                     int lastIndex = list.size() - 1;
                     currentConfig = (Config) list.get(lastIndex);

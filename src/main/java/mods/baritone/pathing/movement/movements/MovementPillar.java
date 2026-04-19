@@ -190,7 +190,7 @@ public class MovementPillar extends Movement {
                 VecUtils.getBlockPosCenter(positionToPlace),
                 ctx.playerRotations());
         if (!ladder) {
-            state.setTarget(new MovementState.MovementTarget(ctx.playerRotations().withPitch(rotation.getPitch()), true));
+            state.setTarget(new MovementState.MovementTarget(ctx.playerRotations().withPitch(rotation.pitch()), true));
         }
 
         boolean blockIsThere = MovementHelper.canWalkOn(ctx, src) || ladder;

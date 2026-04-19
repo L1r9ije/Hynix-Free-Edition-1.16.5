@@ -58,14 +58,13 @@ public class VoicechatConnectionImpl implements VoicechatConnection {
             server.getGroupManager().leaveGroup(serverPlayer);
             return;
         }
-        if (group instanceof GroupImpl) {
-            GroupImpl g = (GroupImpl) group;
-            mods.voicechat.voice.server.Group actualGroup = server.getGroupManager().getGroup(g.getGroup().getId());
+        if (group instanceof GroupImpl g) {
+            mods.voicechat.voice.server.Group actualGroup = server.getGroupManager().getGroup(g.group().getId());
             if (actualGroup == null) {
-                server.getGroupManager().addGroup(g.getGroup(), serverPlayer);
-                actualGroup = g.getGroup();
+                server.getGroupManager().addGroup(g.group(), serverPlayer);
+                actualGroup = g.group();
             }
-            server.getGroupManager().joinGroup(actualGroup, serverPlayer, g.getGroup().getPassword());
+            server.getGroupManager().joinGroup(actualGroup, serverPlayer, g.group().getPassword());
         }
     }
 

@@ -11,7 +11,7 @@ public interface StaticSoundPacket extends SoundPacket {
      *
      * @param <T> the builder itself
      */
-    public interface Builder<T extends StaticSoundPacket.Builder<T>> extends SoundPacket.Builder<T, StaticSoundPacket> {
+    interface Builder<T extends StaticSoundPacket.Builder<T>> extends SoundPacket.Builder<T, StaticSoundPacket> {
 
     }
 

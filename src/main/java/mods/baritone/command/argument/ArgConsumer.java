@@ -137,7 +137,7 @@ public class ArgConsumer implements IArgConsumer {
 
     @Override
     public String peekString(int index) throws CommandNotEnoughArgumentsException {
-        return peek(index).getValue();
+        return peek(index).value();
     }
 
     @Override
@@ -268,7 +268,7 @@ public class ArgConsumer implements IArgConsumer {
 
     @Override
     public String getString() throws CommandNotEnoughArgumentsException {
-        return get().getValue();
+        return get().value();
     }
 
     @Override
@@ -390,7 +390,7 @@ public class ArgConsumer implements IArgConsumer {
 
     @Override
     public String rawRest() {
-        return args.size() > 0 ? args.getFirst().getRawRest() : "";
+        return args.size() > 0 ? args.getFirst().rawRest() : "";
     }
 
     @Override
@@ -425,7 +425,7 @@ public class ArgConsumer implements IArgConsumer {
 
     @Override
     public String consumedString() {
-        return consumed().getValue();
+        return consumed().value();
     }
 
     @Override
@@ -439,12 +439,12 @@ public class ArgConsumer implements IArgConsumer {
     private final class Context implements IDatatypeContext {
 
         @Override
-        public final IBaritone getBaritone() {
+        public IBaritone getBaritone() {
             return ArgConsumer.this.manager.getBaritone();
         }
 
         @Override
-        public final ArgConsumer getConsumer() {
+        public ArgConsumer getConsumer() {
             return ArgConsumer.this;
         }
     }

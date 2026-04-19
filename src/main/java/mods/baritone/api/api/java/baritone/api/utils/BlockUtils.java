@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class BlockUtils {
 
-    private static transient Map<String, Block> resourceCache = new HashMap<>();
+    private static Map<String, Block> resourceCache = new HashMap<>();
 
     private BlockUtils() {
     }

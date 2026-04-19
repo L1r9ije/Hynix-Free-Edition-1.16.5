@@ -154,14 +154,7 @@ final class Util {
             return new EmptyableClass(cls, m);
         }
 
-        private static class EmptyableClass {
-            final Class<?> cls;
-            final Method isEmptyMethod;
-
-            EmptyableClass(Class<?> cls, Method isEmptyMethod) {
-                this.cls = cls;
-                this.isEmptyMethod = isEmptyMethod;
-            }
+        private record EmptyableClass(Class<?> cls, Method isEmptyMethod) {
 
             boolean isInstance(Class<?> instanceClass) {
                 return cls.isAssignableFrom(instanceClass);
@@ -177,14 +170,7 @@ final class Util {
         }
     }
 
-    private static final class TypeAndOrder {
-        final int order;
-        final Class<?> type;
-
-        TypeAndOrder(int order, Class<?> type) {
-            this.order = order;
-            this.type = type;
-        }
+    private record TypeAndOrder(int order, Class<?> type) {
 
         boolean canAssignValue(TypeAndOrder valueType) {
             // no widening conversion for boolean

@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Empty3i {
     private final List<ConcurrentLinkedQueue<IRenderCall>> linkedRenderCalls = ImmutableList.of(new ConcurrentLinkedQueue<>(), new ConcurrentLinkedQueue<>(), new ConcurrentLinkedQueue<>(), new ConcurrentLinkedQueue<>());
-    private volatile int x;
-    private volatile int y;
+    private final int x;
+    private final int y;
     private volatile int z;
 
     public Empty3i() {

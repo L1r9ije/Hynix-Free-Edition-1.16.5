@@ -14,7 +14,7 @@ public final class IoUtils {
         if (i < 0) {
             return new String[]{s};
         } else {
-            return new String[]{s.substring(0, i), s.substring(i + 1, s.length())};
+            return new String[]{s.substring(0, i), s.substring(i + 1)};
         }
     }
 
@@ -85,7 +85,7 @@ public final class IoUtils {
      * Like {@code Runnable}, but with a throwable {@code IOException}.
      */
     @FunctionalInterface
-    public static interface IoRunnable {
+    public interface IoRunnable {
         void run() throws IOException;
     }
 

@@ -4,10 +4,10 @@ import java.net.SocketAddress;
 
 public interface RawUdpPacket {
 
-    byte[] getData();
+    byte[] data();
 
-    long getTimestamp();
+    long timestamp();
 
-    SocketAddress getSocketAddress();
+    SocketAddress socketAddress();
 
 }

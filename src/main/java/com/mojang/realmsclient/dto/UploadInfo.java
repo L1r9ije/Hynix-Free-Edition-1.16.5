@@ -32,7 +32,7 @@ public class UploadInfo extends ValueObject {
         try {
             JsonParser jsonparser = new JsonParser();
             JsonObject jsonobject = jsonparser.parse(p_230796_0_).getAsJsonObject();
-            String s = JsonUtils.func_225171_a("uploadEndpoint", jsonobject, (String) null);
+            String s = JsonUtils.func_225171_a("uploadEndpoint", jsonobject, null);
 
             if (s != null) {
                 int i = JsonUtils.func_225172_a("port", jsonobject, -1);
@@ -40,7 +40,7 @@ public class UploadInfo extends ValueObject {
 
                 if (uri != null) {
                     boolean flag = JsonUtils.func_225170_a("worldClosed", jsonobject, false);
-                    String s1 = JsonUtils.func_225171_a("token", jsonobject, (String) null);
+                    String s1 = JsonUtils.func_225171_a("token", jsonobject, null);
                     return new UploadInfo(flag, s1, uri);
                 }
             }

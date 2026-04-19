@@ -124,10 +124,10 @@ public class GroupScreen extends ListScreenBase {
     @Override
     public void renderForeground(MatrixStack poseStack, int mouseX, int mouseY, float delta) {
         ITextComponent title;
-        if (group.getType().equals(Group.Type.NORMAL)) {
-            title = new TranslationTextComponent("message.voicechat.group_title", new StringTextComponent(group.getName()));
+        if (group.type().equals(Group.Type.NORMAL)) {
+            title = new TranslationTextComponent("message.voicechat.group_title", new StringTextComponent(group.name()));
         } else {
-            title = new TranslationTextComponent("message.voicechat.group_type_title", new StringTextComponent(group.getName()), GroupType.fromType(group.getType()).getTranslation());
+            title = new TranslationTextComponent("message.voicechat.group_type_title", new StringTextComponent(group.name()), GroupType.fromType(group.type()).getTranslation());
         }
 
         font.func_243248_b(poseStack, title, guiLeft + xSize / 2 - font.getStringPropertyWidth(title) / 2, guiTop + 5, FONT_COLOR);

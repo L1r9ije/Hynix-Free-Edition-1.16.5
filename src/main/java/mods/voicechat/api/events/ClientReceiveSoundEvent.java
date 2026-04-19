@@ -33,7 +33,7 @@ public interface ClientReceiveSoundEvent extends ClientEvent {
      */
     void setRawAudio(@Nullable short[] rawAudio);
 
-    public static interface EntitySound extends ClientReceiveSoundEvent {
+    interface EntitySound extends ClientReceiveSoundEvent {
         /**
          * @return if the player is whispering
          */
@@ -45,7 +45,7 @@ public interface ClientReceiveSoundEvent extends ClientEvent {
         float getDistance();
     }
 
-    public static interface LocationalSound extends ClientReceiveSoundEvent {
+    interface LocationalSound extends ClientReceiveSoundEvent {
         /**
          * @return the position of the sound
          */
@@ -57,7 +57,7 @@ public interface ClientReceiveSoundEvent extends ClientEvent {
         float getDistance();
     }
 
-    public static interface StaticSound extends ClientReceiveSoundEvent {
+    interface StaticSound extends ClientReceiveSoundEvent {
 
     }
 

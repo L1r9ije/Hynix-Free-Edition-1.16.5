@@ -94,7 +94,7 @@ public class JoinGroupScreen extends ListScreenBase {
                 if (group.hasPassword()) {
                     minecraft.displayGuiScreen(new EnterPasswordScreen(group));
                 } else {
-                    ClientServerNetManager.sendToServer(new JoinGroupPacket(group.getId(), null));
+                    ClientServerNetManager.sendToServer(new JoinGroupPacket(group.id(), null));
                 }
                 return true;
             }

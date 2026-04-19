@@ -82,7 +82,7 @@ public class RealmsServerSlotButton extends Button implements IScreen {
             if (flag2) {
                 flag = realmsserver.field_230594_m_ == RealmsServer.ServerType.MINIGAME;
                 s = "Minigame";
-                i = (long) realmsserver.field_230597_p_;
+                i = realmsserver.field_230597_p_;
                 s1 = realmsserver.field_230598_q_;
                 flag1 = realmsserver.field_230597_p_ == -1;
             } else {
@@ -102,7 +102,7 @@ public class RealmsServerSlotButton extends Button implements IScreen {
 
     private Pair<ITextComponent, ITextComponent> func_237719_a_(RealmsServer p_237719_1_, String p_237719_2_, boolean p_237719_3_, boolean p_237719_4_, RealmsServerSlotButton.Action p_237719_5_) {
         if (p_237719_5_ == RealmsServerSlotButton.Action.NOTHING) {
-            return Pair.of((ITextComponent) null, new StringTextComponent(p_237719_2_));
+            return Pair.of(null, new StringTextComponent(p_237719_2_));
         } else {
             ITextComponent itextcomponent;
 
@@ -138,7 +138,7 @@ public class RealmsServerSlotButton extends Button implements IScreen {
     private void func_237718_a_(MatrixStack p_237718_1_, int p_237718_2_, int p_237718_3_, int p_237718_4_, int p_237718_5_, boolean p_237718_6_, String p_237718_7_, int p_237718_8_, long p_237718_9_, @Nullable String p_237718_11_, boolean p_237718_12_, boolean p_237718_13_, RealmsServerSlotButton.Action p_237718_14_, @Nullable ITextComponent p_237718_15_) {
         boolean flag = this.isHovered();
 
-        if (this.isMouseOver((double) p_237718_4_, (double) p_237718_5_) && p_237718_15_ != null) {
+        if (this.isMouseOver(p_237718_4_, p_237718_5_) && p_237718_15_ != null) {
             this.field_223774_b.accept(p_237718_15_);
         }
 
@@ -182,10 +182,10 @@ public class RealmsServerSlotButton extends Button implements IScreen {
         drawCenteredString(p_237718_1_, minecraft.fontRenderer, p_237718_7_, p_237718_2_ + 40, p_237718_3_ + 66, 16777215);
     }
 
-    public static enum Action {
+    public enum Action {
         NOTHING,
         SWITCH_SLOT,
-        JOIN;
+        JOIN
     }
 
     public static class ServerData {

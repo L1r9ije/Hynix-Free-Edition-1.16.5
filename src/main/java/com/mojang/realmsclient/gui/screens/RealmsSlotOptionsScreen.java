@@ -112,7 +112,7 @@ public class RealmsSlotOptionsScreen extends RealmsScreen {
             this.field_224656_s = true;
         }
 
-        this.field_224642_e = new TextFieldWidget(this.minecraft.fontRenderer, this.field_224643_f + 2, func_239562_k_(1), this.field_224644_g - 4, 20, (TextFieldWidget) null, new TranslationTextComponent("mco.configure.world.edit.slot.name"));
+        this.field_224642_e = new TextFieldWidget(this.minecraft.fontRenderer, this.field_224643_f + 2, func_239562_k_(1), this.field_224644_g - 4, 20, null, new TranslationTextComponent("mco.configure.world.edit.slot.name"));
         this.field_224642_e.setMaxStringLength(10);
         this.field_224642_e.setText(this.field_224646_i.func_230787_a_(this.field_224648_k));
         this.setListenerDefault(this.field_224642_e);
@@ -258,9 +258,9 @@ public class RealmsSlotOptionsScreen extends RealmsScreen {
 
         public SettingsSlider(int p_i232222_2_, int p_i232222_3_, int p_i232222_4_, int p_i232222_5_, float p_i232222_6_, float p_i232222_7_) {
             super(p_i232222_2_, p_i232222_3_, p_i232222_4_, 20, StringTextComponent.EMPTY, 0.0D);
-            this.field_238066_c_ = (double) p_i232222_6_;
-            this.field_238067_d_ = (double) p_i232222_7_;
-            this.sliderValue = (double) ((MathHelper.clamp((float) p_i232222_5_, p_i232222_6_, p_i232222_7_) - p_i232222_6_) / (p_i232222_7_ - p_i232222_6_));
+            this.field_238066_c_ = p_i232222_6_;
+            this.field_238067_d_ = p_i232222_7_;
+            this.sliderValue = (MathHelper.clamp((float) p_i232222_5_, p_i232222_6_, p_i232222_7_) - p_i232222_6_) / (p_i232222_7_ - p_i232222_6_);
             this.func_230979_b_();
         }
 
@@ -271,7 +271,7 @@ public class RealmsSlotOptionsScreen extends RealmsScreen {
         }
 
         protected void func_230979_b_() {
-            this.setMessage((new TranslationTextComponent("mco.configure.world.spawnProtection")).appendString(": ").append((ITextComponent) (RealmsSlotOptionsScreen.this.field_224655_r == 0 ? new TranslationTextComponent("mco.configure.world.off") : new StringTextComponent(String.valueOf((Object) RealmsSlotOptionsScreen.this.field_224655_r)))));
+            this.setMessage((new TranslationTextComponent("mco.configure.world.spawnProtection")).appendString(": ").append(RealmsSlotOptionsScreen.this.field_224655_r == 0 ? new TranslationTextComponent("mco.configure.world.off") : new StringTextComponent(String.valueOf(RealmsSlotOptionsScreen.this.field_224655_r))));
         }
 
         public void onClick(double mouseX, double mouseY) {

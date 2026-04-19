@@ -49,13 +49,11 @@ public class EntitySoundPacketImpl extends SoundPacketImpl implements EntitySoun
 
         public BuilderImpl(SoundPacketImpl soundPacket) {
             super(soundPacket);
-            if (soundPacket instanceof EntitySoundPacketImpl) {
-                EntitySoundPacketImpl p = (EntitySoundPacketImpl) soundPacket;
+            if (soundPacket instanceof EntitySoundPacketImpl p) {
                 entityUuid = p.getEntityUuid();
                 whispering = p.isWhispering();
                 distance = p.getDistance();
-            } else if (soundPacket instanceof LocationalSoundPacketImpl) {
-                LocationalSoundPacketImpl p = (LocationalSoundPacketImpl) soundPacket;
+            } else if (soundPacket instanceof LocationalSoundPacketImpl p) {
                 distance = p.getDistance();
             } else {
                 distance = Utils.getDefaultDistanceServer();

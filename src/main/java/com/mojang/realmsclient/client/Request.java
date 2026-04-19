@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public abstract class Request<T extends Request<T>> {
     protected HttpURLConnection field_224968_a;
@@ -128,7 +129,7 @@ public abstract class Request<T extends Request<T>> {
         if (p_224954_1_ == null) {
             return "";
         } else {
-            InputStreamReader inputstreamreader = new InputStreamReader(p_224954_1_, "UTF-8");
+            InputStreamReader inputstreamreader = new InputStreamReader(p_224954_1_, StandardCharsets.UTF_8);
             StringBuilder stringbuilder = new StringBuilder();
 
             for (int i = inputstreamreader.read(); i != -1; i = inputstreamreader.read()) {
@@ -149,7 +150,6 @@ public abstract class Request<T extends Request<T>> {
             }
 
             inputstream.close();
-            return;
         } catch (Exception exception) {
             try {
                 InputStream inputstream1 = this.field_224968_a.getErrorStream();
@@ -159,10 +159,8 @@ public abstract class Request<T extends Request<T>> {
                     }
 
                     inputstream1.close();
-                    return;
                 }
             } catch (IOException ioexception) {
-                return;
             }
         } finally {
             if (this.field_224968_a != null) {
@@ -241,7 +239,7 @@ public abstract class Request<T extends Request<T>> {
                 this.field_224968_a.setUseCaches(false);
                 this.field_224968_a.setRequestMethod("POST");
                 OutputStream outputstream = this.field_224968_a.getOutputStream();
-                OutputStreamWriter outputstreamwriter = new OutputStreamWriter(outputstream, "UTF-8");
+                OutputStreamWriter outputstreamwriter = new OutputStreamWriter(outputstream, StandardCharsets.UTF_8);
                 outputstreamwriter.write(this.field_224971_c);
                 outputstreamwriter.close();
                 outputstream.flush();
@@ -270,7 +268,7 @@ public abstract class Request<T extends Request<T>> {
                 this.field_224968_a.setDoInput(true);
                 this.field_224968_a.setRequestMethod("PUT");
                 OutputStream outputstream = this.field_224968_a.getOutputStream();
-                OutputStreamWriter outputstreamwriter = new OutputStreamWriter(outputstream, "UTF-8");
+                OutputStreamWriter outputstreamwriter = new OutputStreamWriter(outputstream, StandardCharsets.UTF_8);
                 outputstreamwriter.write(this.field_224972_c);
                 outputstreamwriter.close();
                 outputstream.flush();

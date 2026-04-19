@@ -26,8 +26,8 @@ import java.util.stream.Stream;
 
 public enum RelativeCoordinate implements IDatatypePost<Double, Double> {
     INSTANCE;
-    private static String ScalesAliasRegex = "[kKmM]";
-    private static Pattern PATTERN = Pattern.compile("^(~?)([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(" + ScalesAliasRegex + "?)|)$");
+    private static final String ScalesAliasRegex = "[kKmM]";
+    private static final Pattern PATTERN = Pattern.compile("^(~?)([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(" + ScalesAliasRegex + "?)|)$");
 
     @Override
     public Double apply(IDatatypeContext ctx, Double origin) throws CommandException {

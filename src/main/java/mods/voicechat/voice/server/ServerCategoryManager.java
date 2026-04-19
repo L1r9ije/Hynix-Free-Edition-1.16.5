@@ -29,7 +29,7 @@ public class ServerCategoryManager extends CategoryManager {
     @Override
     public void addCategory(VolumeCategoryImpl category) {
         super.addCategory(category);
-        Voicechat.LOGGER.debug("Synchronizing volume category {} with all players", category.getId());
+        Voicechat.LOGGER.debug("Synchronizing volume category {} with all players", category.id());
         broadcastAddCategory(server.getServer(), category);
     }
 

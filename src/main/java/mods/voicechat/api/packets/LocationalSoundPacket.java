@@ -25,7 +25,7 @@ public interface LocationalSoundPacket extends SoundPacket {
      *
      * @param <T> the builder itself
      */
-    public interface Builder<T extends Builder<T>> extends SoundPacket.Builder<T, LocationalSoundPacket> {
+    interface Builder<T extends Builder<T>> extends SoundPacket.Builder<T, LocationalSoundPacket> {
 
         /**
          * This is required to be set!

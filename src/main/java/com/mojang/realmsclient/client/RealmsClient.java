@@ -213,7 +213,7 @@ public class RealmsClient {
     }
 
     public Boolean func_224924_g(long p_224924_1_, String p_224924_3_) throws RealmsServiceException {
-        RealmsWorldResetDto realmsworldresetdto = new RealmsWorldResetDto((String) null, Long.valueOf(p_224924_3_), -1, false);
+        RealmsWorldResetDto realmsworldresetdto = new RealmsWorldResetDto(null, Long.valueOf(p_224924_3_), -1, false);
         String s = this.func_224926_c("worlds" + "/$WORLD_ID/reset".replace("$WORLD_ID", String.valueOf(p_224924_1_)));
         String s1 = this.func_224938_a(Request.func_224959_a(s, field_237691_f_.func_237694_a_(realmsworldresetdto), 30000, 80000));
         return Boolean.valueOf(s1);
@@ -297,7 +297,7 @@ public class RealmsClient {
 
     @Nullable
     private String func_224926_c(String p_224926_1_) {
-        return this.func_224907_b(p_224926_1_, (String) null);
+        return this.func_224907_b(p_224926_1_, null);
     }
 
     @Nullable
@@ -344,13 +344,13 @@ public class RealmsClient {
         }
     }
 
-    public static enum CompatibleVersionResponse {
+    public enum CompatibleVersionResponse {
         COMPATIBLE,
         OUTDATED,
-        OTHER;
+        OTHER
     }
 
-    public static enum Environment {
+    public enum Environment {
         PRODUCTION("pc.realms.minecraft.net", "https"),
         STAGE("pc-stage.realms.minecraft.net", "https"),
         LOCAL("localhost:8080", "http");
@@ -358,7 +358,7 @@ public class RealmsClient {
         public String field_224898_d;
         public String field_224899_e;
 
-        private Environment(String p_i51584_3_, String p_i51584_4_) {
+        Environment(String p_i51584_3_, String p_i51584_4_) {
             this.field_224898_d = p_i51584_3_;
             this.field_224899_e = p_i51584_4_;
         }

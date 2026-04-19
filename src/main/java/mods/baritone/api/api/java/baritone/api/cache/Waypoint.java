@@ -84,7 +84,7 @@ public class Waypoint implements IWaypoint {
                 "%s %s %s",
                 name,
                 BetterBlockPos.from(location).toString(),
-                new Date(creationTimestamp).toString()
+                new Date(creationTimestamp)
         );
     }
 
@@ -93,10 +93,9 @@ public class Waypoint implements IWaypoint {
         if (o == null) {
             return false;
         }
-        if (!(o instanceof IWaypoint)) {
+        if (!(o instanceof IWaypoint w)) {
             return false;
         }
-        IWaypoint w = (IWaypoint) o;
         return name.equals(w.getName()) && tag == w.getTag() && location.equals(w.getLocation());
     }
 }

@@ -60,10 +60,9 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
             return;
         }
 
-        if (!(receiver.getPlayer() instanceof ServerPlayerImpl)) {
+        if (!(receiver.getPlayer() instanceof ServerPlayerImpl serverPlayerImpl)) {
             throw new IllegalArgumentException("ServerPlayer is not an instance of ServerPlayerImpl");
         }
-        ServerPlayerImpl serverPlayerImpl = (ServerPlayerImpl) receiver.getPlayer();
 
         @Nullable ClientConnection c = server.getConnections().get(receiver.getPlayer().getUuid());
         server.sendSoundPacket(null, null, serverPlayerImpl.getRealServerPlayer(), state, c, soundPacket, SoundPacketEvent.SOURCE_PLUGIN);
@@ -71,24 +70,21 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
 
     @Override
     public void sendEntitySoundPacketTo(VoicechatConnection connection, EntitySoundPacket p) {
-        if (p instanceof EntitySoundPacketImpl) {
-            EntitySoundPacketImpl packet = (EntitySoundPacketImpl) p;
+        if (p instanceof EntitySoundPacketImpl packet) {
             sendPacket(connection, packet.getPacket());
         }
     }
 
     @Override
     public void sendLocationalSoundPacketTo(VoicechatConnection connection, LocationalSoundPacket p) {
-        if (p instanceof LocationalSoundPacketImpl) {
-            LocationalSoundPacketImpl packet = (LocationalSoundPacketImpl) p;
+        if (p instanceof LocationalSoundPacketImpl packet) {
             sendPacket(connection, packet.getPacket());
         }
     }
 
     @Override
     public void sendStaticSoundPacketTo(VoicechatConnection connection, StaticSoundPacket p) {
-        if (p instanceof StaticSoundPacketImpl) {
-            StaticSoundPacketImpl packet = (StaticSoundPacketImpl) p;
+        if (p instanceof StaticSoundPacketImpl packet) {
             sendPacket(connection, packet.getPacket());
         }
     }
@@ -110,8 +106,7 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
         if (server == null) {
             return null;
         }
-        if (initialPosition instanceof PositionImpl) {
-            PositionImpl p = (PositionImpl) initialPosition;
+        if (initialPosition instanceof PositionImpl p) {
             return new LocationalAudioChannelImpl(channelId, server, level, p);
         } else {
             throw new IllegalArgumentException("initialPosition is not an instance of PositionImpl");
@@ -125,8 +120,7 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
         if (server == null) {
             return null;
         }
-        if (connection instanceof VoicechatConnectionImpl) {
-            VoicechatConnectionImpl conn = (VoicechatConnectionImpl) connection;
+        if (connection instanceof VoicechatConnectionImpl conn) {
             return new StaticAudioChannelImpl(channelId, server, conn);
         }
         return null;
@@ -252,15 +246,13 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
 
     @Override
     public Collection<ServerPlayer> getPlayersInRange(ServerLevel level, Position pos, double range, @Nullable Predicate<ServerPlayer> filter) {
-        if (!(pos instanceof PositionImpl)) {
+        if (!(pos instanceof PositionImpl p)) {
             throw new IllegalArgumentException("Position is not an instance of PositionImpl");
         }
-        PositionImpl p = (PositionImpl) pos;
-        if (!(level instanceof ServerLevelImpl)) {
+        if (!(level instanceof ServerLevelImpl serverLevel)) {
             throw new IllegalArgumentException("ServerLevel is not an instance of ServerLevelImpl");
         }
-        ServerLevelImpl serverLevel = (ServerLevelImpl) level;
-        return ServerWorldUtils.getPlayersInRange(serverLevel.getRawServerLevel(), p.getPosition(), range, filter == null ? null : player -> filter.test(new ServerPlayerImpl(player))).stream().map(ServerPlayerImpl::new).collect(Collectors.toList());
+        return ServerWorldUtils.getPlayersInRange(serverLevel.getRawServerLevel(), p.position(), range, filter == null ? null : player -> filter.test(new ServerPlayerImpl(player))).stream().map(ServerPlayerImpl::new).collect(Collectors.toList());
     }
 
     @Override
@@ -270,10 +262,9 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
 
     @Override
     public void registerVolumeCategory(VolumeCategory category) {
-        if (!(category instanceof VolumeCategoryImpl)) {
+        if (!(category instanceof VolumeCategoryImpl c)) {
             throw new IllegalArgumentException("VolumeCategory is not an instance of VolumeCategoryImpl");
         }
-        VolumeCategoryImpl c = (VolumeCategoryImpl) category;
         Server server = Voicechat.SERVER.getServer();
         if (server == null) {
             return;

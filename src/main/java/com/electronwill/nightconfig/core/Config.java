@@ -231,7 +231,7 @@ public interface Config extends UnmodifiableConfig {
      * @see #isInsertionOrderPreserved()
      */
     static void setInsertionOrderPreserved(boolean orderPreserved) {
-        System.setProperty("nightconfig.preserveInsertionOrder", orderPreserved ? "true" : "false");
+        System.setProperty("nightconfig.preserveInsertionOrder", Boolean.toString(orderPreserved));
     }
 
     // --- Scala convenience methods ---

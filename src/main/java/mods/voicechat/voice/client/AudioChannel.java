@@ -113,11 +113,9 @@ public class AudioChannel extends Thread {
                 }
 
                 if (packet.getData().length == 0) {
-                    if (packet instanceof PlayerSoundPacket) {
-                        PlayerSoundPacket playerSoundPacket = (PlayerSoundPacket) packet;
+                    if (packet instanceof PlayerSoundPacket playerSoundPacket) {
                         ClientPluginManager.instance().onReceiveEntityClientSound(uuid, new short[0], playerSoundPacket.isWhispering(), playerSoundPacket.getDistance());
-                    } else if (packet instanceof LocationSoundPacket) {
-                        LocationSoundPacket locationSoundPacket = (LocationSoundPacket) packet;
+                    } else if (packet instanceof LocationSoundPacket locationSoundPacket) {
                         ClientPluginManager.instance().onReceiveLocationalClientSound(uuid, new short[0], locationSoundPacket.getLocation(), locationSoundPacket.getDistance());
                     } else if (packet instanceof GroupSoundPacket) {
                         ClientPluginManager.instance().onReceiveStaticClientSound(uuid, new short[0]);
@@ -196,8 +194,7 @@ public class AudioChannel extends Thread {
             speaker.play(processedMonoData, volume, packet.getCategory());
             client.getTalkCache().updateTalking(uuid, false);
             appendRecording(() -> PositionalAudioUtils.convertToStereo(processedMonoData));
-        } else if (packet instanceof PlayerSoundPacket) {
-            PlayerSoundPacket soundPacket = (PlayerSoundPacket) packet;
+        } else if (packet instanceof PlayerSoundPacket soundPacket) {
             @Nullable Entity entity = minecraft.world.getPlayerByUuid(uuid);
             if (entity == null) {
                 Vector3d position = minecraft.gameRenderer.getActiveRenderInfo().getProjectedView();
@@ -209,7 +206,7 @@ public class AudioChannel extends Thread {
                         position.y + soundPacket.getDistance() + 1F,
                         position.z + soundPacket.getDistance() + 1F
                 );
-                entity = minecraft.world.getEntitiesInAABBexcluding((Entity) null, box, e -> e.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
+                entity = minecraft.world.getEntitiesInAABBexcluding(null, box, e -> e.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
                 if (entity == null) {
                     return;
                 }
@@ -255,8 +252,7 @@ public class AudioChannel extends Thread {
             }
             float recordingVolume = deathVolume;
             appendRecording(() -> PositionalAudioUtils.convertToStereoForRecording(soundPacket.getDistance(), pos, processedMonoData, recordingVolume));
-        } else if (packet instanceof LocationSoundPacket) {
-            LocationSoundPacket p = (LocationSoundPacket) packet;
+        } else if (packet instanceof LocationSoundPacket p) {
             short[] processedMonoData = ClientPluginManager.instance().onReceiveLocationalClientSound(uuid, monoData, p.getLocation(), p.getDistance());
             if (FreecamUtil.getDistanceTo(p.getLocation()) > p.getDistance() + 1D) {
                 return;

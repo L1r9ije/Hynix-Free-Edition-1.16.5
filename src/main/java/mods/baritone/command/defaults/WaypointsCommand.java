@@ -51,7 +51,7 @@ import static mods.baritone.api.api.java.baritone.api.command.IBaritoneChatContr
 
 public class WaypointsCommand extends Command {
 
-    private Map<IWorldData, List<IWaypoint>> deletedWaypoints = new HashMap<>();
+    private final Map<IWorldData, List<IWaypoint>> deletedWaypoints = new HashMap<>();
 
     public WaypointsCommand(IBaritone baritone) {
         super(baritone, "waypoints", "waypoint", "wp");
@@ -159,7 +159,7 @@ public class WaypointsCommand extends Command {
             for (IWaypoint waypoint : waypoints) {
                 ForWaypoints.waypoints(this.baritone).removeWaypoint(waypoint);
             }
-            deletedWaypoints.computeIfAbsent(baritone.getWorldProvider().getCurrentWorld(), k -> new ArrayList<>()).addAll(Arrays.<IWaypoint>asList(waypoints));
+            deletedWaypoints.computeIfAbsent(baritone.getWorldProvider().getCurrentWorld(), k -> new ArrayList<>()).addAll(Arrays.asList(waypoints));
             TextComponent textComponent = new StringTextComponent(String.format("Cleared %d waypoints, click to restore them", waypoints.length));
             textComponent.setStyle(textComponent.getStyle().setClickEvent(new ClickEvent(
                     ClickEvent.Action.RUN_COMMAND,

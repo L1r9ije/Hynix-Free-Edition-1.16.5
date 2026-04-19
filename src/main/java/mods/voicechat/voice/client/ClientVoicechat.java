@@ -30,7 +30,7 @@ public class ClientVoicechat {
     private InitializationData initializationData;
     @Nullable
     private AudioRecorder recorder;
-    private long startTime;
+    private final long startTime;
 
     public ClientVoicechat() {
         this.startTime = System.currentTimeMillis();

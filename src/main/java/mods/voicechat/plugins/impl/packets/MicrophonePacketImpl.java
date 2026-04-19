@@ -60,9 +60,8 @@ public class MicrophonePacketImpl implements MicrophonePacket {
     @Override
     @Deprecated
     public LocationalSoundPacket toLocationalSoundPacket(Position position) {
-        if (position instanceof PositionImpl) {
-            PositionImpl p = (PositionImpl) position;
-            return new LocationalSoundPacketImpl(new LocationSoundPacket(sender, sender, p.getPosition(), packet.getData(), packet.getSequenceNumber(), Utils.getDefaultDistanceServer(), null));
+        if (position instanceof PositionImpl p) {
+            return new LocationalSoundPacketImpl(new LocationSoundPacket(sender, sender, p.position(), packet.getData(), packet.getSequenceNumber(), Utils.getDefaultDistanceServer(), null));
         } else {
             throw new IllegalArgumentException("position is not an instance of PositionImpl");
         }

@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.awt.image.ImageObserver;
 
 public class SkinProcessor {
     private int[] field_225230_a;
@@ -20,24 +19,24 @@ public class SkinProcessor {
             this.field_225232_c = 64;
             BufferedImage bufferedimage = new BufferedImage(this.field_225231_b, this.field_225232_c, 2);
             Graphics graphics = bufferedimage.getGraphics();
-            graphics.drawImage(p_225228_1_, 0, 0, (ImageObserver) null);
+            graphics.drawImage(p_225228_1_, 0, 0, null);
             boolean flag = p_225228_1_.getHeight() == 32;
 
             if (flag) {
                 graphics.setColor(new Color(0, 0, 0, 0));
                 graphics.fillRect(0, 32, 64, 32);
-                graphics.drawImage(bufferedimage, 24, 48, 20, 52, 4, 16, 8, 20, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 28, 48, 24, 52, 8, 16, 12, 20, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 20, 52, 16, 64, 8, 20, 12, 32, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 24, 52, 20, 64, 4, 20, 8, 32, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 28, 52, 24, 64, 0, 20, 4, 32, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 32, 52, 28, 64, 12, 20, 16, 32, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 40, 48, 36, 52, 44, 16, 48, 20, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 44, 48, 40, 52, 48, 16, 52, 20, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 36, 52, 32, 64, 48, 20, 52, 32, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 40, 52, 36, 64, 44, 20, 48, 32, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 44, 52, 40, 64, 40, 20, 44, 32, (ImageObserver) null);
-                graphics.drawImage(bufferedimage, 48, 52, 44, 64, 52, 20, 56, 32, (ImageObserver) null);
+                graphics.drawImage(bufferedimage, 24, 48, 20, 52, 4, 16, 8, 20, null);
+                graphics.drawImage(bufferedimage, 28, 48, 24, 52, 8, 16, 12, 20, null);
+                graphics.drawImage(bufferedimage, 20, 52, 16, 64, 8, 20, 12, 32, null);
+                graphics.drawImage(bufferedimage, 24, 52, 20, 64, 4, 20, 8, 32, null);
+                graphics.drawImage(bufferedimage, 28, 52, 24, 64, 0, 20, 4, 32, null);
+                graphics.drawImage(bufferedimage, 32, 52, 28, 64, 12, 20, 16, 32, null);
+                graphics.drawImage(bufferedimage, 40, 48, 36, 52, 44, 16, 48, 20, null);
+                graphics.drawImage(bufferedimage, 44, 48, 40, 52, 48, 16, 52, 20, null);
+                graphics.drawImage(bufferedimage, 36, 52, 32, 64, 48, 20, 52, 32, null);
+                graphics.drawImage(bufferedimage, 40, 52, 36, 64, 44, 20, 48, 32, null);
+                graphics.drawImage(bufferedimage, 44, 52, 40, 64, 40, 20, 44, 32, null);
+                graphics.drawImage(bufferedimage, 48, 52, 44, 64, 52, 20, 56, 32, null);
             }
 
             graphics.dispose();

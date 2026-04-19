@@ -38,7 +38,7 @@ public class RealmsGenericErrorScreen extends RealmsScreen {
         } else {
             this.field_224229_b = new StringTextComponent("Realms (" + p_224224_1_.field_224983_c + "):");
             String s = "mco.errorMessage." + p_224224_1_.field_224983_c;
-            this.field_224230_c = (ITextComponent) (I18n.hasKey(s) ? new TranslationTextComponent(s) : ITextComponent.getTextComponentOrEmpty(p_224224_1_.field_224984_d));
+            this.field_224230_c = I18n.hasKey(s) ? new TranslationTextComponent(s) : ITextComponent.getTextComponentOrEmpty(p_224224_1_.field_224984_d);
         }
     }
 

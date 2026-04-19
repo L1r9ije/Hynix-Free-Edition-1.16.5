@@ -61,22 +61,22 @@ public class NetworkMessage {
 
     @Nullable
     public static NetworkMessage readPacketServer(RawUdpPacket packet, Server server) throws IllegalAccessException, InstantiationException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, InvocationTargetException, NoSuchMethodException {
-        byte[] data = packet.getData();
+        byte[] data = packet.data();
         PacketBuffer b = new PacketBuffer(Unpooled.wrappedBuffer(data));
         if (b.readByte() != MAGIC_BYTE) {
-            Voicechat.LOGGER.debug("Received invalid packet from {}", packet.getSocketAddress());
+            Voicechat.LOGGER.debug("Received invalid packet from {}", packet.socketAddress());
             return null;
         }
         UUID playerID = b.readUniqueId();
         if (!server.hasSecret(playerID)) {
-            if (PingHandler.onPacket(server, packet.getSocketAddress(), playerID, b)) {
+            if (PingHandler.onPacket(server, packet.socketAddress(), playerID, b)) {
                 return null;
             }
             // Ignore packets if they are not from a player that has a secret
             Voicechat.LOGGER.debug("Player " + playerID + " does not have a secret");
             return null;
         }
-        return readFromBytes(packet.getSocketAddress(), server.getSecret(playerID), b.readByteArray(), packet.getTimestamp());
+        return readFromBytes(packet.socketAddress(), server.getSecret(playerID), b.readByteArray(), packet.timestamp());
     }
 
     @Nullable

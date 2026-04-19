@@ -61,14 +61,14 @@ public class RealmsLongConfirmationScreen extends RealmsScreen {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    public static enum Type {
+    public enum Type {
         Warning("Warning!", 16711680),
         Info("Info!", 8226750);
 
         public final int field_225143_c;
         public final String field_225144_d;
 
-        private Type(String p_i51697_3_, int p_i51697_4_) {
+        Type(String p_i51697_3_, int p_i51697_4_) {
             this.field_225144_d = p_i51697_3_;
             this.field_225143_c = p_i51697_4_;
         }

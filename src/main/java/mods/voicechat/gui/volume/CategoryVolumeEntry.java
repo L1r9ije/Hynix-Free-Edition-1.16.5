@@ -14,9 +14,9 @@ public class CategoryVolumeEntry extends VolumeEntry {
     protected final ResourceLocation texture;
 
     public CategoryVolumeEntry(VolumeCategoryImpl category, AdjustVolumesScreen screen) {
-        super(screen, new CategoryVolumeConfigEntry(category.getId()));
+        super(screen, new CategoryVolumeConfigEntry(category.id()));
         this.category = category;
-        this.texture = ClientManager.getCategoryManager().getTexture(category.getId(), OTHER_VOLUME_ICON);
+        this.texture = ClientManager.getCategoryManager().getTexture(category.id(), OTHER_VOLUME_ICON);
     }
 
     public VolumeCategoryImpl getCategory() {
@@ -27,21 +27,15 @@ public class CategoryVolumeEntry extends VolumeEntry {
     public void renderElement(MatrixStack poseStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovered, float delta, int skinX, int skinY, int textX, int textY) {
         minecraft.getTextureManager().bindTexture(texture);
         AbstractGui.blit(poseStack, skinX, skinY, SKIN_SIZE, SKIN_SIZE, 16, 16, 16, 16, 16, 16);
-        minecraft.fontRenderer.func_243248_b(poseStack, new StringTextComponent(category.getName()), (float) textX, (float) textY, PLAYER_NAME_COLOR);
-        if (hovered && category.getDescription() != null) {
+        minecraft.fontRenderer.func_243248_b(poseStack, new StringTextComponent(category.name()), (float) textX, (float) textY, PLAYER_NAME_COLOR);
+        if (hovered && category.description() != null) {
             screen.postRender(() -> {
-                screen.renderTooltip(poseStack, new StringTextComponent(category.getDescription()), mouseX, mouseY);
+                screen.renderTooltip(poseStack, new StringTextComponent(category.description()), mouseX, mouseY);
             });
         }
     }
 
-    private static class CategoryVolumeConfigEntry implements AdjustVolumeSlider.VolumeConfigEntry {
-
-        private final String category;
-
-        public CategoryVolumeConfigEntry(String category) {
-            this.category = category;
-        }
+    private record CategoryVolumeConfigEntry(String category) implements AdjustVolumeSlider.VolumeConfigEntry {
 
         @Override
         public void save(double value) {

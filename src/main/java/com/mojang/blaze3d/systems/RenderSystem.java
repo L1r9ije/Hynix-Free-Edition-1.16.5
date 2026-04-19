@@ -638,7 +638,7 @@ public class RenderSystem {
             int i = GlStateManager.getInteger(3379);
 
             for (int j = Math.max(32768, i); j >= 1024; j >>= 1) {
-                GlStateManager.texImage2D(32868, 0, 6408, j, j, 0, 6408, 5121, (IntBuffer) null);
+                GlStateManager.texImage2D(32868, 0, 6408, j, j, 0, 6408, 5121, null);
                 int k = GlStateManager.getTexLevelParameter(32868, 0, 4096);
 
                 if (k != 0) {
@@ -648,7 +648,7 @@ public class RenderSystem {
             }
 
             MAX_SUPPORTED_TEXTURE_SIZE = Math.max(i, 1024);
-            LOGGER.info("Failed to determine maximum texture size by probing, trying GL_MAX_TEXTURE_SIZE = {}", (int) MAX_SUPPORTED_TEXTURE_SIZE);
+            LOGGER.info("Failed to determine maximum texture size by probing, trying GL_MAX_TEXTURE_SIZE = {}", MAX_SUPPORTED_TEXTURE_SIZE);
         }
 
         return MAX_SUPPORTED_TEXTURE_SIZE;

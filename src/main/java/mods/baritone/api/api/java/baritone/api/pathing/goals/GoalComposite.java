@@ -24,18 +24,10 @@ import java.util.Arrays;
  * For example, a GoalComposite of block goals for every oak log in loaded chunks
  * would result in it pathing to the easiest oak log to get to
  *
+ * @param goals An array of goals that any one of must be satisfied
  * @author avecowa
  */
-public class GoalComposite implements Goal {
-
-    /**
-     * An array of goals that any one of must be satisfied
-     */
-    private final Goal[] goals;
-
-    public GoalComposite(Goal... goals) {
-        this.goals = goals;
-    }
+public record GoalComposite(Goal... goals) implements Goal {
 
     @Override
     public boolean isInGoal(int x, int y, int z) {
@@ -88,9 +80,5 @@ public class GoalComposite implements Goal {
     @Override
     public String toString() {
         return "GoalComposite" + Arrays.toString(goals);
-    }
-
-    public Goal[] goals() {
-        return goals;
     }
 }

@@ -410,10 +410,9 @@ public class ConfigSpec {
     public void defineList(List<String> path, Supplier<List<?>> defaultValueSupplier,
                            Predicate<Object> elementValidator) {
         define(path, defaultValueSupplier, o -> {
-            if (!(o instanceof List)) {
+            if (!(o instanceof List<?> list)) {
                 return false;
             }
-            List<?> list = (List<?>) o;
             for (Object element : list) {
                 if (!elementValidator.test(element)) {
                     return false;
@@ -785,10 +784,7 @@ public class ConfigSpec {
     /**
      * Container for the supplier of the default value and the validator.
      */
-    private static final class ValueSpec {
-        private final Supplier<?> defaultValueSupplier;
-        private final Predicate<Object> validator;
-
+    private record ValueSpec(Supplier<?> defaultValueSupplier, Predicate<Object> validator) {
         private ValueSpec(Object defaultValue, Predicate<Object> validator) {
             this(new DumbSupplier<>(
                             Objects.requireNonNull(defaultValue, "The default value must not be null.")),
@@ -807,12 +803,7 @@ public class ConfigSpec {
      *
      * @param <T> the value's type
      */
-    private static final class DumbSupplier<T> implements Supplier<T> {
-        private final T value;
-
-        private DumbSupplier(T value) {
-            this.value = value;
-        }
+    private record DumbSupplier<T>(T value) implements Supplier<T> {
 
         @Override
         public T get() {

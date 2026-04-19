@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 public class ConfigAccessorImpl implements ConfigAccessor {
 
-    private Config config;
+    private final Config config;
 
     public ConfigAccessorImpl(Config config) {
         this.config = config;

@@ -460,11 +460,8 @@ public interface MovementHelper extends ActionCosts, Helper {
             return isWater(upState) ^ Baritone.settings().assumeWalkOnWater.value;
         }
 
-        if (MovementHelper.isLava(state) && !MovementHelper.isFlowing(x, y, z, state, bsi) && Baritone.settings().assumeWalkOnLava.value) { // if we get here it means that assumeWalkOnLava must be true, so put it last
-            return true;
-        }
-
-        return false; // If we don't recognise it then we want to just return false to be safe.
+        // if we get here it means that assumeWalkOnLava must be true, so put it last
+        return MovementHelper.isLava(state) && !MovementHelper.isFlowing(x, y, z, state, bsi) && Baritone.settings().assumeWalkOnLava.value;// If we don't recognise it then we want to just return false to be safe.
     }
 
     static boolean canWalkOn(CalculationContext context, int x, int y, int z, BlockState state) {
@@ -494,14 +491,14 @@ public interface MovementHelper extends ActionCosts, Helper {
     static boolean canUseFrostWalker(CalculationContext context, BlockState state) {
         return context.frostWalker != 0
                 && state.getMaterial() == Material.WATER
-                && ((Integer) state.get(FlowingFluidBlock.LEVEL)) == 0;
+                && state.get(FlowingFluidBlock.LEVEL) == 0;
     }
 
     static boolean canUseFrostWalker(IPlayerContext ctx, BlockPos pos) {
         BlockState state = BlockStateInterface.get(ctx, pos);
         return EnchantmentHelper.hasFrostWalker(ctx.player())
                 && state.getMaterial() == Material.WATER
-                && ((Integer) state.get(FlowingFluidBlock.LEVEL)) == 0;
+                && state.get(FlowingFluidBlock.LEVEL) == 0;
     }
 
     /**
@@ -538,9 +535,7 @@ public interface MovementHelper extends ActionCosts, Helper {
                 return false;
             }
             Block blockAbove = context.getBlock(x, y + 1, z);
-            if (blockAbove instanceof FlowingFluidBlock) {
-                return false;
-            }
+            return !(blockAbove instanceof FlowingFluidBlock);
         }
         return true;
     }
@@ -634,7 +629,7 @@ public interface MovementHelper extends ActionCosts, Helper {
         state.setTarget(new MovementTarget(
                 RotationUtils.calcRotationFromVec3d(ctx.playerHead(),
                         VecUtils.getBlockPosCenter(pos),
-                        ctx.playerRotations()).withPitch(ctx.playerRotations().getPitch()),
+                        ctx.playerRotations()).withPitch(ctx.playerRotations().pitch()),
                 false
         )).setInput(Input.MOVE_FORWARD, true);
     }
@@ -783,6 +778,6 @@ public interface MovementHelper extends ActionCosts, Helper {
     }
 
     enum PlaceResult {
-        READY_TO_PLACE, ATTEMPTING, NO_OPTION;
+        READY_TO_PLACE, ATTEMPTING, NO_OPTION
     }
 }

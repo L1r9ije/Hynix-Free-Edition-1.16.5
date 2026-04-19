@@ -32,7 +32,7 @@ public final class TypeConstraint {
         return c;
     }
 
-    private static final Class<?> findSatisfyingRawType(Type t) {
+    private static Class<?> findSatisfyingRawType(Type t) {
         if (t instanceof Class) {
             return (Class<?>) t;
         }
@@ -47,10 +47,9 @@ public final class TypeConstraint {
             }
             return Array.newInstance(componentClass, 0).getClass();
         }
-        if (t instanceof WildcardType) {
+        if (t instanceof WildcardType w) {
             // For regular WildcardType returned by the reflection API, only one lower or one upper bound is possible.
             // But we also have a custom class RefinedWildcard, which can have multiple bounds.
-            WildcardType w = (WildcardType) t;
 
             Type[] lowerBounds = w.getLowerBounds();
             Type[] upperBounds = w.getUpperBounds();
@@ -100,9 +99,8 @@ public final class TypeConstraint {
                         parent -> resolveTypeArgumentsFor(parent, classToFind, resolvedVariables));
             }
         }
-        if (t instanceof ParameterizedType) {
+        if (t instanceof ParameterizedType pt) {
             // type with generic parameters such as Cls<A, B>
-            ParameterizedType pt = (ParameterizedType) t;
             Type rawType = pt.getRawType();
             Type[] actualTypeArgs = pt.getActualTypeArguments();
 
@@ -110,11 +108,9 @@ public final class TypeConstraint {
             // restrict the bounds of wildcards that are less restrictive than the declaration of the type parameter
             for (int i = 0; i < actualTypeArgs.length; i++) {
                 Type typeArg = actualTypeArgs[i];
-                if (typeArg instanceof WildcardType) {
+                if (typeArg instanceof WildcardType wildcard) {
                     // refine wildcard, otherwise we can lose some information on the bounds when we have a field
                     // declared as `MyType<?>` with `class MyType<T extends Bound>`
-
-                    WildcardType wildcard = (WildcardType) typeArg;
 
                     @SuppressWarnings("unchecked")
                     Class<Object> cls = (Class<Object>) rawType;
@@ -159,8 +155,7 @@ public final class TypeConstraint {
             }
             return res;
         }
-        if (t instanceof WildcardType) {
-            WildcardType w = (WildcardType) t;
+        if (t instanceof WildcardType w) {
             TypeConstraint[] res = null;
             for (Type bound : w.getUpperBounds()) {
                 res = resolveTypeArgumentsFor(resolveIfVariable(bound, resolvedVariables),
@@ -229,7 +224,7 @@ public final class TypeConstraint {
                                Map<TypeVariable<?>, Type> resolvedVariables) {
 
         if (wildcard instanceof RefinedWildcard) {
-            return (RefinedWildcard) wildcard;
+            return wildcard;
         }
 
         // actual: `? extends B` or `? super B`
@@ -384,11 +379,10 @@ public final class TypeConstraint {
 
         @Override
         public boolean equals(Object obj) {
-            if (!(obj instanceof WildcardType))
+            if (!(obj instanceof WildcardType other))
                 return false;
             if (obj == this)
                 return true;
-            WildcardType other = (WildcardType) obj;
             return Arrays.equals(lowerBounds, other.getLowerBounds())
                     && Arrays.equals(upperBounds, other.getUpperBounds());
         }
@@ -439,12 +433,11 @@ public final class TypeConstraint {
 
         @Override
         public boolean equals(Object obj) {
-            if (!(obj instanceof ParameterizedType))
+            if (!(obj instanceof ParameterizedType other))
                 return false;
             if (obj == this)
                 return true;
 
-            ParameterizedType other = (ParameterizedType) obj;
             return null == other.getOwnerType() &&
                     Objects.equals(rawType, other.getRawType()) &&
                     Arrays.equals(arguments, other.getActualTypeArguments());

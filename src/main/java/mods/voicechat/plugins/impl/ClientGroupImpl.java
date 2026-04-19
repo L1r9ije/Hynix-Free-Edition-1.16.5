@@ -6,17 +6,11 @@ import mods.voicechat.voice.common.ClientGroup;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ClientGroupImpl implements Group {
-
-    private final ClientGroup group;
-
-    public ClientGroupImpl(ClientGroup group) {
-        this.group = group;
-    }
+public record ClientGroupImpl(ClientGroup group) implements Group {
 
     @Override
     public String getName() {
-        return group.getName();
+        return group.name();
     }
 
     @Override
@@ -26,26 +20,22 @@ public class ClientGroupImpl implements Group {
 
     @Override
     public UUID getId() {
-        return group.getId();
+        return group.id();
     }
 
     @Override
     public boolean isPersistent() {
-        return group.isPersistent();
+        return group.persistent();
     }
 
     @Override
     public boolean isHidden() {
-        return group.isHidden();
+        return group.hidden();
     }
 
     @Override
     public Type getType() {
-        return group.getType();
-    }
-
-    public ClientGroup getGroup() {
-        return group;
+        return group.type();
     }
 
     @Override
@@ -57,11 +47,7 @@ public class ClientGroupImpl implements Group {
             return false;
         }
         ClientGroupImpl that = (ClientGroupImpl) object;
-        return Objects.equals(group.getId(), that.group.getId());
+        return Objects.equals(group.id(), that.group.id());
     }
 
-    @Override
-    public int hashCode() {
-        return group != null ? group.getId().hashCode() : 0;
-    }
 }

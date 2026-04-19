@@ -103,7 +103,7 @@ public class MatrixStack {
         }
 
         public String toString() {
-            return this.matrix.toString() + this.normal.toString();
+            return this.matrix.toString() + this.normal;
         }
     }
 }

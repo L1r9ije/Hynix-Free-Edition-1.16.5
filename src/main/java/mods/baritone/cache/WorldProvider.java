@@ -19,10 +19,10 @@ package mods.baritone.cache;
 
 import mods.baritone.Baritone;
 import mods.baritone.api.api.java.baritone.api.cache.IWorldProvider;
-import net.minecraft.world.DimensionType;
 import mods.baritone.api.api.java.baritone.api.utils.IPlayerContext;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.FolderName;
 import org.apache.commons.lang3.SystemUtils;

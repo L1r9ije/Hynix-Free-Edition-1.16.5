@@ -6,25 +6,15 @@ import net.minecraft.network.PacketBuffer;
 import javax.annotation.Nullable;
 import java.util.regex.Pattern;
 
-public class VolumeCategoryImpl implements VolumeCategory {
+public record VolumeCategoryImpl(String id, String name, @Nullable String description,
+                                 @Nullable int[][] icon) implements VolumeCategory {
 
     public static final Pattern ID_REGEX = Pattern.compile("^[a-z_]{1,16}$");
 
-    private final String id;
-    private final String name;
-    @Nullable
-    private final String description;
-    @Nullable
-    private final int[][] icon;
-
-    public VolumeCategoryImpl(String id, String name, @Nullable String description, @Nullable int[][] icon) {
+    public VolumeCategoryImpl {
         if (!ID_REGEX.matcher(id).matches()) {
             throw new IllegalArgumentException("Volume category ID can only contain a-z and _ with a maximum amount of 16 characters");
         }
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.icon = icon;
     }
 
     public static VolumeCategoryImpl fromBytes(PacketBuffer buf) {
@@ -44,28 +34,6 @@ public class VolumeCategoryImpl implements VolumeCategory {
             }
         }
         return new VolumeCategoryImpl(id, name, description, icon);
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Nullable
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Nullable
-    @Override
-    public int[][] getIcon() {
-        return icon;
     }
 
     public void toBytes(PacketBuffer buf) {
@@ -108,7 +76,7 @@ public class VolumeCategoryImpl implements VolumeCategory {
         return id.hashCode();
     }
 
-    public static class BuilderImpl implements VolumeCategory.Builder {
+    public static class BuilderImpl implements Builder {
 
         private String id;
         private String name;

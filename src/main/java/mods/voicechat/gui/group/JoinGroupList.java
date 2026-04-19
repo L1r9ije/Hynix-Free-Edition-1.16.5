@@ -28,14 +28,13 @@ public class JoinGroupList extends ListScreenListBase<JoinGroupEntry> {
 
     public static void update() {
         Screen screen = Minecraft.getInstance().currentScreen;
-        if (screen instanceof JoinGroupScreen) {
-            JoinGroupScreen joinGroupScreen = (JoinGroupScreen) screen;
+        if (screen instanceof JoinGroupScreen joinGroupScreen) {
             joinGroupScreen.groupList.updateGroups();
         }
     }
 
     private void updateGroups() {
-        Map<UUID, JoinGroupEntry.Group> groups = ClientManager.getGroupManager().getGroups().stream().filter(clientGroup -> !clientGroup.isHidden()).collect(Collectors.toMap(ClientGroup::getId, JoinGroupEntry.Group::new));
+        Map<UUID, JoinGroupEntry.Group> groups = ClientManager.getGroupManager().getGroups().stream().filter(clientGroup -> !clientGroup.hidden()).collect(Collectors.toMap(ClientGroup::id, JoinGroupEntry.Group::new));
         Collection<PlayerState> playerStates = ClientManager.getPlayerStateManager().getPlayerStates(true);
 
         for (PlayerState state : playerStates) {
@@ -51,7 +50,7 @@ public class JoinGroupList extends ListScreenListBase<JoinGroupEntry> {
 
         groups.values().forEach(group -> group.getMembers().sort(Comparator.comparing(PlayerState::getName)));
 
-        replaceEntries(groups.values().stream().map(group -> new JoinGroupEntry(parent, group)).sorted(Comparator.comparing(o -> o.getGroup().getGroup().getName())).collect(Collectors.toList()));
+        replaceEntries(groups.values().stream().map(group -> new JoinGroupEntry(parent, group)).sorted(Comparator.comparing(o -> o.getGroup().getGroup().name())).collect(Collectors.toList()));
     }
 
     public boolean isEmpty() {

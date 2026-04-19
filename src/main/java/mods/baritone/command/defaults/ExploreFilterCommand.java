@@ -17,6 +17,7 @@
 
 package mods.baritone.command.defaults;
 
+import com.google.gson.JsonSyntaxException;
 import mods.baritone.api.api.java.baritone.api.IBaritone;
 import mods.baritone.api.api.java.baritone.api.command.Command;
 import mods.baritone.api.api.java.baritone.api.command.argument.IArgConsumer;
@@ -24,7 +25,6 @@ import mods.baritone.api.api.java.baritone.api.command.datatypes.RelativeFile;
 import mods.baritone.api.api.java.baritone.api.command.exception.CommandException;
 import mods.baritone.api.api.java.baritone.api.command.exception.CommandInvalidStateException;
 import mods.baritone.api.api.java.baritone.api.command.exception.CommandInvalidTypeException;
-import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.nio.file.NoSuchFileException;
@@ -59,7 +59,7 @@ public class ExploreFilterCommand extends Command {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-        logDirect(String.format("Explore filter applied. Inverted: %s", Boolean.toString(invert)));
+        logDirect(String.format("Explore filter applied. Inverted: %s", invert));
     }
 
     @Override

@@ -391,8 +391,8 @@ public final class BuilderProcess extends BaritoneProcessHelper implements IBuil
             float originalYaw = ctx.player().rotationYaw;
             float originalPitch = ctx.player().rotationPitch;
             // the state depends on the facing of the player sometimes
-            ctx.player().rotationYaw = rot.getYaw();
-            ctx.player().rotationPitch = rot.getPitch();
+            ctx.player().rotationYaw = rot.yaw();
+            ctx.player().rotationPitch = rot.pitch();
             BlockItemUseContext meme = new BlockItemUseContext(new ItemUseContext(
                     ctx.world(),
                     ctx.player(),
@@ -979,8 +979,8 @@ public final class BuilderProcess extends BaritoneProcessHelper implements IBuil
 
     public static class GoalAdjacent extends GoalGetToBlock {
 
-        private boolean allowSameLevel;
-        private BlockPos no;
+        private final boolean allowSameLevel;
+        private final BlockPos no;
 
         public GoalAdjacent(BlockPos pos, BlockPos no, boolean allowSameLevel) {
             super(pos);

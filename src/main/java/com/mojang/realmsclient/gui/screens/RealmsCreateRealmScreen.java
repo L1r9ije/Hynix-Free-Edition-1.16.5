@@ -48,10 +48,10 @@ public class RealmsCreateRealmScreen extends RealmsScreen {
             this.minecraft.displayGuiScreen(this.field_224136_b);
         }));
         this.field_224139_e.active = false;
-        this.field_224137_c = new TextFieldWidget(this.minecraft.fontRenderer, this.width / 2 - 100, 65, 200, 20, (TextFieldWidget) null, new TranslationTextComponent("mco.configure.world.name"));
+        this.field_224137_c = new TextFieldWidget(this.minecraft.fontRenderer, this.width / 2 - 100, 65, 200, 20, null, new TranslationTextComponent("mco.configure.world.name"));
         this.addListener(this.field_224137_c);
         this.setFocusedDefault(this.field_224137_c);
-        this.field_224138_d = new TextFieldWidget(this.minecraft.fontRenderer, this.width / 2 - 100, 115, 200, 20, (TextFieldWidget) null, new TranslationTextComponent("mco.configure.world.description"));
+        this.field_224138_d = new TextFieldWidget(this.minecraft.fontRenderer, this.width / 2 - 100, 115, 200, 20, null, new TranslationTextComponent("mco.configure.world.description"));
         this.addListener(this.field_224138_d);
         this.field_224140_f = new RealmsLabel(new TranslationTextComponent("mco.selectServer.create"), this.width / 2, 11, 16777215);
         this.addListener(this.field_224140_f);

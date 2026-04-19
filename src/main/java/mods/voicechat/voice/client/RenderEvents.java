@@ -135,10 +135,9 @@ public class RenderEvents {
         if (VoicechatClient.CLIENT_CONFIG.hideIcons.get()) {
             return;
         }
-        if (!(entity instanceof PlayerEntity)) {
+        if (!(entity instanceof PlayerEntity player)) {
             return;
         }
-        PlayerEntity player = (PlayerEntity) entity;
         if (entity == minecraft.player) {
             return;
         }

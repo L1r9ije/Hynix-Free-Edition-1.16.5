@@ -309,8 +309,7 @@ public final class ObjectBinder {
         @Override
         public Map<String, Object> valueMap() {
             Function<Object, Object> readConversion = o -> {
-                if (o instanceof FieldInfos) {
-                    FieldInfos fieldInfos = (FieldInfos) o;
+                if (o instanceof FieldInfos fieldInfos) {
                     if (fieldInfos.boundConfig != null) {
                         return fieldInfos.getUpdatedConfig(object);// Updates the object
                     }
@@ -385,18 +384,12 @@ public final class ObjectBinder {
 
     /**
      * Informations about a java field used by the BoundConfig.
+     *
+     * @param field       always non-null
+     * @param boundConfig non-null iff the field is a sub config
      */
     @SuppressWarnings("deprecation")
-    private static final class FieldInfos {
-        final Field field;// always non-null
-        final BoundConfig boundConfig;// non-null iff the field is a sub config
-        final Converter<Object, Object> converter;
-
-        FieldInfos(Field field, BoundConfig boundConfig, Converter<Object, Object> converter) {
-            this.field = field;
-            this.boundConfig = boundConfig;
-            this.converter = converter;
-        }
+    private record FieldInfos(Field field, BoundConfig boundConfig, Converter<Object, Object> converter) {
 
         Object setValue(Object fieldObject, Object value, boolean bypassFinal) {
             if (!bypassFinal && Modifier.isFinal(field.getModifiers())) {
@@ -461,14 +454,8 @@ public final class ObjectBinder {
     }
 
     @SuppressWarnings("deprecation")
-    private static final class EnumValueConverter<T extends Enum<T>> implements Converter<T, Object> {
-        private final Class<T> enumType;
-        private final EnumGetMethod method;
-
-        EnumValueConverter(Class<T> enumType, EnumGetMethod method) {
-            this.enumType = enumType;
-            this.method = method;
-        }
+    private record EnumValueConverter<T extends Enum<T>>(Class<T> enumType,
+                                                         EnumGetMethod method) implements Converter<T, Object> {
 
         @Override
         public T convertToField(Object value) {

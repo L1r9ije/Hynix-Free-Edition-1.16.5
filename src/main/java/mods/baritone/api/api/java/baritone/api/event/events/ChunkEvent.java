@@ -21,65 +21,44 @@ package mods.baritone.api.api.java.baritone.api.event.events;
 import mods.baritone.api.api.java.baritone.api.event.events.type.EventState;
 
 /**
+ * @param state The state of the event
+ * @param type  The type of chunk event that occurred
+ * @param x     The Chunk X position.
+ * @param z     The Chunk Z position.
  * @author Brady
  * @since 8/2/2018
  */
-public final class ChunkEvent {
-
-    /**
-     * The state of the event
-     */
-    private final EventState state;
-
-    /**
-     * The type of chunk event that occurred
-     *
-     * @see Type
-     */
-    private final Type type;
-
-    /**
-     * The Chunk X position.
-     */
-    private final int x;
-
-    /**
-     * The Chunk Z position.
-     */
-    private final int z;
-
-    public ChunkEvent(EventState state, Type type, int x, int z) {
-        this.state = state;
-        this.type = type;
-        this.x = x;
-        this.z = z;
-    }
+public record ChunkEvent(EventState state, Type type, int x, int z) {
 
     /**
      * @return The state of the event
      */
-    public final EventState getState() {
+    @Override
+    public EventState state() {
         return this.state;
     }
 
     /**
      * @return The type of chunk event that occurred;
      */
-    public final Type getType() {
+    @Override
+    public Type type() {
         return this.type;
     }
 
     /**
      * @return The Chunk X position.
      */
-    public final int getX() {
+    @Override
+    public int x() {
         return this.x;
     }
 
     /**
      * @return The Chunk Z position.
      */
-    public final int getZ() {
+    @Override
+    public int z() {
         return this.z;
     }
 

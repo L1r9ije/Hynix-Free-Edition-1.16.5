@@ -208,10 +208,10 @@ public class RealmsPlayerScreen extends RealmsScreen {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32.0F;
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        bufferbuilder.pos(0.0D, (double) this.height, 0.0D).tex(0.0F, (float) (this.height - i) / 32.0F + 0.0F).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.pos((double) this.width, (double) this.height, 0.0D).tex((float) this.width / 32.0F, (float) (this.height - i) / 32.0F + 0.0F).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.pos((double) this.width, (double) i, 0.0D).tex((float) this.width / 32.0F, 0.0F).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.pos(0.0D, (double) i, 0.0D).tex(0.0F, 0.0F).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(0.0D, this.height, 0.0D).tex(0.0F, (float) (this.height - i) / 32.0F + 0.0F).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(this.width, this.height, 0.0D).tex((float) this.width / 32.0F, (float) (this.height - i) / 32.0F + 0.0F).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(this.width, i, 0.0D).tex((float) this.width / 32.0F, 0.0F).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(0.0D, i, 0.0D).tex(0.0F, 0.0F).color(64, 64, 64, 255).endVertex();
         tessellator.draw();
         this.field_224314_o.func_239560_a_(this, matrixStack);
 
@@ -233,7 +233,7 @@ public class RealmsPlayerScreen extends RealmsScreen {
             int i = p_237903_3_ + 12;
             int j = p_237903_4_ - 12;
             int k = this.font.getStringPropertyWidth(p_237903_2_);
-            this.fillGradient(p_237903_1_, i - 3, j - 3, i + k + 3, j + 8 + 3, -1073741824, -1073741824);
+            fillGradient(p_237903_1_, i - 3, j - 3, i + k + 3, j + 8 + 3, -1073741824, -1073741824);
             this.font.func_243246_a(p_237903_1_, p_237903_2_, (float) i, (float) j, 16777215);
         }
     }
@@ -277,10 +277,10 @@ public class RealmsPlayerScreen extends RealmsScreen {
         }
     }
 
-    static enum GuestAction {
+    enum GuestAction {
         TOGGLE_OP,
         REMOVE,
-        NONE;
+        NONE
     }
 
     class InvitedEntry extends ExtendedList.AbstractListEntry<RealmsPlayerScreen.InvitedEntry> {
@@ -333,7 +333,7 @@ public class RealmsPlayerScreen extends RealmsScreen {
         }
 
         public int getRowWidth() {
-            return (int) ((double) this.width * 1.0D);
+            return (int) ((double) this.width);
         }
 
         public boolean isFocused() {

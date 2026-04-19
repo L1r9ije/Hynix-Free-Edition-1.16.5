@@ -9,13 +9,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class GroupImpl implements Group {
-
-    private final mods.voicechat.voice.server.Group group;
-
-    public GroupImpl(mods.voicechat.voice.server.Group group) {
-        this.group = group;
-    }
+public record GroupImpl(mods.voicechat.voice.server.Group group) implements Group {
 
     @Nullable
     public static GroupImpl create(PlayerState state) {
@@ -60,10 +54,6 @@ public class GroupImpl implements Group {
         return group.getType();
     }
 
-    public mods.voicechat.voice.server.Group getGroup() {
-        return group;
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -76,12 +66,7 @@ public class GroupImpl implements Group {
         return Objects.equals(group.getId(), group1.group.getId());
     }
 
-    @Override
-    public int hashCode() {
-        return group != null ? group.getId().hashCode() : 0;
-    }
-
-    public static class BuilderImpl implements Group.Builder {
+    public static class BuilderImpl implements Builder {
 
         @Nullable
         private UUID id;
@@ -114,19 +99,19 @@ public class GroupImpl implements Group {
         }
 
         @Override
-        public Group.Builder setName(String name) {
+        public Builder setName(String name) {
             this.name = convertGroupName(name);
             return this;
         }
 
         @Override
-        public Group.Builder setPassword(String password) {
+        public Builder setPassword(String password) {
             this.password = password;
             return this;
         }
 
         @Override
-        public Group.Builder setPersistent(boolean persistent) {
+        public Builder setPersistent(boolean persistent) {
             this.persistent = persistent;
             return this;
         }
@@ -138,7 +123,7 @@ public class GroupImpl implements Group {
         }
 
         @Override
-        public Group.Builder setType(Type type) {
+        public Builder setType(Type type) {
             this.type = type;
             return this;
         }
@@ -154,15 +139,15 @@ public class GroupImpl implements Group {
             GroupImpl group = new GroupImpl(new mods.voicechat.voice.server.Group(id == null ? UUID.randomUUID() : id, name, password, persistent, hidden, type));
             Server server = Voicechat.SERVER.getServer();
             if (server != null && persistent) {
-                server.getGroupManager().addGroup(group.getGroup(), null);
+                server.getGroupManager().addGroup(group.group(), null);
             }
             return group;
         }
     }
 
-    public static class TypeImpl implements Group.Type {
+    public static class TypeImpl implements Type {
 
-        public static short toInt(Group.Type type) {
+        public static short toInt(Type type) {
             if (type == OPEN) {
                 return 1;
             } else if (type == ISOLATED) {
@@ -172,7 +157,7 @@ public class GroupImpl implements Group {
             }
         }
 
-        public static Group.Type fromInt(short i) {
+        public static Type fromInt(short i) {
             if (i == 1) {
                 return OPEN;
             } else if (i == 2) {

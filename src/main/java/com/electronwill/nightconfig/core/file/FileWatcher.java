@@ -385,7 +385,7 @@ public final class FileWatcher {
         }
     }
 
-    private static enum ControlMessageKind {
+    private enum ControlMessageKind {
         PUT, ADD, REMOVE, POISON
     }
 
@@ -593,11 +593,8 @@ public final class FileWatcher {
         }
     }
 
-    private static final class WatchedDirectory {
-        private final WatchKey key;
-        private final Map<Path, DebouncedRunnable> fileChangeHandlers;
-
-        WatchedDirectory(WatchKey key, Map<Path, DebouncedRunnable> fileChangeHandlers) {
+    private record WatchedDirectory(WatchKey key, Map<Path, DebouncedRunnable> fileChangeHandlers) {
+        private WatchedDirectory(WatchKey key, Map<Path, DebouncedRunnable> fileChangeHandlers) {
             this.key = Objects.requireNonNull(key);
             this.fileChangeHandlers = Objects.requireNonNull(fileChangeHandlers);
         }
@@ -605,22 +602,14 @@ public final class FileWatcher {
 
     /**
      * Control message that can be send to a watcher thread.
+     *
+     * @param path    null for poison
+     * @param handler null for some poison and remove
+     * @param future  Allows to notify the caller when the processing of the message is complete.
+     *                optional
      */
-    private static final class ControlMessage {
-        private final ControlMessageKind kind;
-        private final CanonicalPath path; // null for poison
-        private final Runnable handler; // null for some poison and remove
-        /**
-         * Allows to notify the caller when the processing of the message is complete.
-         */
-        private final CompletableFuture<Void> future; // optional
-
-        private ControlMessage(ControlMessageKind kind, CanonicalPath path, Runnable handler, CompletableFuture<Void> future) {
-            this.path = path;
-            this.kind = kind;
-            this.handler = handler;
-            this.future = future;
-        }
+    private record ControlMessage(ControlMessageKind kind, CanonicalPath path, Runnable handler,
+                                  CompletableFuture<Void> future) {
 
         static ControlMessage addOrPut(ControlMessageKind kind, CanonicalPath path, Runnable handler, CompletableFuture<Void> future) {
             if (kind != ControlMessageKind.ADD && kind != ControlMessageKind.PUT) {
@@ -643,13 +632,7 @@ public final class FileWatcher {
         }
     }
 
-    private static class CanonicalPath {
-        public final Path parentDirectory, fileName;
-
-        private CanonicalPath(Path parentDirectory, Path fileName) {
-            this.parentDirectory = parentDirectory;
-            this.fileName = fileName;
-        }
+    private record CanonicalPath(Path parentDirectory, Path fileName) {
 
         public static CanonicalPath from(Path fullFilePath) {
             try {

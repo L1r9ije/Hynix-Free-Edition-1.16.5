@@ -39,7 +39,7 @@ public interface SoundPacket extends Packet, ConvertablePacket {
      * @param <T> the builder itself
      * @param <P> the packet, the builder builds
      */
-    public interface Builder<T extends Builder<T, P>, P extends SoundPacket> {
+    interface Builder<T extends Builder<T, P>, P extends SoundPacket> {
 
         /**
          * <b>NOTE</b>: Make sure to set this to a unique value to avoid conflicts with other channels.

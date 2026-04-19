@@ -145,7 +145,7 @@ public class RealmsBrokenWorldScreen extends RealmsScreen {
                 if ((entry.getValue()).field_230625_l_ != null && (entry.getValue()).field_230624_k_ != -1L) {
                     this.func_237775_a_(matrixStack, this.func_224065_a(entry.getKey()), func_239562_k_(1) + 5, mouseX, mouseY, this.field_224074_d.field_230595_n_ == entry.getKey() && !this.func_224069_f(), entry.getValue().func_230787_a_(entry.getKey()), entry.getKey(), (entry.getValue()).field_230624_k_, (entry.getValue()).field_230625_l_, (entry.getValue()).field_230627_n_);
                 } else {
-                    this.func_237775_a_(matrixStack, this.func_224065_a(entry.getKey()), func_239562_k_(1) + 5, mouseX, mouseY, this.field_224074_d.field_230595_n_ == entry.getKey() && !this.func_224069_f(), entry.getValue().func_230787_a_(entry.getKey()), entry.getKey(), -1L, (String) null, (entry.getValue()).field_230627_n_);
+                    this.func_237775_a_(matrixStack, this.func_224065_a(entry.getKey()), func_239562_k_(1) + 5, mouseX, mouseY, this.field_224074_d.field_230595_n_ == entry.getKey() && !this.func_224069_f(), entry.getValue().func_230787_a_(entry.getKey()), entry.getKey(), -1L, null, (entry.getValue()).field_230627_n_);
                 }
             }
         }

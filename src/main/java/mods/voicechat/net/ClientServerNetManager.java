@@ -18,8 +18,7 @@ public abstract class ClientServerNetManager extends NetManager {
     }
 
     public static <T extends Packet<T>> void setClientListener(Channel<T> channel, ClientServerNetManager.ClientReceiver<T> packetReceiver) {
-        if (channel instanceof ClientServerChannel) {
-            ClientServerChannel<T> c = (ClientServerChannel<T>) channel;
+        if (channel instanceof ClientServerChannel<T> c) {
             c.setClientListener(packetReceiver);
         } else {
             throw new IllegalStateException("Channel is not a ClientServerChannel");

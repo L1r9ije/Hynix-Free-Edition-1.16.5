@@ -36,8 +36,8 @@ public class Subscription extends ValueObject {
         }
     }
 
-    public static enum Type {
+    public enum Type {
         NORMAL,
-        RECURRING;
+        RECURRING
     }
 }

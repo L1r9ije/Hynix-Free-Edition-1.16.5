@@ -41,12 +41,10 @@ public class LocationalSoundPacketImpl extends SoundPacketImpl implements Locati
 
         public BuilderImpl(SoundPacketImpl soundPacket) {
             super(soundPacket);
-            if (soundPacket instanceof LocationalSoundPacketImpl) {
-                LocationalSoundPacketImpl p = (LocationalSoundPacketImpl) soundPacket;
+            if (soundPacket instanceof LocationalSoundPacketImpl p) {
                 position = p.position;
                 distance = p.getDistance();
-            } else if (soundPacket instanceof EntitySoundPacketImpl) {
-                EntitySoundPacketImpl p = (EntitySoundPacketImpl) soundPacket;
+            } else if (soundPacket instanceof EntitySoundPacketImpl p) {
                 distance = p.getDistance();
             } else {
                 distance = Utils.getDefaultDistanceServer();
@@ -75,7 +73,7 @@ public class LocationalSoundPacketImpl extends SoundPacketImpl implements Locati
             if (position == null) {
                 throw new IllegalStateException("position missing");
             }
-            return new LocationalSoundPacketImpl(new LocationSoundPacket(channelId, sender, position.getPosition(), opusEncodedData, sequenceNumber, distance, category));
+            return new LocationalSoundPacketImpl(new LocationSoundPacket(channelId, sender, position.position(), opusEncodedData, sequenceNumber, distance, category));
         }
 
     }

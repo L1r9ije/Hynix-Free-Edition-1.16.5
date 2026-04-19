@@ -29,13 +29,7 @@ import java.util.Objects;
  *
  * @author LoganDark
  */
-public class GoalInverted implements Goal {
-
-    public final Goal origin;
-
-    public GoalInverted(Goal origin) {
-        this.origin = origin;
-    }
+public record GoalInverted(Goal origin) implements Goal {
 
     @Override
     public boolean isInGoal(int x, int y, int z) {
@@ -63,11 +57,6 @@ public class GoalInverted implements Goal {
 
         GoalInverted goal = (GoalInverted) o;
         return Objects.equals(origin, goal.origin);
-    }
-
-    @Override
-    public int hashCode() {
-        return origin.hashCode() * 495796690;
     }
 
     @Override

@@ -21,7 +21,7 @@ public class RealmsUtil {
     private static final MinecraftSessionService field_225196_c = field_225195_b.createMinecraftSessionService();
     public static LoadingCache<String, GameProfile> field_225194_a = CacheBuilder.newBuilder().expireAfterWrite(60L, TimeUnit.MINUTES).build(new CacheLoader<String, GameProfile>() {
         public GameProfile load(String p_load_1_) throws Exception {
-            GameProfile gameprofile = RealmsUtil.field_225196_c.fillProfileProperties(new GameProfile(UUIDTypeAdapter.fromString(p_load_1_), (String) null), false);
+            GameProfile gameprofile = RealmsUtil.field_225196_c.fillProfileProperties(new GameProfile(UUIDTypeAdapter.fromString(p_load_1_), null), false);
 
             if (gameprofile == null) {
                 throw new Exception("Couldn't get profile");

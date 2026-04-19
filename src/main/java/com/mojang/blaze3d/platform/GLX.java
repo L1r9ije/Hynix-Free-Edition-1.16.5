@@ -89,7 +89,7 @@ public class GLX {
             };
 
             for (String s : list) {
-                LOGGER.error("GLFW error collected during initialization: {}", (Object) s);
+                LOGGER.error("GLFW error collected during initialization: {}", s);
             }
 
             RenderSystem.setErrorCallback(glfwerrorcallback);
@@ -157,17 +157,17 @@ public class GLX {
 
         if (p__renderCrosshair_1_) {
             bufferbuilder.pos(0.0D, 0.0D, 0.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos((double) p__renderCrosshair_0_, 0.0D, 0.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.pos(p__renderCrosshair_0_, 0.0D, 0.0D).color(0, 0, 0, 255).endVertex();
         }
 
         if (p__renderCrosshair_2_) {
             bufferbuilder.pos(0.0D, 0.0D, 0.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(0.0D, (double) p__renderCrosshair_0_, 0.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.pos(0.0D, p__renderCrosshair_0_, 0.0D).color(0, 0, 0, 255).endVertex();
         }
 
         if (p__renderCrosshair_3_) {
             bufferbuilder.pos(0.0D, 0.0D, 0.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(0.0D, 0.0D, (double) p__renderCrosshair_0_).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.pos(0.0D, 0.0D, p__renderCrosshair_0_).color(0, 0, 0, 255).endVertex();
         }
 
         tessellator.draw();
@@ -176,17 +176,17 @@ public class GLX {
 
         if (p__renderCrosshair_1_) {
             bufferbuilder.pos(0.0D, 0.0D, 0.0D).color(255, 0, 0, 255).endVertex();
-            bufferbuilder.pos((double) p__renderCrosshair_0_, 0.0D, 0.0D).color(255, 0, 0, 255).endVertex();
+            bufferbuilder.pos(p__renderCrosshair_0_, 0.0D, 0.0D).color(255, 0, 0, 255).endVertex();
         }
 
         if (p__renderCrosshair_2_) {
             bufferbuilder.pos(0.0D, 0.0D, 0.0D).color(0, 255, 0, 255).endVertex();
-            bufferbuilder.pos(0.0D, (double) p__renderCrosshair_0_, 0.0D).color(0, 255, 0, 255).endVertex();
+            bufferbuilder.pos(0.0D, p__renderCrosshair_0_, 0.0D).color(0, 255, 0, 255).endVertex();
         }
 
         if (p__renderCrosshair_3_) {
             bufferbuilder.pos(0.0D, 0.0D, 0.0D).color(127, 127, 255, 255).endVertex();
-            bufferbuilder.pos(0.0D, 0.0D, (double) p__renderCrosshair_0_).color(127, 127, 255, 255).endVertex();
+            bufferbuilder.pos(0.0D, 0.0D, p__renderCrosshair_0_).color(127, 127, 255, 255).endVertex();
         }
 
         tessellator.draw();

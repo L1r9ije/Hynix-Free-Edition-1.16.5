@@ -133,7 +133,7 @@ public class RealmsMainScreen extends RealmsScreen {
 
     public RealmsMainScreen(Screen p_i232181_1_) {
         this.field_224019_h = p_i232181_1_;
-        this.field_224014_c = RateLimiter.create((double) 0.016666668F);
+        this.field_224014_c = RateLimiter.create(0.016666668F);
     }
 
     private static boolean func_223968_l() {
@@ -174,7 +174,7 @@ public class RealmsMainScreen extends RealmsScreen {
             if (this.field_224035_x) {
                 return true;
             } else {
-                return this.field_224037_z && !this.field_223993_A && this.field_224028_q.isEmpty() ? true : this.field_224028_q.isEmpty();
+                return this.field_224028_q.isEmpty();
             }
         } else {
             return false;
@@ -232,7 +232,7 @@ public class RealmsMainScreen extends RealmsScreen {
             this.field_224020_i = new RealmsMainScreen.ServerList();
 
             if (field_224018_g != -1) {
-                this.field_224020_i.setScrollAmount((double) field_224018_g);
+                this.field_224020_i.setScrollAmount(field_224018_g);
             }
 
             this.addListener(this.field_224020_i);
@@ -502,7 +502,7 @@ public class RealmsMainScreen extends RealmsScreen {
                         RealmsMainScreen.this.func_223975_u();
                     } catch (RealmsServiceException realmsserviceexception) {
                         RealmsMainScreen.field_224033_v = false;
-                        RealmsMainScreen.field_224012_a.error("Couldn't connect to realms", (Throwable) realmsserviceexception);
+                        RealmsMainScreen.field_224012_a.error("Couldn't connect to realms", realmsserviceexception);
 
                         if (realmsserviceexception.field_224981_a == 401) {
                             RealmsMainScreen.field_224000_H = new RealmsGenericErrorScreen(new TranslationTextComponent("mco.error.invalid.session.title"), new TranslationTextComponent("mco.error.invalid.session.message"), RealmsMainScreen.this.field_224019_h);
@@ -547,7 +547,7 @@ public class RealmsMainScreen extends RealmsScreen {
 
                     RealmsMainScreen.field_224032_u = true;
                 } catch (RealmsServiceException realmsserviceexception) {
-                    RealmsMainScreen.field_224012_a.error("Couldn't connect to realms", (Throwable) realmsserviceexception);
+                    RealmsMainScreen.field_224012_a.error("Couldn't connect to realms", realmsserviceexception);
                     RealmsMainScreen.this.minecraft.execute(() ->
                     {
                         RealmsMainScreen.this.minecraft.displayGuiScreen(new RealmsGenericErrorScreen(realmsserviceexception, RealmsMainScreen.this.field_224019_h));
@@ -677,8 +677,8 @@ public class RealmsMainScreen extends RealmsScreen {
         {
             return p_243041_1_ instanceof RealmsMainScreen.ServerEntry && ((RealmsMainScreen.ServerEntry) p_243041_1_).field_223734_a.field_230582_a_ == this.field_224021_j;
         });
-        this.field_224020_i.setSelected((RealmsMainScreen.ListEntry) null);
-        this.func_223915_a((RealmsServer) null);
+        this.field_224020_i.setSelected(null);
+        this.func_223915_a(null);
         this.field_224021_j = -1L;
         this.field_224022_k.active = false;
     }
@@ -732,7 +732,7 @@ public class RealmsMainScreen extends RealmsScreen {
             this.func_237605_b_(matrixStack, mouseX, mouseY);
         } else {
             if (this.field_223994_B) {
-                this.func_223915_a((RealmsServer) null);
+                this.func_223915_a(null);
 
                 if (!this.children.contains(this.field_224020_i)) {
                     this.children.add(this.field_224020_i);
@@ -799,7 +799,7 @@ public class RealmsMainScreen extends RealmsScreen {
             this.field_223997_E = 0;
             this.field_223998_F = 0;
             this.field_223999_G = true;
-            this.func_223915_a((RealmsServer) null);
+            this.func_223915_a(null);
 
             if (this.children.contains(this.field_224020_i)) {
                 IGuiEventListener iguieventlistener = this.field_224020_i;
@@ -855,18 +855,18 @@ public class RealmsMainScreen extends RealmsScreen {
 
     private void func_237581_a_(MatrixStack p_237581_1_, int p_237581_2_, int p_237581_3_, int p_237581_4_, int p_237581_5_, boolean p_237581_6_, boolean p_237581_7_) {
         int i = this.field_224029_r;
-        boolean flag = this.func_223931_b((double) p_237581_2_, (double) p_237581_3_);
+        boolean flag = this.func_223931_b(p_237581_2_, p_237581_3_);
         boolean flag1 = p_237581_7_ && p_237581_6_;
 
         if (flag1) {
             float f = 0.25F + (1.0F + MathHelper.sin((float) this.field_224030_s * 0.5F)) * 0.25F;
             int j = -16777216 | (int) (f * 64.0F) << 16 | (int) (f * 64.0F) << 8 | (int) (f * 64.0F) << 0;
-            this.fillGradient(p_237581_1_, p_237581_4_ - 2, p_237581_5_ - 2, p_237581_4_ + 18, p_237581_5_ + 18, j, j);
+            fillGradient(p_237581_1_, p_237581_4_ - 2, p_237581_5_ - 2, p_237581_4_ + 18, p_237581_5_ + 18, j, j);
             j = -16777216 | (int) (f * 255.0F) << 16 | (int) (f * 255.0F) << 8 | (int) (f * 255.0F) << 0;
-            this.fillGradient(p_237581_1_, p_237581_4_ - 2, p_237581_5_ - 2, p_237581_4_ + 18, p_237581_5_ - 1, j, j);
-            this.fillGradient(p_237581_1_, p_237581_4_ - 2, p_237581_5_ - 2, p_237581_4_ - 1, p_237581_5_ + 18, j, j);
-            this.fillGradient(p_237581_1_, p_237581_4_ + 17, p_237581_5_ - 2, p_237581_4_ + 18, p_237581_5_ + 18, j, j);
-            this.fillGradient(p_237581_1_, p_237581_4_ - 2, p_237581_5_ + 17, p_237581_4_ + 18, p_237581_5_ + 18, j, j);
+            fillGradient(p_237581_1_, p_237581_4_ - 2, p_237581_5_ - 2, p_237581_4_ + 18, p_237581_5_ - 1, j, j);
+            fillGradient(p_237581_1_, p_237581_4_ - 2, p_237581_5_ - 2, p_237581_4_ - 1, p_237581_5_ + 18, j, j);
+            fillGradient(p_237581_1_, p_237581_4_ + 17, p_237581_5_ - 2, p_237581_4_ + 18, p_237581_5_ + 18, j, j);
+            fillGradient(p_237581_1_, p_237581_4_ - 2, p_237581_5_ + 17, p_237581_4_ + 18, p_237581_5_ + 18, j, j);
         }
 
         this.minecraft.getTextureManager().bindTexture(field_237546_t_);
@@ -891,7 +891,7 @@ public class RealmsMainScreen extends RealmsScreen {
         if (flag4) {
             ITextComponent itextcomponent = i == 0 ? field_243000_E : field_243001_F;
             int i1 = this.font.getStringPropertyWidth(itextcomponent);
-            this.fillGradient(p_237581_1_, j1 - 3, p_237581_3_ - 3, j1 + i1 + 3, p_237581_3_ + 8 + 3, -1073741824, -1073741824);
+            fillGradient(p_237581_1_, j1 - 3, p_237581_3_ - 3, j1 + i1 + 3, p_237581_3_ + 8 + 3, -1073741824, -1073741824);
             this.font.func_243246_a(p_237581_1_, itextcomponent, (float) j1, (float) p_237581_3_, -1);
         }
     }
@@ -991,11 +991,7 @@ public class RealmsMainScreen extends RealmsScreen {
     }
 
     private void func_237630_f_(MatrixStack p_237630_1_, int p_237630_2_, int p_237630_3_, int p_237630_4_, int p_237630_5_) {
-        boolean flag = false;
-
-        if (p_237630_4_ >= p_237630_2_ && p_237630_4_ <= p_237630_2_ + 28 && p_237630_5_ >= p_237630_3_ && p_237630_5_ <= p_237630_3_ + 28 && p_237630_5_ < this.height - 40 && p_237630_5_ > 32 && !this.func_223990_b()) {
-            flag = true;
-        }
+        boolean flag = p_237630_4_ >= p_237630_2_ && p_237630_4_ <= p_237630_2_ + 28 && p_237630_5_ >= p_237630_3_ && p_237630_5_ <= p_237630_3_ + 28 && p_237630_5_ < this.height - 40 && p_237630_5_ > 32 && !this.func_223990_b();
 
         this.minecraft.getTextureManager().bindTexture(field_237544_r_);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -1009,11 +1005,7 @@ public class RealmsMainScreen extends RealmsScreen {
     }
 
     private void func_237633_g_(MatrixStack p_237633_1_, int p_237633_2_, int p_237633_3_, int p_237633_4_, int p_237633_5_) {
-        boolean flag = false;
-
-        if (p_237633_4_ >= p_237633_2_ && p_237633_4_ <= p_237633_2_ + 28 && p_237633_5_ >= p_237633_3_ && p_237633_5_ <= p_237633_3_ + 28 && p_237633_5_ < this.height - 40 && p_237633_5_ > 32 && !this.func_223990_b()) {
-            flag = true;
-        }
+        boolean flag = p_237633_4_ >= p_237633_2_ && p_237633_4_ <= p_237633_2_ + 28 && p_237633_5_ >= p_237633_3_ && p_237633_5_ <= p_237633_3_ + 28 && p_237633_5_ < this.height - 40 && p_237633_5_ > 32 && !this.func_223990_b();
 
         this.minecraft.getTextureManager().bindTexture(field_237549_w_);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -1048,7 +1040,7 @@ public class RealmsMainScreen extends RealmsScreen {
 
             for (ITextComponent itextcomponent1 : p_237583_2_) {
                 int l = j1 - (i == 0 ? 3 : 0) + i;
-                this.fillGradient(p_237583_1_, i1 - 3, l, i1 + j + 3, j1 + 8 + 3 + i, -1073741824, -1073741824);
+                fillGradient(p_237583_1_, i1 - 3, l, i1 + j + 3, j1 + 8 + 3 + i, -1073741824, -1073741824);
                 this.font.func_243246_a(p_237583_1_, itextcomponent1, (float) i1, (float) (j1 + i), 16777215);
                 i += 10;
             }
@@ -1056,11 +1048,7 @@ public class RealmsMainScreen extends RealmsScreen {
     }
 
     private void func_237580_a_(MatrixStack p_237580_1_, int p_237580_2_, int p_237580_3_, int p_237580_4_, int p_237580_5_, boolean p_237580_6_) {
-        boolean flag = false;
-
-        if (p_237580_2_ >= p_237580_4_ && p_237580_2_ <= p_237580_4_ + 20 && p_237580_3_ >= p_237580_5_ && p_237580_3_ <= p_237580_5_ + 20) {
-            flag = true;
-        }
+        boolean flag = p_237580_2_ >= p_237580_4_ && p_237580_2_ <= p_237580_4_ + 20 && p_237580_3_ >= p_237580_5_ && p_237580_3_ <= p_237580_5_ + 20;
 
         this.minecraft.getTextureManager().bindTexture(field_237550_x_);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -1073,11 +1061,7 @@ public class RealmsMainScreen extends RealmsScreen {
     }
 
     private void func_237582_a_(MatrixStack p_237582_1_, int p_237582_2_, int p_237582_3_, boolean p_237582_4_, int p_237582_5_, int p_237582_6_, boolean p_237582_7_, boolean p_237582_8_) {
-        boolean flag = false;
-
-        if (p_237582_2_ >= p_237582_5_ && p_237582_2_ <= p_237582_5_ + 20 && p_237582_3_ >= p_237582_6_ && p_237582_3_ <= p_237582_6_ + 20) {
-            flag = true;
-        }
+        boolean flag = p_237582_2_ >= p_237582_5_ && p_237582_2_ <= p_237582_5_ + 20 && p_237582_3_ >= p_237582_6_ && p_237582_3_ <= p_237582_6_ + 20;
 
         this.minecraft.getTextureManager().bindTexture(field_237551_y_);
 
@@ -1139,11 +1123,11 @@ public class RealmsMainScreen extends RealmsScreen {
         this.minecraft.displayGuiScreen(new RealmsPendingInvitesScreen(this.field_224019_h));
     }
 
-    static enum ServerState {
+    enum ServerState {
         NONE,
         EXPIRED,
         LEAVE,
-        CONFIGURE;
+        CONFIGURE
     }
 
     class CloseButton extends Button {
@@ -1162,7 +1146,7 @@ public class RealmsMainScreen extends RealmsScreen {
             float f = this.isHovered() ? 12.0F : 0.0F;
             blit(matrixStack, this.x, this.y, 0.0F, f, 12, 12, 12, 24);
 
-            if (this.isMouseOver((double) mouseX, (double) mouseY)) {
+            if (this.isMouseOver(mouseX, mouseY)) {
                 RealmsMainScreen.this.func_237603_a_(this.getMessage());
             }
         }
@@ -1288,7 +1272,7 @@ public class RealmsMainScreen extends RealmsScreen {
                 }
 
                 if (!"0".equals(p_237679_1_.field_230599_r_.field_230607_a_)) {
-                    String s = TextFormatting.GRAY + "" + p_237679_1_.field_230599_r_.field_230607_a_;
+                    String s = TextFormatting.GRAY + p_237679_1_.field_230599_r_.field_230607_a_;
                     RealmsMainScreen.this.font.drawString(p_237679_2_, s, (float) (p_237679_3_ + 207 - RealmsMainScreen.this.font.getStringWidth(s)), (float) (p_237679_4_ + 3), 8421504);
 
                     if (p_237679_5_ >= p_237679_3_ + 207 - RealmsMainScreen.this.font.getStringWidth(s) && p_237679_5_ <= p_237679_3_ + 207 && p_237679_6_ >= p_237679_4_ + 1 && p_237679_6_ <= p_237679_4_ + 10 && p_237679_6_ < RealmsMainScreen.this.height - 40 && p_237679_6_ > 32 && !RealmsMainScreen.this.func_223990_b()) {
@@ -1528,11 +1512,7 @@ public class RealmsMainScreen extends RealmsScreen {
         private void func_237681_a_(MatrixStack p_237681_1_, int p_237681_2_, int p_237681_3_, int p_237681_4_, int p_237681_5_, int p_237681_6_) {
             int i = p_237681_4_ + 8;
             int j = 0;
-            boolean flag = false;
-
-            if (p_237681_3_ <= p_237681_5_ && p_237681_5_ <= (int) RealmsMainScreen.this.field_224020_i.getScrollAmount() && p_237681_4_ <= p_237681_6_ && p_237681_6_ <= p_237681_4_ + 32) {
-                flag = true;
-            }
+            boolean flag = p_237681_3_ <= p_237681_5_ && p_237681_5_ <= (int) RealmsMainScreen.this.field_224020_i.getScrollAmount() && p_237681_4_ <= p_237681_6_ && p_237681_6_ <= p_237681_4_ + 32;
 
             int k = 8388479;
 

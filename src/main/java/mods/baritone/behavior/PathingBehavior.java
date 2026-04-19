@@ -98,7 +98,7 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
     @Override
     public void onTick(TickEvent event) {
         dispatchEvents();
-        if (event.getType() == TickEvent.Type.OUT) {
+        if (event.type() == TickEvent.Type.OUT) {
             secretInternalSegmentCancel();
             baritone.getPathingControlManager().cancelEverything();
             return;
@@ -241,7 +241,7 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
     @Override
     public void onPlayerUpdate(PlayerUpdateEvent event) {
         if (current != null) {
-            switch (event.getState()) {
+            switch (event.state()) {
                 case PRE:
                     lastAutoJump = ctx.minecraft().gameSettings.autoJump;
                     ctx.minecraft().gameSettings.autoJump = false;

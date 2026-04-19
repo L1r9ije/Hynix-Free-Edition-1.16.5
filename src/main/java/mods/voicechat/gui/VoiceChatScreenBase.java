@@ -78,12 +78,8 @@ public abstract class VoiceChatScreenBase extends Screen {
         }
     }
 
-    public static class HoverArea {
-        private final int posX, posY;
-        private final int width, height;
-        @Nullable
-        private final Supplier<List<IReorderingProcessor>> tooltip;
-
+    public record HoverArea(int posX, int posY, int width, int height,
+                            @Nullable Supplier<List<IReorderingProcessor>> tooltip) {
         public HoverArea(int posX, int posY, int width, int height) {
             this(posX, posY, width, height, null);
         }
@@ -96,32 +92,9 @@ public abstract class VoiceChatScreenBase extends Screen {
             this.tooltip = tooltip;
         }
 
-        public int getPosX() {
-            return posX;
-        }
-
-        public int getPosY() {
-            return posY;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        @Nullable
-        public Supplier<List<IReorderingProcessor>> getTooltip() {
-            return tooltip;
-        }
-
         public boolean isHovered(int guiLeft, int guiTop, int mouseX, int mouseY) {
             if (mouseX >= guiLeft + posX && mouseX < guiLeft + posX + width) {
-                if (mouseY >= guiTop + posY && mouseY < guiTop + posY + height) {
-                    return true;
-                }
+                return mouseY >= guiTop + posY && mouseY < guiTop + posY + height;
             }
             return false;
         }

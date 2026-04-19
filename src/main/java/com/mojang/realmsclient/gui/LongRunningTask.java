@@ -14,9 +14,9 @@ public abstract class LongRunningTask implements IErrorConsumer, Runnable {
 
     protected static void func_238125_a_(int p_238125_0_) {
         try {
-            Thread.sleep((long) (p_238125_0_ * 1000));
+            Thread.sleep((long) (p_238125_0_ * 1000L));
         } catch (InterruptedException interruptedexception) {
-            field_238124_a_.error("", (Throwable) interruptedexception);
+            field_238124_a_.error("", interruptedexception);
         }
     }
 

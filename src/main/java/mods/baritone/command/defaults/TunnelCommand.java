@@ -41,9 +41,9 @@ public class TunnelCommand extends Command {
         args.requireMax(3);
         if (args.hasExactly(3)) {
             boolean cont = true;
-            int height = Integer.parseInt(args.getArgs().get(0).getValue());
-            int width = Integer.parseInt(args.getArgs().get(1).getValue());
-            int depth = Integer.parseInt(args.getArgs().get(2).getValue());
+            int height = Integer.parseInt(args.getArgs().get(0).value());
+            int width = Integer.parseInt(args.getArgs().get(1).value());
+            int depth = Integer.parseInt(args.getArgs().get(2).value());
 
             if (width < 1 || height < 2 || depth < 1 || height > 255) {
                 logDirect("Width and depth must at least be 1 block; Height must at least be 2 blocks, and cannot be greater than the build limit.");
@@ -86,7 +86,7 @@ public class TunnelCommand extends Command {
                     ctx.player().getHorizontalFacing()
             );
             baritone.getCustomGoalProcess().setGoalAndPath(goal);
-            logDirect(String.format("Goal: %s", goal.toString()));
+            logDirect(String.format("Goal: %s", goal));
         }
     }
 

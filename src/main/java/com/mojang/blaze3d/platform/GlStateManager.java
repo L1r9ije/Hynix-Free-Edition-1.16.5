@@ -79,15 +79,15 @@ public class GlStateManager {
     private static int shadeModel = 7425;
     private static GlStateManager.FramebufferExtension fboMode;
     private static GlStateManager.SupportType supportType;
-    private static LockCounter alphaLock = new LockCounter();
-    private static GlAlphaState alphaLockState = new GlAlphaState();
-    private static LockCounter blendLock = new LockCounter();
-    private static GlBlendState blendLockState = new GlBlendState();
-    private static LockCounter cullLock = new LockCounter();
-    private static GlCullState cullLockState = new GlCullState();
+    private static final LockCounter alphaLock = new LockCounter();
+    private static final GlAlphaState alphaLockState = new GlAlphaState();
+    private static final LockCounter blendLock = new LockCounter();
+    private static final GlBlendState blendLockState = new GlBlendState();
+    private static final LockCounter cullLock = new LockCounter();
+    private static final GlCullState cullLockState = new GlCullState();
     private static boolean clientStateLocked = false;
     private static int clientActiveTexture = 0;
-    private static boolean creatingDisplayList = false;
+    private static final boolean creatingDisplayList = false;
     private static boolean fogAllowed = true;
     private static int framebufferRead;
     private static int framebufferDraw;
@@ -1177,6 +1177,7 @@ public class GlStateManager {
             for (int i : textures) {
                 if (glstatemanager$texturestate.textureName == i) {
                     glstatemanager$texturestate.textureName = -1;
+                    break;
                 }
             }
         }
@@ -1794,7 +1795,7 @@ public class GlStateManager {
         GL42.glBindImageTexture(p_bindImageTexture_0_, p_bindImageTexture_1_, p_bindImageTexture_2_, p_bindImageTexture_3_, p_bindImageTexture_4_, p_bindImageTexture_5_, p_bindImageTexture_6_);
     }
 
-    public static enum DestFactor {
+    public enum DestFactor {
         CONSTANT_ALPHA(32771),
         CONSTANT_COLOR(32769),
         DST_ALPHA(772),
@@ -1812,31 +1813,31 @@ public class GlStateManager {
 
         public final int param;
 
-        private DestFactor(int param) {
+        DestFactor(int param) {
             this.param = param;
         }
     }
 
     @Deprecated
-    public static enum FogMode {
+    public enum FogMode {
         LINEAR(9729),
         EXP(2048),
         EXP2(2049);
 
         public final int param;
 
-        private FogMode(int param) {
+        FogMode(int param) {
             this.param = param;
         }
     }
 
-    public static enum FramebufferExtension {
+    public enum FramebufferExtension {
         BASE,
         ARB,
-        EXT;
+        EXT
     }
 
-    public static enum LogicOp {
+    public enum LogicOp {
         AND(5377),
         AND_INVERTED(5380),
         AND_REVERSE(5378),
@@ -1856,12 +1857,12 @@ public class GlStateManager {
 
         public final int opcode;
 
-        private LogicOp(int opCode) {
+        LogicOp(int opCode) {
             this.opcode = opCode;
         }
     }
 
-    public static enum SourceFactor {
+    public enum SourceFactor {
         CONSTANT_ALPHA(32771),
         CONSTANT_COLOR(32769),
         DST_ALPHA(772),
@@ -1880,32 +1881,32 @@ public class GlStateManager {
 
         public final int param;
 
-        private SourceFactor(int param) {
+        SourceFactor(int param) {
             this.param = param;
         }
     }
 
-    public static enum SupportType {
+    public enum SupportType {
         BASE,
         EXT,
-        NONE;
+        NONE
     }
 
     @Deprecated
-    public static enum TexGen {
+    public enum TexGen {
         S,
         T,
         R,
-        Q;
+        Q
     }
 
-    public static enum Viewport {
+    public enum Viewport {
         INSTANCE;
 
-        protected int x;
-        protected int y;
-        protected int w;
-        protected int h;
+        private int x;
+        private int y;
+        private int w;
+        private int h;
     }
 
     @Deprecated

@@ -74,20 +74,17 @@ public class SoundPacketImpl implements SoundPacket {
 
     @Override
     public LocationalSoundPacket toLocationalSoundPacket(Position position) {
-        if (position instanceof PositionImpl) {
-            PositionImpl p = (PositionImpl) position;
-            return new LocationalSoundPacketImpl(new LocationSoundPacket(packet.getChannelId(), packet.getSender(), p.getPosition(), packet.getData(), packet.getSequenceNumber(), getDistance(), null));
+        if (position instanceof PositionImpl p) {
+            return new LocationalSoundPacketImpl(new LocationSoundPacket(packet.getChannelId(), packet.getSender(), p.position(), packet.getData(), packet.getSequenceNumber(), getDistance(), null));
         } else {
             throw new IllegalArgumentException("position is not an instance of PositionImpl");
         }
     }
 
     private float getDistance() {
-        if (this instanceof EntitySoundPacket) {
-            EntitySoundPacket p = (EntitySoundPacket) this;
+        if (this instanceof EntitySoundPacket p) {
             return p.getDistance();
-        } else if (this instanceof LocationalSoundPacket) {
-            LocationalSoundPacket p = (LocationalSoundPacket) this;
+        } else if (this instanceof LocationalSoundPacket p) {
             return p.getDistance();
         }
         return Utils.getDefaultDistanceServer();

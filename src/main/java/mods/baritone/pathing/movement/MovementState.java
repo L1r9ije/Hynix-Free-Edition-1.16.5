@@ -70,7 +70,7 @@ public class MovementState {
          * <p>
          * {@code true} if we're trying to place or break blocks, {@code false} if we're trying to look at the movement location
          */
-        private boolean forceRotations;
+        private final boolean forceRotations;
 
         public MovementTarget() {
             this(null, false);

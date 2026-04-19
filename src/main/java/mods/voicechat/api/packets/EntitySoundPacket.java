@@ -31,7 +31,7 @@ public interface EntitySoundPacket extends SoundPacket {
      *
      * @param <T> the builder itself
      */
-    public interface Builder<T extends Builder<T>> extends SoundPacket.Builder<T, EntitySoundPacket> {
+    interface Builder<T extends Builder<T>> extends SoundPacket.Builder<T, EntitySoundPacket> {
 
         /**
          * This is required to be set!

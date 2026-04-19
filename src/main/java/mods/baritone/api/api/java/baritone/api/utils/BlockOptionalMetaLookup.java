@@ -18,7 +18,6 @@
 package mods.baritone.api.api.java.baritone.api.utils;
 
 import com.google.common.collect.ImmutableSet;
-import mods.baritone.api.api.java.baritone.api.utils.accessor.IItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -78,7 +77,7 @@ public class BlockOptionalMetaLookup {
     }
 
     public boolean has(ItemStack stack) {
-        int hash = ((IItemStack) (Object) stack).getBaritoneHash();
+        int hash = stack.getBaritoneHash();
         hash -= stack.getDamage();
         return stackHashes.contains(hash);
     }

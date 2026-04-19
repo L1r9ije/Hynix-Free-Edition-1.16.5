@@ -61,15 +61,13 @@ final class TableWriter {
 
         for (Entry entry : config.entrySet()) {
             Object value = entry.getValue();
-            if (value instanceof UnmodifiableCommentedConfig) {
-                UnmodifiableConfig sub = (UnmodifiableConfig) value;
+            if (value instanceof UnmodifiableCommentedConfig sub) {
                 if (writer.writesInline(sub)) {
                     simpleEntries.add(entry);
                 } else {
                     tablesEntries.add(entry);
                 }
-            } else if (value instanceof List) {
-                List<?> list = (List<?>) value;
+            } else if (value instanceof List<?> list) {
                 if (!list.isEmpty() && list.stream().allMatch(UnmodifiableConfig.class::isInstance)) {
                     tableArraysEntries.add(entry);
                 } else {
@@ -157,7 +155,7 @@ final class TableWriter {
         for (Iterator<Entry> it = table.subTables.iterator(); it.hasNext(); ) {
             Entry entry = it.next();
             UnmodifiableCommentedConfig sub = UnmodifiableCommentedConfig
-                    .fake((UnmodifiableConfig) entry.getRawValue());
+                    .fake(entry.getRawValue());
             configPath.add(entry.getKey());
             writeWithHeader(sub, entry.getComment(), false, true, configPath, output, writer);
             configPath.remove(configPath.size() - 1);
@@ -175,7 +173,7 @@ final class TableWriter {
             Entry entry = it.next();
             configPath.add(entry.getKey());
             @SuppressWarnings({"rawtypes", "unchecked"})
-            List<? extends UnmodifiableConfig> array = (List) entry.getRawValue();
+            List<? extends UnmodifiableConfig> array = entry.getRawValue();
             for (UnmodifiableConfig sub : array) {
                 writeWithHeader(UnmodifiableCommentedConfig.fake(sub), entry.getComment(), true,
                         true, configPath, output, writer);

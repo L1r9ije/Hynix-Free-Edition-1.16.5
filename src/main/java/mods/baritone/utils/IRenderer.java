@@ -38,7 +38,7 @@ public interface IRenderer {
 
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder buffer = tessellator.getBuffer();
-    IEntityRenderManager renderManager = (IEntityRenderManager) Minecraft.getInstance().getRenderManager();
+    IEntityRenderManager renderManager = Minecraft.getInstance().getRenderManager();
     TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     Settings settings = BaritoneAPI.getSettings();
 

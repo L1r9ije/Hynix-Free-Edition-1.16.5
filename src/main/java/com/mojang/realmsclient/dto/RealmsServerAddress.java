@@ -18,9 +18,9 @@ public class RealmsServerAddress extends ValueObject {
 
         try {
             JsonObject jsonobject = jsonparser.parse(p_230782_0_).getAsJsonObject();
-            realmsserveraddress.field_230601_a_ = JsonUtils.func_225171_a("address", jsonobject, (String) null);
-            realmsserveraddress.field_230602_b_ = JsonUtils.func_225171_a("resourcePackUrl", jsonobject, (String) null);
-            realmsserveraddress.field_230603_c_ = JsonUtils.func_225171_a("resourcePackHash", jsonobject, (String) null);
+            realmsserveraddress.field_230601_a_ = JsonUtils.func_225171_a("address", jsonobject, null);
+            realmsserveraddress.field_230602_b_ = JsonUtils.func_225171_a("resourcePackUrl", jsonobject, null);
+            realmsserveraddress.field_230603_c_ = JsonUtils.func_225171_a("resourcePackHash", jsonobject, null);
         } catch (Exception exception) {
             field_230604_d_.error("Could not parse RealmsServerAddress: " + exception.getMessage());
         }

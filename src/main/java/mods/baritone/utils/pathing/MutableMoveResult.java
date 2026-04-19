@@ -35,7 +35,7 @@ public final class MutableMoveResult {
         reset();
     }
 
-    public final void reset() {
+    public void reset() {
         x = 0;
         y = 0;
         z = 0;

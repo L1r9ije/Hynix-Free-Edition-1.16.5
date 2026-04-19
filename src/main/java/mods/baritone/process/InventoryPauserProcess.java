@@ -34,10 +34,7 @@ public class InventoryPauserProcess extends BaritoneProcessHelper {
 
     @Override
     public boolean isActive() {
-        if (ctx.player() == null || ctx.world() == null) {
-            return false;
-        }
-        return true;
+        return ctx.player() != null && ctx.world() != null;
     }
 
     private double motion() {

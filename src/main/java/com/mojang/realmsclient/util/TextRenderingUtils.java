@@ -112,7 +112,7 @@ public class TextRenderingUtils {
         }
 
         public static TextRenderingUtils.LineSegment func_225214_a(String p_225214_0_, String p_225214_1_) {
-            return new TextRenderingUtils.LineSegment((String) null, p_225214_0_, p_225214_1_);
+            return new TextRenderingUtils.LineSegment(null, p_225214_0_, p_225214_1_);
         }
 
         @VisibleForTesting

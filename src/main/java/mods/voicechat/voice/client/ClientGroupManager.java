@@ -15,13 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientGroupManager {
 
-    private Map<UUID, ClientGroup> groups;
+    private final Map<UUID, ClientGroup> groups;
 
     public ClientGroupManager() {
         groups = new ConcurrentHashMap<>();
         ClientServerNetManager.setClientListener(CommonCompatibilityManager.INSTANCE.getNetManager().addGroupChannel, (client, handler, packet) -> {
-            groups.put(packet.getGroup().getId(), packet.getGroup());
-            Voicechat.LOGGER.debug("Added group '{}' ({})", packet.getGroup().getName(), packet.getGroup().getId());
+            groups.put(packet.getGroup().id(), packet.getGroup());
+            Voicechat.LOGGER.debug("Added group '{}' ({})", packet.getGroup().name(), packet.getGroup().id());
             JoinGroupList.update();
         });
         ClientServerNetManager.setClientListener(CommonCompatibilityManager.INSTANCE.getNetManager().removeGroupChannel, (client, handler, packet) -> {

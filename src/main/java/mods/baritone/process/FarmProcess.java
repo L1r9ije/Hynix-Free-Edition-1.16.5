@@ -188,8 +188,7 @@ public final class FarmProcess extends BaritoneProcessHelper implements IFarmPro
                 toBreak.add(pos);
                 continue;
             }
-            if (state.getBlock() instanceof IGrowable) {
-                IGrowable ig = (IGrowable) state.getBlock();
+            if (state.getBlock() instanceof IGrowable ig) {
                 if (ig.canGrow(ctx.world(), pos, state, true) && ig.canUseBonemeal(ctx.world(), ctx.world().rand, pos, state)) {
                     bonemealable.add(pos);
                 }
@@ -292,8 +291,7 @@ public final class FarmProcess extends BaritoneProcessHelper implements IFarmPro
             }
         }
         for (Entity entity : ctx.entities()) {
-            if (entity instanceof ItemEntity && entity.isOnGround()) {
-                ItemEntity ei = (ItemEntity) entity;
+            if (entity instanceof ItemEntity ei && entity.isOnGround()) {
                 if (PICKUP_DROPPED.contains(ei.getItem().getItem())) {
                     // +0.1 because of farmland's 0.9375 dummy height lol
                     goalz.add(new GoalBlock(new BlockPos(entity.getPositionVec().x, entity.getPositionVec().y + 0.1, entity.getPositionVec().z)));

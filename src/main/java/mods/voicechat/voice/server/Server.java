@@ -286,8 +286,7 @@ public class Server extends Thread {
         if (sender.isSpectator()) {
             if (Voicechat.SERVER_CONFIG.spectatorPlayerPossession.get()) {
                 Entity camera = sender.getSpectatingEntity();
-                if (camera instanceof ServerPlayerEntity) {
-                    ServerPlayerEntity spectatingPlayer = (ServerPlayerEntity) camera;
+                if (camera instanceof ServerPlayerEntity spectatingPlayer) {
                     if (spectatingPlayer != sender) {
                         PlayerState receiverState = playerStateManager.getState(spectatingPlayer.getUniqueID());
                         if (receiverState == null) {
@@ -517,7 +516,7 @@ public class Server extends Thread {
                         message = NetworkMessage.readPacketServer(rawPacket, Server.this);
                     } catch (Exception e) {
                         CooldownTimer.run("failed_reading_packet", () -> {
-                            Voicechat.LOGGER.warn("Failed to read packet from {}", rawPacket.getSocketAddress());
+                            Voicechat.LOGGER.warn("Failed to read packet from {}", rawPacket.socketAddress());
                         });
                         continue;
                     }
@@ -534,8 +533,7 @@ public class Server extends Thread {
                         continue;
                     }
 
-                    if (message.getPacket() instanceof AuthenticatePacket) {
-                        AuthenticatePacket packet = (AuthenticatePacket) message.getPacket();
+                    if (message.getPacket() instanceof AuthenticatePacket packet) {
                         UUID secret = secrets.get(packet.getPlayerUUID());
                         if (secret != null && secret.equals(packet.getSecret())) {
                             ClientConnection connection = unCheckedConnections.get(packet.getPlayerUUID());
@@ -580,11 +578,9 @@ public class Server extends Thread {
                         continue;
                     }
 
-                    if (message.getPacket() instanceof MicPacket) {
-                        MicPacket packet = (MicPacket) message.getPacket();
+                    if (message.getPacket() instanceof MicPacket packet) {
                         onMicPacket(conn.getPlayerUUID(), packet);
-                    } else if (message.getPacket() instanceof PingPacket) {
-                        PingPacket packet = (PingPacket) message.getPacket();
+                    } else if (message.getPacket() instanceof PingPacket packet) {
                         pingManager.onPongPacket(packet);
                     } else if (message.getPacket() instanceof KeepAlivePacket) {
                         conn.setLastKeepAliveResponse(System.currentTimeMillis());

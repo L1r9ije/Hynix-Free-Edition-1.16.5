@@ -29,7 +29,7 @@ public class WorldTemplate extends ValueObject {
             worldtemplate.field_230649_c_ = JsonUtils.func_225171_a("version", p_230803_0_, "");
             worldtemplate.field_230650_d_ = JsonUtils.func_225171_a("author", p_230803_0_, "");
             worldtemplate.field_230651_e_ = JsonUtils.func_225171_a("link", p_230803_0_, "");
-            worldtemplate.field_230652_f_ = JsonUtils.func_225171_a("image", p_230803_0_, (String) null);
+            worldtemplate.field_230652_f_ = JsonUtils.func_225171_a("image", p_230803_0_, null);
             worldtemplate.field_230653_g_ = JsonUtils.func_225171_a("trailer", p_230803_0_, "");
             worldtemplate.field_230654_h_ = JsonUtils.func_225171_a("recommendedPlayers", p_230803_0_, "");
             worldtemplate.field_230655_i_ = WorldTemplate.Type.valueOf(JsonUtils.func_225171_a("type", p_230803_0_, WorldTemplate.Type.WORLD_TEMPLATE.name()));
@@ -40,11 +40,11 @@ public class WorldTemplate extends ValueObject {
         return worldtemplate;
     }
 
-    public static enum Type {
+    public enum Type {
         WORLD_TEMPLATE,
         MINIGAME,
         ADVENTUREMAP,
         EXPERIENCE,
-        INSPIRATION;
+        INSPIRATION
     }
 }

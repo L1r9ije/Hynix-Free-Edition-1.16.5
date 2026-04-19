@@ -68,7 +68,7 @@ public final class CachedWorld implements ICachedWorld, Helper {
     /**
      * A map of all of the cached regions.
      */
-    private Long2ObjectMap<CachedRegion> cachedRegions = new Long2ObjectOpenHashMap<>();
+    private final Long2ObjectMap<CachedRegion> cachedRegions = new Long2ObjectOpenHashMap<>();
 
     CachedWorld(Path directory, RegistryKey<World> dimension) {
         if (!Files.exists(directory)) {
@@ -98,14 +98,14 @@ public final class CachedWorld implements ICachedWorld, Helper {
     }
 
     @Override
-    public final void queueForPacking(Chunk chunk) {
+    public void queueForPacking(Chunk chunk) {
         if (toPackMap.put(chunk.getPos(), chunk) == null) {
             toPackQueue.add(chunk.getPos());
         }
     }
 
     @Override
-    public final boolean isCached(int blockX, int blockZ) {
+    public boolean isCached(int blockX, int blockZ) {
         CachedRegion region = getRegion(blockX >> 9, blockZ >> 9);
         if (region == null) {
             return false;
@@ -113,12 +113,12 @@ public final class CachedWorld implements ICachedWorld, Helper {
         return region.isCached(blockX & 511, blockZ & 511);
     }
 
-    public final boolean regionLoaded(int blockX, int blockZ) {
+    public boolean regionLoaded(int blockX, int blockZ) {
         return getRegion(blockX >> 9, blockZ >> 9) != null;
     }
 
     @Override
-    public final ArrayList<BlockPos> getLocationsOf(String block, int maximum, int centerX, int centerZ, int maxRegionDistanceSq) {
+    public ArrayList<BlockPos> getLocationsOf(String block, int maximum, int centerX, int centerZ, int maxRegionDistanceSq) {
         ArrayList<BlockPos> res = new ArrayList<>();
         int centerRegionX = centerX >> 9;
         int centerRegionZ = centerZ >> 9;
@@ -154,7 +154,7 @@ public final class CachedWorld implements ICachedWorld, Helper {
     }
 
     @Override
-    public final void save() {
+    public void save() {
         if (!Baritone.settings().chunkCaching.value) {
             System.out.println("Not saving to disk; chunk caching is disabled.");
             allRegions().forEach(region -> {
@@ -234,7 +234,7 @@ public final class CachedWorld implements ICachedWorld, Helper {
     }
 
     @Override
-    public final void reloadAllFromDisk() {
+    public void reloadAllFromDisk() {
         long start = System.nanoTime() / 1000000L;
         allRegions().forEach(region -> {
             if (region != null) {
@@ -246,7 +246,7 @@ public final class CachedWorld implements ICachedWorld, Helper {
     }
 
     @Override
-    public final synchronized CachedRegion getRegion(int regionX, int regionZ) {
+    public synchronized CachedRegion getRegion(int regionX, int regionZ) {
         return cachedRegions.get(getRegionID(regionX, regionZ));
     }
 

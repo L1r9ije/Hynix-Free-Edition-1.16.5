@@ -96,7 +96,7 @@ public class FileDownload {
                 try {
                     closeablehttpclient.close();
                 } catch (IOException ioexception) {
-                    LOGGER.error("Could not close http client", (Throwable) ioexception);
+                    LOGGER.error("Could not close http client", ioexception);
                 }
             }
         }
@@ -131,7 +131,6 @@ public class FileDownload {
                 } catch (Exception exception1) {
                     LOGGER.error("Caught exception while downloading: " + exception1.getMessage());
                     this.field_224846_d = true;
-                    return;
                 } finally {
                     this.field_224850_h.releaseConnection();
 
@@ -240,7 +239,7 @@ public class FileDownload {
                 }
             }
         } catch (Exception exception1) {
-            LOGGER.error("Error getting level list", (Throwable) exception1);
+            LOGGER.error("Error getting level list", exception1);
             this.field_224846_d = true;
             return;
         }
@@ -287,7 +286,7 @@ public class FileDownload {
                 }
             }
         } catch (Exception exception) {
-            LOGGER.error("Error extracting world", (Throwable) exception);
+            LOGGER.error("Error extracting world", exception);
             this.field_224846_d = true;
         } finally {
             if (tararchiveinputstream != null) {
@@ -325,7 +324,7 @@ public class FileDownload {
             super.afterWrite(p_afterWrite_1_);
 
             if (this.field_224806_b != null) {
-                this.field_224806_b.actionPerformed(new ActionEvent(this, 0, (String) null));
+                this.field_224806_b.actionPerformed(new ActionEvent(this, 0, null));
             }
         }
     }
@@ -351,7 +350,7 @@ public class FileDownload {
                     FileDownload.this.field_224847_e = true;
                     FileDownload.this.func_237690_a_(this.field_224813_b, this.field_224814_c, this.field_224815_d);
                 } catch (IOException ioexception) {
-                    FileDownload.LOGGER.error("Error extracting archive", (Throwable) ioexception);
+                    FileDownload.LOGGER.error("Error extracting archive", ioexception);
                     FileDownload.this.field_224846_d = true;
                 }
             }
@@ -385,7 +384,7 @@ public class FileDownload {
                         FileDownload.this.field_224846_d = true;
                     }
                 } catch (IOException ioexception) {
-                    FileDownload.LOGGER.error("Error copying resourcepack file", (Object) ioexception.getMessage());
+                    FileDownload.LOGGER.error("Error copying resourcepack file", ioexception.getMessage());
                     FileDownload.this.field_224846_d = true;
                 }
             }

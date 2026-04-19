@@ -20,13 +20,13 @@ public class ClientNetworkMessage {
 
     @Nullable
     public static NetworkMessage readPacketClient(RawUdpPacket packet, ClientVoicechatConnection client) throws IllegalAccessException, InstantiationException, IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, InvocationTargetException, NoSuchMethodException {
-        byte[] data = packet.getData();
+        byte[] data = packet.data();
         PacketBuffer b = new PacketBuffer(Unpooled.wrappedBuffer(data));
         if (b.readByte() != NetworkMessage.MAGIC_BYTE) {
             Voicechat.LOGGER.debug("Received invalid packet from {}", client.getAddress());
             return null;
         }
-        return NetworkMessage.readFromBytes(packet.getSocketAddress(), client.getData().getSecret(), b.readByteArray(), System.currentTimeMillis());
+        return NetworkMessage.readFromBytes(packet.socketAddress(), client.getData().getSecret(), b.readByteArray(), System.currentTimeMillis());
     }
 
     public static byte[] writeClient(ClientVoicechatConnection client, NetworkMessage networkMessage) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {

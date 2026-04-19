@@ -54,7 +54,7 @@ public class LocationalAudioChannelImpl extends AudioChannelImpl implements Loca
 
     @Override
     public void send(byte[] opusData) {
-        broadcast(new LocationSoundPacket(channelId, channelId, position.getPosition(), opusData, sequenceNumber.getAndIncrement(), distance, category));
+        broadcast(new LocationSoundPacket(channelId, channelId, position.position(), opusData, sequenceNumber.getAndIncrement(), distance, category));
     }
 
     @Override
@@ -64,15 +64,14 @@ public class LocationalAudioChannelImpl extends AudioChannelImpl implements Loca
 
     @Override
     public void flush() {
-        broadcast(new LocationSoundPacket(channelId, channelId, position.getPosition(), new byte[0], sequenceNumber.getAndIncrement(), distance, category));
+        broadcast(new LocationSoundPacket(channelId, channelId, position.position(), new byte[0], sequenceNumber.getAndIncrement(), distance, category));
     }
 
     private void broadcast(LocationSoundPacket packet) {
-        if (!(level instanceof ServerLevelImpl)) {
+        if (!(level instanceof ServerLevelImpl serverLevel)) {
             throw new IllegalArgumentException("level is not an instance of ServerLevelImpl");
         }
-        ServerLevelImpl serverLevel = (ServerLevelImpl) level;
-        server.broadcast(ServerWorldUtils.getPlayersInRange(serverLevel.getRawServerLevel(), position.getPosition(), server.getBroadcastRange(distance), filter == null ? player -> true : player -> filter.test(new ServerPlayerImpl(player))), packet, null, null, null, SoundPacketEvent.SOURCE_PLUGIN);
+        server.broadcast(ServerWorldUtils.getPlayersInRange(serverLevel.getRawServerLevel(), position.position(), server.getBroadcastRange(distance), filter == null ? player -> true : player -> filter.test(new ServerPlayerImpl(player))), packet, null, null, null, SoundPacketEvent.SOURCE_PLUGIN);
     }
 
 }

@@ -44,7 +44,7 @@ public class DefaultArgParsers {
 
         @Override
         public Integer parseArg(ICommandArgument arg) throws RuntimeException {
-            return Integer.parseInt(arg.getValue());
+            return Integer.parseInt(arg.value());
         }
     }
 
@@ -58,7 +58,7 @@ public class DefaultArgParsers {
 
         @Override
         public Long parseArg(ICommandArgument arg) throws RuntimeException {
-            return Long.parseLong(arg.getValue());
+            return Long.parseLong(arg.value());
         }
     }
 
@@ -72,7 +72,7 @@ public class DefaultArgParsers {
 
         @Override
         public Float parseArg(ICommandArgument arg) throws RuntimeException {
-            String value = arg.getValue();
+            String value = arg.value();
             if (!value.matches("^([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)|)$")) {
                 throw new IllegalArgumentException("failed float format check");
             }
@@ -90,7 +90,7 @@ public class DefaultArgParsers {
 
         @Override
         public Double parseArg(ICommandArgument arg) throws RuntimeException {
-            String value = arg.getValue();
+            String value = arg.value();
             if (!value.matches("^([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)|)$")) {
                 throw new IllegalArgumentException("failed double format check");
             }
@@ -111,7 +111,7 @@ public class DefaultArgParsers {
 
         @Override
         public Boolean parseArg(ICommandArgument arg) throws RuntimeException {
-            String value = arg.getValue();
+            String value = arg.value();
             if (TRUTHY_VALUES.contains(value.toLowerCase(Locale.US))) {
                 return true;
             } else if (FALSY_VALUES.contains(value.toLowerCase(Locale.US))) {

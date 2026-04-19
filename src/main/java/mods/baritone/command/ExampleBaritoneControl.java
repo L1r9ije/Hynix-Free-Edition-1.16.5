@@ -33,7 +33,6 @@ import mods.baritone.behavior.Behavior;
 import mods.baritone.command.argument.ArgConsumer;
 import mods.baritone.command.argument.CommandArguments;
 import mods.baritone.command.manager.CommandManager;
-import mods.baritone.utils.accessor.IGuiScreen;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
@@ -100,7 +99,7 @@ public class ExampleBaritoneControl extends Behavior implements Helper {
             return false;
         } else if (msg.trim().equalsIgnoreCase("orderpizza")) {
             try {
-                ((IGuiScreen) ctx.minecraft().currentScreen).openLinkInvoker(new URI("https://www.dominos.com/en/pages/order/"));
+                ctx.minecraft().currentScreen.openLinkInvoker(new URI("https://www.dominos.com/en/pages/order/"));
             } catch (NullPointerException | URISyntaxException ignored) {
             }
             return false;

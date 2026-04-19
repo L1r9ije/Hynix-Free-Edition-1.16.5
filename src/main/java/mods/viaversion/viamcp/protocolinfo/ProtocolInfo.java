@@ -23,7 +23,7 @@ import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import java.util.Arrays;
 import java.util.List;
 
-public class ProtocolInfo {
+public record ProtocolInfo(String name, String releaseDate, ProtocolVersion protocolVersion) {
 
     public static final ProtocolInfo R1_21_5 = new ProtocolInfo("Spring to Life drop", "March 25, 2025", ProtocolVersion.v1_21_5);
     public static final ProtocolInfo R1_21_4 = new ProtocolInfo("The Garden Awakens", "December 3, 2024", ProtocolVersion.v1_21_4);
@@ -74,34 +74,12 @@ public class ProtocolInfo {
     private final static List<ProtocolInfo> PROTOCOL_INFOS = Arrays.asList(R1_7, R1_7_6, R1_8, R1_9, R1_9_1, R1_9_2, R1_9_3, R1_10, R1_11, R1_11_1, R1_12, R1_12_1, R1_12_2, R1_13, R1_13_1, R1_13_2, R1_14, R1_14_1, R1_14_2, R1_14_3, R1_14_4,
             R1_15, R1_15_1, R1_15_2, R1_16, R1_16_1, R1_16_2, R1_16_3, R1_16_4, R1_17, R1_17_1, R1_18, R1_18_2, R1_19, R1_19_1, R1_19_3, R1_19_4, R1_20, R1_20_2, R1_20_3, R1_20_5, R1_21, R1_21_2, R1_21_4, R1_21_5);
 
-    private final String name;
-    private final String releaseDate;
-    private final ProtocolVersion protocolVersion;
-
-    public ProtocolInfo(final String name, final String releaseDate, final ProtocolVersion protocolVersion) {
-        this.name = name;
-        this.releaseDate = releaseDate;
-        this.protocolVersion = protocolVersion;
-    }
-
     public static ProtocolInfo fromProtocolVersion(final ProtocolVersion protocolVersion) {
         for (ProtocolInfo protocolInfo : PROTOCOL_INFOS) {
-            if (protocolInfo.getProtocolVersion().getName().equals(protocolVersion.getName())) {
+            if (protocolInfo.protocolVersion().getName().equals(protocolVersion.getName())) {
                 return protocolInfo;
             }
         }
         return null;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public ProtocolVersion getProtocolVersion() {
-        return protocolVersion;
     }
 }

@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CooldownTimer {
 
-    private static ConcurrentHashMap<String, Long> cooldowns;
+    private static final ConcurrentHashMap<String, Long> cooldowns;
 
     static {
         cooldowns = new ConcurrentHashMap<>();

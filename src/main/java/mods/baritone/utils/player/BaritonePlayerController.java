@@ -50,7 +50,7 @@ public final class BaritonePlayerController implements IPlayerController {
 
     @Override
     public void syncHeldItem() {
-        ((IPlayerControllerMP) mc.playerController).callSyncCurrentPlayItem();
+        mc.playerController.callSyncCurrentPlayItem();
     }
 
     @Override
@@ -96,6 +96,6 @@ public final class BaritonePlayerController implements IPlayerController {
 
     @Override
     public void setHittingBlock(boolean hittingBlock) {
-        ((IPlayerControllerMP) mc.playerController).setIsHittingBlock(hittingBlock);
+        mc.playerController.setIsHittingBlock(hittingBlock);
     }
 }
